@@ -1,0 +1,32 @@
+# einvoicecost.ae
+
+> UAE e-invoicing cost calculator and done-for-you setup. Shows the exact price upfront for your software and your exact invoice count, with no slabs or brackets. Most providers only quote after a sales call. Prices updated: 9 November 2026. Prices in AED, excluding 5% VAT.
+
+## Key facts
+- UAE businesses under AED 50 million revenue must appoint an Accredited Service Provider (ASP) by 31 March 2027 and go live with e-invoicing on 1 July 2027.
+- Fine for appointing an ASP late: AED 5,000 a month. After go-live, each invoice not issued electronically can be fined AED 100, up to AED 5,000 a month.
+- QuickBooks (Online and Desktop) and Excel are not ASPs, so they need an outside ASP and a connection. einvoicecost.ae handles the full setup.
+- Zoho Books, TallyPrime and Wafeq are ASPs themselves (built-in e-invoicing).
+- B2C sales are outside the UAE e-invoicing system.
+
+## Prices (first year for up to 500 invoices, then AED 500 a year)
+- QuickBooks Online: AED 4,500 first year (ASP registration 1,000 + setup 3,000 + e-invoicing 500)
+- QuickBooks Desktop: AED 5,500 first year (1,000 + 4,000 + 500)
+- Excel / no software: AED 3,500 first year (1,000 + 2,000 + 500)
+- Above 500 invoices: you pay for your exact number of invoices, no slabs or brackets. Supplier invoices you receive are not counted.
+- Zoho Books, Tally, Wafeq: e-invoicing built in; optional done-for-you setup AED 1,500.
+- Other software (Xero, Odoo, Sage, SAP, Oracle, Dynamics, ERPNext, BUSY and more): price on WhatsApp.
+
+## Pages
+- [Calculator (home)](https://einvoicecost.ae/): exact price by software and invoices per year
+- [QuickBooks Online](https://einvoicecost.ae/quickbooks-online)
+- [QuickBooks Desktop](https://einvoicecost.ae/quickbooks-desktop)
+- [Excel / no software](https://einvoicecost.ae/excel)
+- [Zoho Books](https://einvoicecost.ae/zoho-books)
+- [Tally](https://einvoicecost.ae/tally)
+- [Wafeq](https://einvoicecost.ae/wafeq)
+- [Other software](https://einvoicecost.ae/other-software)
+- [Full price list](https://einvoicecost.ae/pricing.md)
+
+## Contact
+- WhatsApp: +971 50 875 9256 (Business Bay, Dubai)

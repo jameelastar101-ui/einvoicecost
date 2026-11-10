@@ -1,0 +1,21 @@
+{
+  "name": "einvoicecost-ae",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "UAE e-invoicing cost calculator and guides - einvoicecost.ae",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.8"
+  }
+}

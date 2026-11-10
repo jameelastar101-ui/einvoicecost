@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/home.css';
+
+const title = "UAE E-Invoicing Cost Calculator 2027 | einvoicecost.ae";
+const description = "Exact UAE e-invoicing cost for QuickBooks, Excel, Zoho, Tally or Wafeq, priced for your exact invoice count. No slabs or brackets.";
+const faqs = [
+  {
+    "q": "What is an ASP?",
+    "a": "An Accredited Service Provider, approved by the UAE Ministry of Finance. It checks each invoice and sends it through the Peppol network to your customer and to the FTA. Every business must appoint one on EmaraTax."
+  },
+  {
+    "q": "Do I need one if my software already has e-invoicing?",
+    "a": "Zoho Books, TallyPrime and Wafeq are ASPs themselves, so no other provider is needed. QuickBooks, Excel and most other software need an outside ASP, which we set up for you."
+  },
+  {
+    "q": "How much does e-invoicing cost in the UAE?",
+    "a": "It depends on your software and how many invoices you send. With us, the first year for up to 500 invoices is AED 4,500 for QuickBooks Online, AED 5,500 for QuickBooks Desktop and AED 3,500 for Excel, then AED 500 a year. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Zoho Books, TallyPrime and Wafeq have e-invoicing built in. Prices exclude VAT."
+  },
+  {
+    "q": "Why do you show prices when other providers don't?",
+    "a": "Many e-invoicing providers in the UAE only give a price after a sales call or a demo. We show your exact price upfront, for your exact invoice count, so you can compare before you talk to anyone."
+  },
+  {
+    "q": "What happens if I miss the deadline?",
+    "a": "The fine for not appointing an ASP on time is AED 5,000 for each month. After go-live, every invoice not sent electronically can be fined AED 100, up to AED 5,000 a month."
+  },
+  {
+    "q": "Should I switch to cheaper software?",
+    "a": "Usually not. Moving years of data and retraining staff costs more than e-invoicing. If you still want to move to Zoho or Tally, we handle the switch too."
+  }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalURL="https://einvoicecost.ae/"
+  ogType="website"
+  faqs={faqs}
+>
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="#top">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <span class="tag">UAE e-invoicing prices</span>
+          <a class="btn-top" id="topWa" href="https://wa.me/971508759256" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a></div></nav>
+      <div class="hero-head">
+        <div>
+          <p class="eyebrow">Ministry of Finance e-invoicing mandate</p>
+          <h1>What will e&#8209;invoicing cost your business?</h1>
+          <p class="lede">Choose your accounting software and the number of invoices you send. You get the exact price for your invoice count, with no slabs or brackets. Most providers only quote after a sales call. We show yours upfront.</p>
+        </div>
+        <div class="keydates">
+          <div><p class="d">31 Mar 2027</p><p class="l">Appoint your ASP</p></div>
+          <div><p class="d">1 Jul 2027</p><p class="l">E-invoicing goes live</p></div>
+          <div><p class="d">AED 5,000</p><p class="l">Monthly fine if late</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="wrap">
+    <main id="top">
+      <div class="calc">
+        <div class="calc-left">
+          <p class="step-label">Step 1 · Your accounting software</p>
+          <div class="tiles" id="tiles" role="group" aria-label="Accounting software"></div>
+  
+          <div id="invWrap">
+            <p class="step-label second">Step 2 · Invoices per year</p>
+            <div class="inv-row">
+              <div class="inv-box"><input id="inv" type="text" inputmode="numeric" value="500" aria-label="Invoices per year"><span>invoices / year</span></div>
+              <div class="chips" id="chips"></div>
+            </div>
+            <p class="hint">Count sales invoices and credit notes. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Invoices you receive from suppliers are not counted.</p>
+          </div>
+        </div>
+  
+        <aside class="slip" aria-live="polite">
+          <div class="slip-head">
+            <div>
+              <p class="eyebrow">Estimate · AED · excl. VAT</p>
+              <p class="slip-sw" id="slipSw">QuickBooks Online</p>
+            </div>
+            <span class="badge need" id="slipBadge">Needs an ASP</span>
+          </div>
+  
+          <div id="priceView">
+            <div class="totals">
+              <div class="total"><p class="lab">First year</p><p class="val"><small>AED</small><span id="fy">4,500</span></p></div>
+              <div class="total"><p class="lab">Every year after</p><p class="val"><small>AED</small><span id="ny">500</span></p></div>
+            </div>
+            <ul class="lines" id="lines"></ul>
+            <div class="help" id="helpRow" hidden>
+              <label for="helpChk"><input type="checkbox" id="helpChk">Want us to do it?</label>
+              <span class="v">+ AED 1,500</span>
+            </div>
+            <p class="note" id="slipNote"></p>
+            <a class="guide-link" id="guideLink" href="/quickbooks-online">Read the full QuickBooks Online guide →</a>
+          </div>
+  
+          <div id="otherView" hidden>
+            <p style="padding-block:18px 4px;font-size:15px">Tell us your software and we reply on WhatsApp with your exact price, usually the same day.</p>
+            <a class="guide-link" href="/other-software">Odoo, Sage, SAP, Xero and more →</a>
+          </div>
+  
+          <div class="cta">
+            <a class="btn-wa" id="ctaWa" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
+              <span id="ctaLbl">Let's discuss on WhatsApp</span>
+            </a>
+            <p class="lock" id="lockLine">Start before <b>30 November 2026</b> and get your <b>first consultation free</b><span id="daysLeft"></span>.</p>
+          </div>
+        </aside>
+      </div>
+  
+      <section class="band" id="compare">
+        <div class="sec-head">
+          <div><p class="eyebrow">Compare all software</p><h2 style="margin-top:6px">E-invoicing cost for every software</h2></div>
+          <p class="sub" style="margin:0">Enter your invoices once. Every column updates as you type.</p>
+        </div>
+  
+        <div class="cmp-shell">
+          <div class="cmp-bar">
+            <div>
+              <label for="cmpInv" class="lab">Invoices per year</label>
+              <div class="inv-box"><input id="cmpInv" type="text" inputmode="numeric" value="500" aria-label="Invoices per year for comparison"><span>invoices</span></div>
+            </div>
+            <div class="cmp-range">
+              <input id="cmpRange" type="range" min="0" max="10000" step="100" value="500" aria-label="Invoices per year slider">
+              <div class="range-scale mono"><span>0</span><span>2,500</span><span>5,000</span><span>7,500</span><span>10,000+</span></div>
+            </div>
+            <div class="cmp-sum"><span class="lab">All prices</span><p class="big">AED · excl. VAT</p></div>
+          </div>
+          <p class="swipe">Swipe sideways to see all 7 →</p>
+          <div class="cmp-scroll"><table class="ct" id="ct"></table></div>
+          <div class="cmp-cards" id="cmpCards"></div>
+        </div>
+        <p class="legend">Your accounting software subscription is separate and not included. Zoho sells e-invoicing in prepaid packs; its figure is the approximate yearly cost paid to Zoho.</p>
+      </section>
+  
+  
+      <section class="band" id="guides">
+        <div class="sec-head"><div><p class="eyebrow">Step-by-step guides</p><h2 style="margin-top:6px">Cost and setup guide for your software</h2></div><p class="sub" style="margin:0">Prices, the 5 setup steps, things to know and common questions.</p></div>
+        <div class="guides"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/quickbooks-desktop">QuickBooks Desktop<span>Needs an ASP</span></a><a href="/excel">Excel / no software<span>Needs an ASP</span></a><a href="/zoho-books">Zoho Books<span>Built-in ASP</span></a><a href="/tally">Tally Prime<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/other-software">Other software<span>Odoo, Sage, SAP, Xero and more</span></a></div>
+      </section>
+      <section class="band">
+        <p class="eyebrow">Deadlines</p>
+        <h2>When you must be ready</h2>
+        <div class="dl">
+          <div><p class="d">31 Mar 2027</p><p>Businesses under AED 50M revenue must appoint an ASP.</p></div>
+          <div><p class="d">1 Jul 2027</p><p>E-invoicing goes live for these businesses.</p></div>
+          <div><p class="d">1 Oct 2027</p><p>Government entities go live.</p></div>
+        </div>
+        <p class="fines">Fines: <b>AED 5,000 a month</b> for not appointing an ASP on time, and <b>AED 100 per invoice</b> not issued electronically (up to AED 5,000 a month). Businesses over AED 50M had to appoint by 30 Oct 2026 and go live on 1 Jan 2027.</p>
+      </section>
+  
+      <section class="band">
+        <p class="eyebrow">Questions</p>
+        <h2>Common questions</h2>
+        <div class="faq">
+          <details><summary>What is an ASP?</summary><p>An Accredited Service Provider, approved by the UAE Ministry of Finance. It checks each invoice and sends it through the Peppol network to your customer and to the FTA. Every business must appoint one on EmaraTax.</p></details>
+          <details><summary>Do I need one if my software already has e-invoicing?</summary><p>Zoho Books, TallyPrime and Wafeq are ASPs themselves, so no other provider is needed. QuickBooks, Excel and most other software need an outside ASP, which we set up for you.</p></details>
+          <details><summary>What happens if I miss the deadline?</summary><p>The fine for not appointing an ASP on time is AED 5,000 for each month. After go-live, every invoice not sent electronically can be fined AED 100, up to AED 5,000 a month.</p></details>
+          <details><summary>How much does e-invoicing cost in the UAE?</summary><p>It depends on your software and how many invoices you send. With us, the first year for up to 500 invoices is AED 4,500 for QuickBooks Online, AED 5,500 for QuickBooks Desktop and AED 3,500 for Excel, then AED 500 a year. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Zoho Books, TallyPrime and Wafeq have e-invoicing built in. Prices exclude VAT.</p></details><details><summary>Why do you show prices when other providers don't?</summary><p>Many e-invoicing providers in the UAE only give a price after a sales call or a demo. We show your exact price upfront, for your exact invoice count, so you can compare before you talk to anyone.</p></details><details><summary>Should I switch to cheaper software?</summary><p>Usually not. Moving years of data and retraining staff costs more than e-invoicing. If you still want to move to Zoho or Tally, we handle the switch too.</p></details>
+        </div>
+      </section>
+  
+  
+      <section class="band sources"><p class="eyebrow">Sources</p><h2>Where these prices and rules come from</h2><ul>
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li>
+        <li><a href="https://www.zoho.com/ae/books/pricing/" target="_blank" rel="noopener">Zoho Books UAE pricing</a></li>
+        <li><a href="https://help.tallysolutions.com/uae-e-invoicing-in-tallyprime/" target="_blank" rel="noopener">Tally Help: UAE e-invoicing in TallyPrime</a></li>
+        <li><a href="https://www.wafeq.com/en-ae/press-releases/business-regulations-brief/wafeq-uae-e-invoicing-included-at-no-extra-cost" target="_blank" rel="noopener">Wafeq: UAE e-invoicing included at no extra cost</a></li>
+        
+        <li><a href="https://quickbooks.intuit.com/ae/resources/running-a-business/e-invoicing-compliance-in-the-uae" target="_blank" rel="noopener">QuickBooks UAE: e-invoicing compliance</a></li>
+      </ul></section>
+      <section class="band final">
+        <div><h2>Ready before the deadline?</h2><p class="sub">Message us your software and invoice count. We reply with your price and next steps.</p></div>
+        <a class="btn-wa" id="finalWa" href="#" target="_blank" rel="noopener" style="padding:14px 22px;font-size:16px">Message us on WhatsApp</a>
+      </section>
+    </main>
+  
+  </div>
+  
+  <div class="dock" id="dock">
+    <div class="row">
+      <p class="fy cta" id="dockFy">Need e-invoice support?</p>
+      <a class="btn-wa" id="dockWa" href="#" target="_blank" rel="noopener">WhatsApp Now</a>
+    </div>
+  </div>
+  <script>
+    import '../scripts/index.js';
+  </script>
+</BaseLayout>
