@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/guide.css';
+import { PRICES, PRICES_CHECKED, aed, firstYearText, everyYearText } from '../config/prices.js';
+
+const qboFy = firstYearText('qbo');
+const qbdFy = firstYearText('qbd');
+const ny = everyYearText();
+
+const title = "Switch to Zoho Books, Tally or Wafeq for UAE E-Invoicing | Data Migration";
+const description = "Moving from QuickBooks or Excel to Zoho Books, TallyPrime or Wafeq for UAE e-invoicing? We move your data and set up built-in e-invoicing. Fixed price on WhatsApp.";
+const faqs = [
+  {
+    q: "Can I move from QuickBooks to Zoho Books in the UAE?",
+    a: "Yes. We move your customers, suppliers, items, chart of accounts, opening balances and unpaid invoices from QuickBooks Online or Desktop into Zoho Books, then set up Zoho's built-in e-invoicing."
+  },
+  {
+    q: "Can I switch from QuickBooks Desktop to Tally?",
+    a: "Yes. Many QuickBooks Desktop users move to TallyPrime because it also runs on your own computer. We move your data and set up Tally's e-invoicing, which is free with an active TSS subscription."
+  },
+  {
+    q: "Can I move from Excel to accounting software for e-invoicing?",
+    a: "Yes. We load your customers, items and opening balances into Zoho Books, TallyPrime or Wafeq, so you invoice from proper software with e-invoicing built in."
+  },
+  {
+    q: "Is it cheaper to switch software or keep QuickBooks with an ASP?",
+    a: `Keeping QuickBooks Online with us costs AED ${qboFy} in the first year for up to 500 invoices, then AED ${ny} a year. Switching costs a one-time migration plus ${aed(PRICES.help)} setup, with no yearly fee from us. Software subscriptions are separate in both cases.`
+  },
+  {
+    q: "Do Zoho Books, Tally and Wafeq support UAE e-invoicing (PINT AE)?",
+    a: "Yes. All three are accredited service providers (ASPs), so invoices go out in the UAE format (PINT AE) through the Peppol network directly from the software."
+  },
+  {
+    q: "Do I need a separate ASP after switching?",
+    a: "No. Zoho Books, TallyPrime or Wafeq becomes your ASP, which you appoint on EmaraTax. We guide you through it."
+  },
+  {
+    q: "How long does data migration take?",
+    a: "Usually 1 to 3 weeks, depending on how much data you have and how clean it is. We give you a timeline with your fixed price."
+  },
+  {
+    q: "Will I lose my old data and history?",
+    a: "No. Your old QuickBooks or Excel files stay as they are, so you can still look up past records. We move what you need to keep working: lists, balances and open items. Full history can be moved too, quoted separately."
+  },
+  {
+    q: "When should I switch before the 31 March 2027 deadline?",
+    a: "As early as you can. A switch is easiest at the start of a month or quarter, and you need time to test before you appoint your ASP by 31 March 2027."
+  },
+  {
+    q: "What do I need to send you to start?",
+    a: "Your current software, the software you want to move to, roughly how many invoices you send a year and how many years of data you have. A sample export helps us give an exact price."
+  }
+];
+const breadcrumbs = [
+  { name: "Home", url: "https://einvoicecost.ae/" },
+  { name: "Switch software", url: "https://einvoicecost.ae/switch-accounting-software" }
+];
+const migMsg = "Hi, I use [QuickBooks / Excel], about [500] invoices a year. I want to switch to [Zoho / Tally / Wafeq]. I have about [ ] years of data. Please send me the migration price.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalURL="https://einvoicecost.ae/switch-accounting-software"
+  ogType="article"
+  faqs={faqs}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" id="topWa" href="https://wa.me/971508759256" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software" aria-current="page">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › Switch software</p>
+      <p class="eyebrow">Switch accounting software · UAE e-invoicing</p>
+      <h1>Switch to Zoho Books, Tally or Wafeq before e-invoicing starts</h1>
+      <div class="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Zoho Books, TallyPrime and Wafeq are accredited service providers (ASPs) themselves, so <b>e-invoicing is built in</b>: no outside ASP, no connector and no yearly platform fee.</p><p>If you use QuickBooks or Excel today and want to move, <b>we move your data and set up e-invoicing in one go</b>. The price depends on your data, so message us for a fixed price before any work starts.</p>
+        <div class="facts"><div><p class="k">Move from</p><p class="v">QuickBooks or Excel</p></div><div><p class="k">Move to</p><p class="v">Zoho, Tally or Wafeq</p></div><div><p class="k">Price</p><p class="v">Fixed quote on WhatsApp</p></div></div>
+      </div>
+    </div>
+  </div>
+  <main class="wrap">
+
+    <section id="compare">
+      <h2>Should you stay on QuickBooks or switch?</h2>
+      <p class="sub">Both work for UAE e-invoicing. Here is how they compare, so you can decide.</p>
+      <div class="tablewrap">
+        <table class="swt">
+          <thead><tr><th></th><th>Stay on QuickBooks</th><th>Switch to Zoho, Tally or Wafeq</th></tr></thead>
+          <tbody>
+            <tr><td>First year with us</td><td>AED {qboFy} for QuickBooks Online, AED {qbdFy} for QuickBooks Desktop (up to 500 invoices)</td><td>Data migration (fixed quote) + setup {aed(PRICES.help)}</td></tr>
+            <tr><td>Every year after, paid to us</td><td>AED {ny} (platform fee + invoices)</td><td>Nothing</td></tr>
+            <tr><td>E-invoicing paid to the software</td><td>Nothing extra</td><td>Zoho: prepaid packs (1,000 invoices = AED 330, one time). Tally: free with active TSS. Wafeq: included in paid plans.</td></tr>
+            <tr><td>Your staff</td><td>Keep working in QuickBooks. No retraining.</td><td>Learn a new system</td></tr>
+            <tr><td>Your data</td><td>Stays where it is</td><td>We move it for you</td></tr>
+            <tr><td>Good fit if</td><td>You like QuickBooks and have years of history in it</td><td>You want no yearly e-invoicing fee, or your QuickBooks Desktop version is old</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">Your accounting software subscription is separate in both cases. Not sure which is cheaper for you? Message us your software and invoice count and we will show you both prices.</p>
+    </section>
+
+    <section>
+      <h2>Which software suits you?</h2>
+      <div class="cards">
+        <div class="card"><span class="badge check">Good for cloud users</span><h3>Zoho Books</h3>
+          <p>Needs the Professional plan or higher for e-invoicing. E-invoicing in prepaid packs, first 100 free once. Supplier e-invoices arrive as draft bills.</p>
+          <p class="from"><a href="/zoho-books">Zoho Books guide →</a></p></div>
+        <div class="card"><span class="badge check">Good for desktop users and inventory</span><h3>TallyPrime</h3>
+          <p>E-invoicing free with an active TSS subscription. Needs a Tally.NET ID, AED base currency and VAT turned on. Runs on your own computer, like QuickBooks Desktop.</p>
+          <p class="from"><a href="/tally">Tally guide →</a></p></div>
+        <div class="card"><span class="badge check">Good for small UAE businesses</span><h3>Wafeq</h3>
+          <p>E-invoicing included in paid plans, Starter and above. Cloud software, nothing to install. Simple yearly plans.</p>
+          <p class="from"><a href="/wafeq">Wafeq guide →</a></p></div>
+      </div>
+    </section>
+
+    <section id="covers">
+      <h2>What we move</h2>
+      <ul class="covers">
+        <li><b>Customers and their TRNs</b></li>
+        <li><b>Suppliers</b></li>
+        <li><b>Items and services</b></li>
+        <li><b>Chart of accounts</b></li>
+        <li><b>Opening balances</b>On your switch date.</li>
+        <li><b>Unpaid sales invoices and supplier bills</b></li>
+        <li><b>VAT codes</b>Set up for UAE e-invoicing.</li>
+        <li><b>Full transaction history</b>If you need it (quoted separately).</li>
+      </ul>
+    </section>
+
+    <section id="steps">
+      <h2>How switching works</h2>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Message us on WhatsApp</h3></div><p>Tell us your current software, the software you want, how many invoices you send a year and how many years of data you have.</p></div></li>
+        <li><div><div class="st-head"><h3>We check your data</h3><span class="tag us">We handle it</span></div><p>A short call or a sample export, so we know exactly what needs to move.</p></div></li>
+        <li><div><div class="st-head"><h3>You get a fixed price</h3><span class="tag us">We handle it</span></div><p>Before any work starts. No surprises later.</p></div></li>
+        <li><div><div class="st-head"><h3>We move your data</h3><span class="tag us">We handle it</span></div><p>Lists, balances and open items go into your new software, and we check the balances match.</p></div></li>
+        <li><div><div class="st-head"><h3>E-invoicing goes live</h3><span class="tag us">We handle it</span></div><p>We appoint your new software as your ASP on EmaraTax, send test invoices and a credit note, then switch it on.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="migration-price">
+      <h2>How much does data migration cost?</h2>
+      <div class="notlisted">
+        <p><b>Price depends on your data.</b> How many years, how many customers and items, and how clean the data is. Send us the details and we reply with a fixed price. E-invoicing setup in your new software is {aed(PRICES.help)}.</p>
+        <a class="btn-wa" data-wa={migMsg} href="#" target="_blank" rel="noopener">Get my migration price</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Switching software: common questions</h2>
+      <div class="faq">
+        {faqs.map((f) => (
+          <details><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </div>
+    </section>
+
+    <section class="final">
+      <div><h2>Switch before 31 March 2027</h2><p class="sub">Message us your software and how much data you have. We reply with a fixed price and a timeline.</p></div>
+      <a class="btn-wa" data-wa={migMsg} href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> Message us on WhatsApp</a>
+    </section>
+
+    <footer>
+      <span>Prices checked: {PRICES_CHECKED}</span>
+      <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
+    </footer>
+  </main>
+  <div class="dock">
+    <div class="row">
+      <p class="fy cta" id="dockFy">Need e-invoice support?</p>
+      <a class="btn-wa" id="dockWa" href="#" target="_blank" rel="noopener">WhatsApp Now</a>
+    </div>
+  </div>
+  <script>
+    import '../scripts/switch-accounting-software.js';
+  </script>
+</BaseLayout>

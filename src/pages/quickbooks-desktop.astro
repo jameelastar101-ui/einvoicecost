@@ -1,41 +1,47 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/guide.css';
+import PriceBox from '../components/PriceBox.astro';
+import PriceTable from '../components/PriceTable.astro';
+import { PRICES, PRICES_CHECKED, fmt, aed, invoiceFee, firstYearText, everyYearText, connectorText } from '../config/prices.js';
 
+const fy = firstYearText('qbd');
+const ny = everyYearText();
 const title = "QuickBooks Desktop E-Invoicing UAE: Cost & Setup";
-const description = "QuickBooks Desktop needs a connector and an ASP for UAE e-invoicing. Cost: AED 5,500 first year, then AED 500 a year. Versions and setup steps.";
+const description = `QuickBooks Desktop needs a connector and an ASP for UAE e-invoicing. Cost: AED ${fy} first year, then AED ${ny} a year. Versions and setup steps.`;
 const faqs = [
   {
-    "q": "Does QuickBooks Desktop support UAE e-invoicing?",
-    "a": "Not on its own. QuickBooks Desktop creates the invoice, but it needs a connector on the computer that runs QuickBooks, linked to an accredited ASP that sends invoices in the UAE format."
+    q: "Does QuickBooks Desktop support UAE e-invoicing?",
+    a: "Not on its own. QuickBooks Desktop creates the invoice, but it needs a connector on the computer that runs QuickBooks, linked to an accredited ASP that sends invoices in the UAE format."
   },
   {
-    "q": "How much does QuickBooks Desktop e-invoicing cost in the UAE?",
-    "a": "With us, AED 5,500 in the first year for up to 500 invoices: ASP registration AED 1,000, setup and connector AED 4,000 and e-invoicing AED 500. After that it is AED 500 a year. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Prices exclude VAT."
+    q: "How much does QuickBooks Desktop e-invoicing cost in the UAE?",
+    a: `With us, AED ${fy} in the first year for up to 500 invoices: onboarding and ASP registration ${aed(PRICES.onboarding)}, setup ${aed(PRICES.setup)}, auto-send connector ${aed(PRICES.connector.qbd)}, platform fee ${aed(PRICES.platform)} and e-invoicing ${aed(PRICES.feeMin)}. After that it is AED ${ny} a year. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Prices exclude VAT.`
   },
   {
-    "q": "Will my old QuickBooks Desktop version work?",
-    "a": "Many versions can be connected, but it depends on the version and edition. Press F2 in QuickBooks to see yours and send it to us. We confirm before you start."
+    q: "Will my old QuickBooks Desktop version work?",
+    a: "Many versions can be connected, but it depends on the version and edition. Press F2 in QuickBooks to see yours and send it to us. We confirm before you start."
   },
   {
-    "q": "Do I need to move to QuickBooks Online?",
-    "a": "Not for e-invoicing. Move only if your version is no longer supported or you want cloud access. That is a bigger change to your accounting, so decide it separately."
+    q: "Do I need to move to QuickBooks Online?",
+    a: "Not for e-invoicing. Move only if your version is no longer supported or you want cloud access. If you decide to move, Zoho Books, Tally and Wafeq have e-invoicing built in, and we move your data.",
+    html: 'Not for e-invoicing. Move only if your version is no longer supported or you want cloud access. If you decide to move, Zoho Books, Tally and Wafeq have e-invoicing built in, and <a href="/switch-accounting-software">we move your data</a>.'
   },
   {
-    "q": "Does the QuickBooks computer need to stay on?",
-    "a": "Yes. The connector runs on that computer, so invoices go out only while it is on and connected to the internet."
+    q: "Does the QuickBooks computer need to stay on?",
+    a: "Yes. The connector runs on that computer, so invoices go out only while it is on and connected to the internet."
   },
   {
-    "q": "What do I have to do?",
-    "a": "Nothing in the setup. You allow one remote session on the QuickBooks computer and share EmaraTax access, and we do every step."
+    q: "What do I have to do?",
+    a: "Nothing in the setup. You allow one remote session on the QuickBooks computer and share EmaraTax access, and we do every step."
   },
   {
-    "q": "How long does QuickBooks Desktop e-invoicing setup take?",
-    "a": "About 2 to 3 weeks, because the connector is installed and tested on your computer."
+    q: "How long does QuickBooks Desktop e-invoicing setup take?",
+    a: "About 2 to 3 weeks, because the connector is installed and tested on your computer."
   },
   {
-    "q": "What is the e-invoicing deadline for QuickBooks Desktop users?",
-    "a": "The same as every business. Businesses under AED 50 million revenue must appoint an ASP by 31 March 2027 and go live on 1 July 2027. The fine for appointing late is AED 5,000 a month."
+    q: "What is the e-invoicing deadline for QuickBooks Desktop users?",
+    a: "The same as every business. Businesses under AED 50 million revenue must appoint an ASP by 31 March 2027 and go live on 1 July 2027. The fine for appointing late is AED 5,000 a month."
   }
 ];
 const breadcrumbs = [
@@ -67,13 +73,13 @@ const breadcrumbs = [
           <a class="btn-top" id="topWa" href="https://wa.me/971508759256" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
         </div>
       </header>
-      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop" aria-current="page">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a></div></nav>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop" aria-current="page">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
       <p class="crumb"><a href="/">Home</a> › QuickBooks Desktop</p>
       <p class="eyebrow">QuickBooks Desktop · UAE e-invoicing guide</p>
       <h1>QuickBooks Desktop e-invoicing in the UAE: cost and setup</h1>
       <div class="answer">
         <p class="eyebrow">Quick answer</p>
-        <p>QuickBooks Desktop has <b>no built-in UAE e-invoicing</b> and is not an ASP. It needs a connector on the computer that runs QuickBooks, linked to an accredited ASP.</p><p>With us it costs <b>AED 5,500 in the first year</b> (up to 500 invoices), then <b>AED 500 a year</b>. We handle the whole setup, including installing the connector.</p>
+        <p>QuickBooks Desktop has <b>no built-in UAE e-invoicing</b> and is not an ASP. It needs a connector on the computer that runs QuickBooks, linked to an accredited ASP.</p><p>With us it costs <b>AED {fy} in the first year</b> (up to 500 invoices), then <b>AED {ny} a year</b>. We handle the whole setup, including installing the connector.</p>
         <div class="facts"><div><p class="k">Needs an ASP</p><p class="v">Yes</p></div><div><p class="k">Your setup work</p><p class="v">None</p></div><div><p class="k">Ready in</p><p class="v">About 2–3 weeks</p></div></div>
       </div>
     </div>
@@ -82,30 +88,22 @@ const breadcrumbs = [
   
     <section id="cost">
       <h2>How much does QuickBooks Desktop e-invoicing cost in the UAE?</h2>
-      <p class="sub">With us, <b>AED 5,500 in the first year</b> for up to 500 invoices, then <b>AED 500 a year</b>. One-time costs are ASP registration AED 1,000 and setup AED 4,000. Above 500 invoices, you pay for your exact invoice count, with <b>no slabs or brackets</b>. Most providers only quote after a sales call. Here you see your exact price upfront. All prices in AED, excluding 5% VAT. Count the sales invoices and credit notes you send. Invoices you receive from suppliers are free.</p>
-      <div class="tablewrap">
-        <table class="stack inv three">
-          <thead><tr><th>Invoices per year</th><th>ASP registration<br>(one time)</th><th>Setup &amp; connection<br>(one time)</th><th>E-invoicing<br>per year</th><th>First year<br>total</th><th>Each year<br>after</th></tr></thead>
-          <tbody><tr><td>300</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">500</td><td class="tot" data-label="First year total">5,500</td><td class="tot" data-label="Each year after">500</td></tr><tr><td>500</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">500</td><td class="tot" data-label="First year total">5,500</td><td class="tot" data-label="Each year after">500</td></tr><tr><td>1,000</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">875</td><td class="tot" data-label="First year total">5,875</td><td class="tot" data-label="Each year after">875</td></tr><tr><td>2,000</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">1,625</td><td class="tot" data-label="First year total">6,625</td><td class="tot" data-label="Each year after">1,625</td></tr><tr><td>5,000</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">3,875</td><td class="tot" data-label="First year total">8,875</td><td class="tot" data-label="Each year after">3,875</td></tr><tr><td>10,000</td><td class="hm" data-label="ASP registration">1,000</td><td class="hm" data-label="Setup &amp; connection">4,000</td><td data-label="E-invoicing per year">7,625</td><td class="tot" data-label="First year total">12,625</td><td class="tot" data-label="Each year after">7,625</td></tr></tbody>
-        </table>
-      </div>
-      <p class="small">More than 10,000 invoices a year? <a id="bigWa" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a> for a price. The yearly fee is paid in advance.</p>
-      <div class="calc" aria-live="polite">
-        <div class="calc-in">
-          <label for="inv">Your invoices per year</label>
-          <div class="inv-box"><input id="inv" type="text" inputmode="numeric" value="500" aria-label="Invoices per year"><span>invoices</span></div>
-        </div>
-        <div class="calc-out">
-          <div><p class="lab">First year</p><p class="val"><small>AED</small><span id="fy">5,500</span></p></div>
-          <div><p class="lab">Every year after</p><p class="val"><small>AED</small><span id="ny">500</span></p></div>
-        </div>
-      </div>
+      <p class="sub">With us, <b>AED {fy} in the first year</b> for up to 500 invoices, then <b>AED {ny} a year</b>. One-time costs are onboarding and ASP registration {aed(PRICES.onboarding)}, setup {aed(PRICES.setup)} and the auto-send connector {aed(PRICES.connector.qbd)}. Every year you pay the platform fee of {aed(PRICES.platform)} plus {aed(PRICES.feeMin)} for up to 500 invoices. Above 500 invoices, you pay for your exact invoice count, with <b>no slabs or brackets</b>. Most providers only quote after a sales call. Here you see your exact price upfront. All prices in AED, excluding 5% VAT. Count the sales invoices and credit notes you send. Invoices you receive from suppliers are free.</p>
+      <PriceBox sw="qbd" />
+      <PriceTable sw="qbd" />
+      <p class="small">More than 10,000 invoices a year? <a id="bigWa" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a> for a price. The yearly fees are paid in advance.</p>
       <p class="small">Your QuickBooks Desktop licence is separate and not included.</p>
     </section>
     <section id="covers">
-      <h2>What does the AED 4,000 setup fee cover?</h2>
-      <p class="sub">Without a connector, someone has to upload or re-type every invoice by hand, every day. The setup fee pays for setting up that link once, so it runs on its own from then on.</p>
-      <ul class="covers"><li class=star><b>A connector on your QuickBooks computer</b>We install and set up a connector on the computer that runs QuickBooks. It picks up each new invoice and credit note and sends it to our accredited partner, which delivers it to your customer and the FTA. Your QuickBooks file stays on your computer.</li><li><b>ASP registration done for you</b>We open your account with our accredited partner and appoint it as your ASP on EmaraTax.</li><li><b>Your data checked and fixed</b>Customer TRNs, VAT codes, items and addresses, so invoices are not rejected.</li><li><b>VAT codes matched to the UAE format</b>Every VAT code and item mapped to PINT AE, the format the FTA reads.</li><li><b>Tested before go-live</b>Test invoices and a credit note are sent and checked before we switch it on.</li><li><b>Rejected invoices fixed</b>If an invoice is rejected after go-live, we find the cause and fix it.</li></ul>
+      <h2>What do the fees cover?</h2>
+      <p class="sub">Without a connector, someone has to upload or re-type every invoice by hand, every day. The connector is set up once and then runs on its own.</p>
+      <ul class="covers">
+        <li class="star"><b>Auto-send connector <span>· {aed(PRICES.connector.qbd)} one time</span></b>We install and set up a connector on the computer that runs QuickBooks. It picks up each new invoice and credit note and sends it to our accredited partner, which delivers it to your customer and the FTA. Your QuickBooks file stays on your computer.</li>
+        <li><b>Onboarding &amp; ASP registration <span>· {aed(PRICES.onboarding)} one time</span></b>We open your account with our accredited partner and appoint it as your ASP on EmaraTax.</li>
+        <li><b>Setup <span>· {aed(PRICES.setup)} one time</span></b>Your version and data checked and fixed, VAT codes matched to the UAE format (PINT AE), and test invoices sent before go-live.</li>
+        <li><b>Platform fee <span>· {aed(PRICES.platform)} per year</span></b>Your e-invoicing account with our accredited partner, the connector kept running, and rejected invoices fixed.</li>
+        <li><b>E-invoicing <span>· {aed(PRICES.feeMin)} per year</span></b>Up to 500 invoices and credit notes a year. Above 500, you pay for your exact count.</li>
+      </ul>
     </section>
     <section id="steps">
       <h2>How to set up e-invoicing in QuickBooks Desktop</h2>
@@ -124,7 +122,7 @@ const breadcrumbs = [
           </div>
         </div>
       </div>
-      <ol class="steps5"><li><div><div class="st-head"><h3>Check your QuickBooks version and data</h3><span class="tag us">We handle it</span></div><p>We check which QuickBooks Desktop version and edition you run, then review your company TRN, customer TRNs, VAT codes and addresses. Anything missing, we fix.</p><p class="note">Tip: press F2 in QuickBooks to see your version.</p></div></li><li><div><div class="st-head"><h3>Open your account and appoint the ASP</h3><span class="tag us">We handle it</span></div><p>We open your e-invoicing account with our accredited partner and appoint it as your ASP on EmaraTax for you. Your business then gets a Peppol ID, which is its address on the UAE e-invoicing network.</p></div></li><li><div><div class="st-head"><h3>Install the connector on your QuickBooks computer</h3><span class="tag us">We handle it</span></div><p>In one remote session we install and set up the connector on the computer that runs QuickBooks. It picks up each new invoice and credit note and passes it to our accredited partner. Your QuickBooks file stays on your computer.</p></div></li><li><div><div class="st-head"><h3>Match your VAT codes and items</h3><span class="tag us">We handle it</span></div><p>QuickBooks Desktop uses its own VAT codes and item names. The UAE e-invoice format (PINT AE) needs standard ones. We map each VAT code you use (standard 5%, zero-rated, exempt and others) and your items, units and customer types, so every invoice is read correctly.</p></div></li><li><div><div class="st-head"><h3>Test and go live</h3><span class="tag us">We handle it</span></div><p>We send test invoices and a credit note, check they are accepted and fix anything rejected. Then we switch it on and you invoice in QuickBooks as usual. If an invoice is rejected later, we fix it.</p><p class="note">Keep the QuickBooks computer on and online during working hours so invoices go out.</p></div></li></ol>
+      <ol class="steps5"><li><div><div class="st-head"><h3>Check your QuickBooks version and data</h3><span class="tag us">We handle it</span></div><p>We check which QuickBooks Desktop version and edition you run, then review your company TRN, customer TRNs, VAT codes and addresses. Anything missing, we fix.</p><p class="note">Tip: press F2 in QuickBooks to see your version.</p></div></li><li><div><div class="st-head"><h3>Open your account and appoint the ASP</h3><span class="tag us">We handle it</span></div><p>We open your e-invoicing account with our accredited partner and appoint it as your ASP on EmaraTax for you. Your business then gets a Peppol ID, which is its address on the UAE e-invoicing network.</p></div></li><li><div><div class="st-head"><h3>Install the auto-send connector on your QuickBooks computer</h3><span class="tag us">We handle it</span></div><p>In one remote session we install and set up the connector on the computer that runs QuickBooks. It picks up each new invoice and credit note and passes it to our accredited partner. Your QuickBooks file stays on your computer.</p></div></li><li><div><div class="st-head"><h3>Match your VAT codes and items</h3><span class="tag us">We handle it</span></div><p>QuickBooks Desktop uses its own VAT codes and item names. The UAE e-invoice format (PINT AE) needs standard ones. We map each VAT code you use (standard 5%, zero-rated, exempt and others) and your items, units and customer types, so every invoice is read correctly.</p></div></li><li><div><div class="st-head"><h3>Test and go live</h3><span class="tag us">We handle it</span></div><p>We send test invoices and a credit note, check they are accepted and fix anything rejected. Then we switch it on and you invoice in QuickBooks as usual. If an invoice is rejected later, we fix it.</p><p class="note">Keep the QuickBooks computer on and online during working hours so invoices go out.</p></div></li></ol>
       
     </section>
     <section>
@@ -134,16 +132,21 @@ const breadcrumbs = [
     <section>
       <h2>Things to know before you start</h2>
       <ul class="warn"><li><b>The QuickBooks computer must stay on.</b> Invoices go out only while the computer that runs QuickBooks is on and connected to the internet.</li><li><b>Check your version first.</b> Intuit stopped selling QuickBooks Desktop in the UK, and new US Pro and Premier subscriptions ended in September 2024. Many UAE businesses still run older copies, so we check yours before setup.</li><li><b>A PDF invoice is not a UAE e-invoice.</b> Emailing a PDF will not count for invoices in scope. They must go through an accredited ASP in the structured format.</li><li><b>You appoint one ASP.</b> The same ASP handles the e-invoices you send and the ones you receive.</li><li><b>Credit notes go through e-invoicing too.</b> To correct an invoice that has already been sent, issue a credit note.</li></ul>
+      <p class="callout">Old QuickBooks Desktop version? Moving to Zoho Books, Tally or Wafeq is an option. <a href="/switch-accounting-software">We move your data →</a></p>
     </section>
     
-    <section class="sources"><h2>Sources</h2><ul><li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li><li><a href="https://quickbooks.intuit.com/ae/resources/running-a-business/e-invoicing-compliance-in-the-uae" target="_blank" rel="noopener">QuickBooks UAE: e-invoicing compliance</a></li></ul><p class="small">Prices and rules checked against these sources on 9 November 2026. We update this page when they change.</p></section>
+    <section class="sources"><h2>Sources</h2><ul><li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li><li><a href="https://quickbooks.intuit.com/ae/resources/running-a-business/e-invoicing-compliance-in-the-uae" target="_blank" rel="noopener">QuickBooks UAE: e-invoicing compliance</a></li></ul><p class="small">Prices and rules checked against these sources on {PRICES_CHECKED}. We update this page when they change.</p></section>
     <section>
       <h2>What is the e-invoicing deadline for QuickBooks Desktop users?</h2>
       <p class="sub">Businesses under AED 50 million revenue must appoint an ASP by <b>31 March 2027</b> and go live on <b>1 July 2027</b>. The fine for appointing late is <b>AED 5,000 a month</b>. After go-live, each invoice not issued electronically can be fined AED 100, up to AED 5,000 a month. Businesses over AED 50 million had to appoint by 30 October 2026 and go live on 1 January 2027.</p>
     </section>
     <section>
       <h2>QuickBooks Desktop e-invoicing: common questions</h2>
-      <div class="faq"><details><summary>Does QuickBooks Desktop support UAE e-invoicing?</summary><p>Not on its own. QuickBooks Desktop creates the invoice, but it needs a connector on the computer that runs QuickBooks, linked to an accredited ASP that sends invoices in the UAE format.</p></details><details><summary>How much does QuickBooks Desktop e-invoicing cost in the UAE?</summary><p>With us, AED 5,500 in the first year for up to 500 invoices: ASP registration AED 1,000, setup and connector AED 4,000 and e-invoicing AED 500. After that it is AED 500 a year. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Prices exclude VAT.</p></details><details><summary>Will my old QuickBooks Desktop version work?</summary><p>Many versions can be connected, but it depends on the version and edition. Press F2 in QuickBooks to see yours and send it to us. We confirm before you start.</p></details><details><summary>Do I need to move to QuickBooks Online?</summary><p>Not for e-invoicing. Move only if your version is no longer supported or you want cloud access. That is a bigger change to your accounting, so decide it separately.</p></details><details><summary>Does the QuickBooks computer need to stay on?</summary><p>Yes. The connector runs on that computer, so invoices go out only while it is on and connected to the internet.</p></details><details><summary>What do I have to do?</summary><p>Nothing in the setup. You allow one remote session on the QuickBooks computer and share EmaraTax access, and we do every step.</p></details><details><summary>How long does QuickBooks Desktop e-invoicing setup take?</summary><p>About 2 to 3 weeks, because the connector is installed and tested on your computer.</p></details><details><summary>What is the e-invoicing deadline for QuickBooks Desktop users?</summary><p>The same as every business. Businesses under AED 50 million revenue must appoint an ASP by 31 March 2027 and go live on 1 July 2027. The fine for appointing late is AED 5,000 a month.</p></details></div>
+      <div class="faq">
+        {faqs.map((f) => (
+          <details><summary>{f.q}</summary><p set:html={f.html ?? f.a} /></details>
+        ))}
+      </div>
     </section>
     <section class="final">
       <div><h2>Get QuickBooks Desktop ready before 31 March</h2><p class="sub">Send us your QuickBooks version and invoice count. We reply with your price and next steps, usually the same day.</p></div>
@@ -154,7 +157,7 @@ const breadcrumbs = [
       <div class="more"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/excel">Excel / no software<span>Needs an ASP</span></a><a href="/zoho-books">Zoho Books<span>Built-in ASP</span></a><a href="/tally">Tally Prime<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/other-software">Other software<span>Get a price</span></a><a href="/#compare">Compare all<span>Side by side</span></a></div>
     </section>
     <footer>
-      <span>Prices checked: 9 November 2026</span>
+      <span>Prices checked: {PRICES_CHECKED}</span>
       <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
     </footer>
   </main>

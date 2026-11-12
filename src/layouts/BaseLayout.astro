@@ -1,11 +1,15 @@
 ---
+import { firstYearText, everyYearText } from '../config/prices.js';
 /**
  * BaseLayout - shared <head>, SEO tags and JSON-LD for every page.
  * Page content goes in the default slot; extra <head> content in slot="head".
  */
 export interface FAQ {
   q: string;
+  /** Plain-text answer (used in the FAQPage JSON-LD). */
   a: string;
+  /** Optional HTML version of the answer shown on the page (e.g. with links). */
+  html?: string;
 }
 export interface Crumb {
   name: string;
@@ -56,7 +60,7 @@ const professionalService = {
     addressLocality: 'Business Bay, Dubai',
     addressCountry: 'AE',
   },
-  priceRange: 'AED 500 - AED 5,500',
+  priceRange: `AED ${everyYearText()} - AED ${firstYearText('qbd')}`,
   description:
     'UAE e-invoicing cost calculator and done-for-you setup for QuickBooks, Excel and other software. Exact prices shown upfront for your exact invoice count, with no slabs or brackets.',
 };

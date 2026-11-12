@@ -1,0 +1,46 @@
+---
+/**
+ * PriceTable - guide-page price table, generated from src/config/prices.js.
+ * Usage: <PriceTable sw="qbo" />   (qbo | qbd | excel | other)
+ */
+import { SOFTWARE, tableRows, fmt } from '../config/prices.js';
+export interface Props {
+  sw: 'qbo' | 'qbd' | 'excel' | 'other';
+}
+const { sw } = Astro.props;
+const s = SOFTWARE[sw];
+const rows = tableRows(sw);
+const connectorCell = (r: { connector: number }) =>
+  sw === 'excel' ? 'Not needed' : sw === 'other' ? 'Ask us' : fmt(r.connector);
+---
+
+<div class="tablewrap">
+  <table class="stack inv three">
+    <thead>
+      <tr>
+        <th>Invoices per year</th>
+        <th>Onboarding &amp; ASP<br />(one time)</th>
+        <th>Setup<br />(one time)</th>
+        <th>Auto-send connector<br />(one time)</th>
+        <th>Platform fee<br />per year</th>
+        <th>E-invoicing<br />per year</th>
+        <th>First year<br />total</th>
+        <th>Each year<br />after</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td>{fmt(r.n)}</td>
+          <td class="hm" data-label="Onboarding &amp; ASP">{fmt(r.onboarding)}</td>
+          <td class="hm" data-label="Setup">{fmt(r.setup)}</td>
+          <td class="hm" data-label="Auto-send connector">{connectorCell(r)}</td>
+          <td class="hm" data-label="Platform fee per year">{fmt(r.platform)}</td>
+          <td data-label="E-invoicing per year">{fmt(r.yearly)}</td>
+          <td class="tot" data-label="First year total">{fmt(r.firstYear)}{s.other ? ' + connector' : ''}</td>
+          <td class="tot" data-label="Each year after">{fmt(r.everyYear)}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

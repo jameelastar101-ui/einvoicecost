@@ -119,7 +119,7 @@ section.band h2{font-family:var(--serif);font-size:clamp(26px,3vw,34px);font-wei
 .cmp-sum .big{font:600 15px var(--sans);color:var(--ink)}
 .swipe{display:none;font-size:12px;color:var(--muted);padding:8px 16px 0}
 .cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table.ct{border-collapse:separate;border-spacing:0;width:100%;min-width:1040px;font-size:14px;table-layout:fixed}
+table.ct{border-collapse:separate;border-spacing:0;width:100%;min-width:1240px;font-size:14px;table-layout:fixed}
 table.ct col.c-lab{width:190px}
 .ct th,.ct td{padding:13px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;transition:background-color .25s;
   font-family:var(--sans);font-weight:400;color:var(--ink)}
@@ -250,3 +250,42 @@ table.ct col.c-lab{width:190px}
   .hero-head h1{font-size:34px}
 }
 .dock .fy.cta{font-size:16px;line-height:1.25}
+
+/* ---- 11 Nov 2026 changes: both deadline groups, connector / platform lines, switch section ---- */
+.gscroll a.new{border-color:var(--sky);background:rgba(156,194,240,.16)}
+.dates2{display:grid;grid-template-columns:150px auto auto;row-gap:14px;align-items:center;justify-content:start;min-width:0}
+.dates2 .sl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);font-weight:700;line-height:1.35;padding-right:12px}
+.dates2 .st{padding:4px 22px;border-left:1px solid rgba(201,214,232,.35)}
+.dates2 .st .d{display:block;font-family:var(--serif);font-size:22px;font-weight:700;color:var(--on-navy);white-space:nowrap;line-height:1.15}
+.dates2 .st .l{display:block;font-size:13px;color:var(--sky-muted);margin-top:4px}
+.dates2 .fine{grid-column:1/-1;font-size:13px;color:var(--sky-muted)}
+.dates2 .fine b{color:#fff}
+.passed{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--warn-soft);color:var(--warn);padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:1px}
+.lines li .k em{display:block;font-style:normal;font-size:12px;color:var(--muted);opacity:.85;margin-top:1px;max-width:34ch}
+.lines li.hi .k{color:var(--ink);font-weight:600}
+.total .plus{font-size:12px;font-weight:700;color:var(--accent);margin-top:2px}
+.switch-line{margin-top:12px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);font-size:13px;color:var(--ink)}
+.switch-line a{font-weight:700;text-decoration:none}
+.ct small.plus2{display:block;font-family:var(--sans);font-size:11px;color:var(--accent);margin:2px 0 0}
+.mc-tot .plus{font-size:11px;font-weight:700;color:var(--accent)}
+.legend{max-width:90ch}
+.switch{margin-top:56px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px 40px;padding:30px 32px;background:var(--paper);border:1px solid var(--line);border-radius:6px}
+.switch h2{font-family:var(--serif);font-size:clamp(24px,2.6vw,30px);font-weight:700;color:var(--navy);margin-top:6px}
+.switch .moves{list-style:none;margin:0;padding:0;display:grid;gap:8px;align-content:start}
+.switch .moves li{display:flex;gap:10px;font-size:15px}
+.switch .moves li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:var(--navy) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2'/></svg>") center/12px no-repeat}
+.switch .act{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:18px}
+.switch .act .more{font-weight:700;text-decoration:none}
+.dl .grp{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+.dl .d + p + .d{margin-top:14px}
+.dl .d .passed{font-family:var(--sans)}
+.pfoot{margin-top:48px;border-top:1px solid var(--line);padding-block:22px 0;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+@media (max-width:960px){.switch{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .dates2{grid-template-columns:1fr 1fr;row-gap:6px}
+  .dates2 .sl{grid-column:1/-1;margin-top:8px}
+  .dates2 .st{padding:4px 12px}
+  .dates2 .sl + .st{padding-left:0;border-left:0}
+  .dates2 .st .d{font-size:18px}
+  .switch{padding:22px 18px}
+}

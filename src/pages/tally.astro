@@ -1,13 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/guide.css';
+import PriceBox from '../components/PriceBox.astro';
+import PriceTable from '../components/PriceTable.astro';
+import { PRICES, PRICES_CHECKED, fmt, aed, invoiceFee, firstYearText, everyYearText, connectorText } from '../config/prices.js';
 
 const title = "Tally E-Invoicing UAE: Is It Free? Cost & Setup";
 const description = "Tally is its own UAE e-invoicing ASP, with no per-invoice fee if TSS is active. TSS costs, the Indian licence rule and 5 TallyPrime setup steps.";
 const faqs = [
   {
     "q": "Is Tally e-invoicing free in the UAE?",
-    "a": "Yes, there is no per-invoice fee. E-invoicing is included in TallyPrime as long as your TSS subscription is active."
+    "a": "Yes, there is no per-invoice fee. E-invoicing is included in TallyPrime as long as your TSS subscription is active. There is no ASP fee, connector or platform fee from us."
   },
   {
     "q": "Is Tally an accredited service provider (ASP)?",
@@ -35,7 +38,12 @@ const faqs = [
   },
   {
     "q": "Can you set up Tally e-invoicing for me?",
-    "a": "Yes. We handle the full setup for AED 1,500 one time, including fixing your masters, registration, testing and any rejected invoice."
+    "a": `Yes. We handle the full setup for ${aed(PRICES.help)} one time, including fixing your masters, registration, testing and any rejected invoice.`
+  },
+  {
+    "q": "Can you move my data from QuickBooks or Excel to TallyPrime?",
+    "a": "Yes. We move your customers, suppliers, items, chart of accounts, opening balances and unpaid invoices, then set up e-invoicing. See how switching works on our switch software page.",
+    "html": 'Yes. We move your customers, suppliers, items, chart of accounts, opening balances and unpaid invoices, then set up e-invoicing. <a href="/switch-accounting-software">See how switching works</a>.'
   },
   {
     "q": "What is the e-invoicing deadline for Tally users?",
@@ -71,13 +79,13 @@ const breadcrumbs = [
           <a class="btn-top" id="topWa" href="https://wa.me/971508759256" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
         </div>
       </header>
-      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally" aria-current="page">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a></div></nav>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally" aria-current="page">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
       <p class="crumb"><a href="/">Home</a> › Tally Prime</p>
       <p class="eyebrow">Tally Prime · UAE e-invoicing guide</p>
       <h1>Tally e-invoicing in the UAE: cost and setup</h1>
       <div class="answer">
         <p class="eyebrow">Quick answer</p>
-        <p>Tally is an <b>accredited ASP itself</b> (Tally Software Solutions FZCO), so you don't need another provider. E-invoicing in TallyPrime has <b>no per-invoice fee</b> as long as your TSS is active.</p><p>Set it up yourself free with the 5 steps below, or we handle it for AED 1,500.</p>
+        <p>TallyPrime is an <b>accredited ASP itself</b> (Tally Software Solutions FZCO), so you don't need another provider. E-invoicing has <b>no per-invoice fee</b> while your TSS is active.</p><p>There is <b>no ASP fee, no connector and no platform fee</b>. Set it up yourself for free in 5 steps, or we do it for <b>{aed(PRICES.help)} one time</b>.</p>
         <div class="facts"><div><p class="k">Tally is an ASP</p><p class="v">Yes</p></div><div><p class="k">E-invoicing fee</p><p class="v">AED 0</p></div><div><p class="k">Needs</p><p class="v">Active TSS</p></div></div>
       </div>
     </div>
@@ -86,14 +94,15 @@ const breadcrumbs = [
   
     <section id="cost">
       <h2>How much does Tally e-invoicing cost in the UAE?</h2>
-      <p class="sub">E-invoicing in TallyPrime has <b>no per-invoice fee</b>. Tally is an accredited ASP itself, and e-invoicing works as long as your TSS (Tally Software Services) subscription is active. Your main cost is keeping TSS active.</p>
+      <p class="sub">TallyPrime is an accredited ASP itself, so there is <b>no ASP fee, no connector and no platform fee</b>, and no per-invoice fee. E-invoicing works as long as your TSS (Tally Software Services) subscription is active. Set it up yourself for free, or we do it for <b>{aed(PRICES.help)} one time</b>.</p>
+      <PriceBox sw="tally" />
+      <h3 class="sm">What you pay Tally</h3>
       <div class="tablewrap"><table class="stack"><thead><tr><th>Item</th><th>About AED</th><th>Note</th></tr></thead><tbody>
         <tr><td>E-invoicing per invoice</td><td class="tot" data-label="About AED">0</td><td class="txt" data-label="Note">Included with active TSS</td></tr>
         <tr><td>TSS renewal, Silver (single user)</td><td data-label="About AED">468 a year</td><td class="txt" data-label="Note">Keeps e-invoicing working</td></tr>
         <tr><td>TSS renewal, Gold (multi-user)</td><td data-label="About AED">1,404 a year</td><td class="txt" data-label="Note">Keeps e-invoicing working</td></tr>
         <tr><td>New TallyPrime Gold licence</td><td data-label="About AED">7,020 one time</td><td class="txt" data-label="Note">Includes 1 year of TSS</td></tr>
         <tr><td>TallyPrime subscription, single user</td><td data-label="About AED">78 a month</td><td class="txt" data-label="Note">Instead of buying a licence</td></tr>
-        <tr><td>Our setup (optional)</td><td data-label="About AED">1,500 one time</td><td class="txt" data-label="Note">Or do it yourself free</td></tr>
       </tbody></table></div>
       <p class="small">Licence and TSS prices are approximate prices from Tally partners in the UAE. Check with your Tally partner.</p>
     </section>
@@ -107,7 +116,7 @@ const breadcrumbs = [
         </div>
         <div class="handle-side">
           <h4>Or we handle it for you</h4>
-          <p class="price">AED 1,500<small>one time</small></p>
+          <p class="price">{aed(PRICES.help)}<small>one time</small></p>
           <ul><li>Release, TSS and Tally.NET ID checked</li><li>Your customer TRNs, VAT codes and items checked and fixed</li><li>Registration and EmaraTax appointment done for you</li><li>A test invoice and credit note sent and checked</li><li>Rejected invoices fixed and your staff shown how it works</li></ul>
           <a class="btn-wa" id="helpWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> We'll do it for you</a>
         </div>
@@ -121,19 +130,24 @@ const breadcrumbs = [
     <section>
       <h2>Things to know before you start</h2>
       <ul class="warn"><li><b>Keep TSS active.</b> E-invoicing in TallyPrime needs an active TSS subscription. Renew it before it lapses.</li><li><b>Indian licences will need to change.</b> An Indian TallyPrime licence can be used for registration now, but Tally says registration will soon need an International licence.</li><li><b>Discounts and charges need a reason.</b> UAE e-invoicing needs a reason whenever a discount, charge or excise amount changes the invoice value.</li><li><b>Branches don't register again.</b> Once your head office is registered, branches can issue e-invoices under the same setup.</li><li><b>Supplier e-invoices are not received in Tally yet.</b> Check with your Tally partner for updates.</li></ul>
+      <p class="callout">Switching to TallyPrime from QuickBooks or Excel? <a href="/switch-accounting-software">We move your data →</a></p>
     </section>
     
-    <section class="sources"><h2>Sources</h2><ul><li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li><li><a href="https://help.tallysolutions.com/uae-e-invoicing-in-tallyprime/" target="_blank" rel="noopener">Tally Help: UAE e-invoicing in TallyPrime</a></li></ul><p class="small">Prices and rules checked against these sources on 9 November 2026. We update this page when they change.</p></section>
+    <section class="sources"><h2>Sources</h2><ul><li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li><li><a href="https://help.tallysolutions.com/uae-e-invoicing-in-tallyprime/" target="_blank" rel="noopener">Tally Help: UAE e-invoicing in TallyPrime</a></li></ul><p class="small">Prices and rules checked against these sources on {PRICES_CHECKED}. We update this page when they change.</p></section>
     <section>
       <h2>What is the e-invoicing deadline for Tally users?</h2>
       <p class="sub">Businesses under AED 50 million revenue must appoint an ASP by <b>31 March 2027</b> and go live on <b>1 July 2027</b>. The fine for appointing late is <b>AED 5,000 a month</b>. After go-live, each invoice not issued electronically can be fined AED 100, up to AED 5,000 a month. Businesses over AED 50 million had to appoint by 30 October 2026 and go live on 1 January 2027.</p>
     </section>
     <section>
       <h2>Tally e-invoicing: common questions</h2>
-      <div class="faq"><details><summary>Is Tally e-invoicing free in the UAE?</summary><p>Yes, there is no per-invoice fee. E-invoicing is included in TallyPrime as long as your TSS subscription is active.</p></details><details><summary>Is Tally an accredited service provider (ASP)?</summary><p>Yes. Tally Software Solutions FZCO is an accredited ASP, so TallyPrime users appoint Tally on EmaraTax and do not need another provider.</p></details><details><summary>Do I need TSS for Tally e-invoicing?</summary><p>Yes. Your TSS must be active and you need a Tally.NET ID. Silver TSS renewal costs about AED 468 a year and Gold about AED 1,404 a year.</p></details><details><summary>Can I use an Indian TallyPrime licence for UAE e-invoicing?</summary><p>For now, yes. Tally says registration will soon be supported only with an International licence, so plan the switch.</p></details><details><summary>Which Tally version do I need?</summary><p>The latest TallyPrime release. Update before you start, because UAE e-invoicing comes in recent releases.</p></details><details><summary>Do branches need to register separately?</summary><p>No. Once your head office is registered, branches can issue e-invoices using the same setup.</p></details><details><summary>How do I set up e-invoicing in TallyPrime?</summary><p>Enable e-Invoicing in F11, open EmaraTax from Tally and select Tally Software Solutions FZCO as your ASP, then press S in Tally to complete registration. The five steps on this page explain each one.</p></details><details><summary>Can you set up Tally e-invoicing for me?</summary><p>Yes. We handle the full setup for AED 1,500 one time, including fixing your masters, registration, testing and any rejected invoice.</p></details><details><summary>What is the e-invoicing deadline for Tally users?</summary><p>The same as every business. Businesses under AED 50 million revenue must appoint an ASP by 31 March 2027 and go live on 1 July 2027. The fine for appointing late is AED 5,000 a month.</p></details></div>
+      <div class="faq">
+        {faqs.map((f) => (
+          <details><summary>{f.q}</summary><p set:html={f.html ?? f.a} /></details>
+        ))}
+      </div>
     </section>
     <section class="final">
-      <div><h2>Set it up yourself, or let us do it</h2><p class="sub">Stuck on a step, or rather not do it at all? Message us and we handle it for AED 1,500.</p></div>
+      <div><h2>Set it up yourself, or let us do it</h2><p class="sub">Stuck on a step, or rather not do it at all? Message us and we handle it for {aed(PRICES.help)}.</p></div>
       <a class="btn-wa" id="finalWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> Ask us on WhatsApp</a>
     </section>
     <section>
@@ -141,7 +155,7 @@ const breadcrumbs = [
       <div class="more"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/quickbooks-desktop">QuickBooks Desktop<span>Needs an ASP</span></a><a href="/excel">Excel / no software<span>Needs an ASP</span></a><a href="/zoho-books">Zoho Books<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/other-software">Other software<span>Get a price</span></a><a href="/#compare">Compare all<span>Side by side</span></a></div>
     </section>
     <footer>
-      <span>Prices checked: 9 November 2026</span>
+      <span>Prices checked: {PRICES_CHECKED}</span>
       <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
     </footer>
   </main>
