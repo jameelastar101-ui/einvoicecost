@@ -1,21 +1,32 @@
 # einvoicecost.ae
 
-> UAE e-invoicing cost calculator and done-for-you setup. Shows the exact price upfront for your software and your exact invoice count, with no slabs or brackets. Most providers only quote after a sales call. Prices updated: 9 November 2026. Prices in AED, excluding 5% VAT.
+> UAE e-invoicing cost calculator and done-for-you setup. Shows the exact price upfront for your software and your exact invoice count, with no slabs or brackets. Most providers only quote after a sales call. Prices updated: 11 November 2026. Prices in AED, excluding 5% VAT.
 
 ## Key facts
-- UAE businesses under AED 50 million revenue must appoint an Accredited Service Provider (ASP) by 31 March 2027 and go live with e-invoicing on 1 July 2027.
+- UAE businesses under AED 50 million revenue must appoint an Accredited Service Provider (ASP) by 31 March 2027 and go live with e-invoicing on 1 July 2027. Businesses with revenue of AED 50 million and above had to appoint by 30 October 2026 and go live on 1 January 2027.
 - Fine for appointing an ASP late: AED 5,000 a month. After go-live, each invoice not issued electronically can be fined AED 100, up to AED 5,000 a month.
-- QuickBooks (Online and Desktop) and Excel are not ASPs, so they need an outside ASP and a connection. einvoicecost.ae handles the full setup.
+- QuickBooks (Online and Desktop), Excel and most other software are not ASPs, so they need an outside ASP and a connection. einvoicecost.ae handles the full setup.
 - Zoho Books, TallyPrime and Wafeq are ASPs themselves (built-in e-invoicing).
 - B2C sales are outside the UAE e-invoicing system.
 
-## Prices (first year for up to 500 invoices, then AED 500 a year)
-- QuickBooks Online: AED 4,500 first year (ASP registration 1,000 + setup 3,000 + e-invoicing 500)
-- QuickBooks Desktop: AED 5,500 first year (1,000 + 4,000 + 500)
-- Excel / no software: AED 3,500 first year (1,000 + 2,000 + 500)
-- Above 500 invoices: you pay for your exact number of invoices, no slabs or brackets. Supplier invoices you receive are not counted.
-- Zoho Books, Tally, Wafeq: e-invoicing built in; optional done-for-you setup AED 1,500.
-- Other software (Xero, Odoo, Sage, SAP, Oracle, Dynamics, ERPNext, BUSY and more): price on WhatsApp.
+## Prices (AED, excluding 5% VAT), checked 11 November 2026
+
+Software without built-in e-invoicing (QuickBooks Online, QuickBooks Desktop, Excel, any other software):
+- Onboarding & ASP registration: 1,000 one time
+- Setup: 1,500 one time
+- Auto-send connector: QuickBooks Online 2,000; QuickBooks Desktop 3,000; Excel not needed (upload); other software quoted on WhatsApp
+- Platform fee: 1,000 per year
+- E-invoicing: 500 per year for up to 500 invoices, then exact invoice count, no slabs
+- First year at 500 invoices: QuickBooks Online 6,000; QuickBooks Desktop 7,000; Excel 4,000; other software 4,000 + connector
+- Every year after at 500 invoices: 1,500
+
+Built-in e-invoicing (Zoho Books, TallyPrime, Wafeq): no ASP fee, no connector, no platform fee. Optional setup by us: 1,500 one time.
+
+Switching software: we move data from QuickBooks or Excel to Zoho Books, TallyPrime or Wafeq. Price depends on the data; fixed quote on WhatsApp. Page: https://einvoicecost.ae/switch-accounting-software
+
+Deadlines: revenue under AED 50M appoint ASP by 31 March 2027, go live 1 July 2027. Revenue AED 50M and above appoint by 30 October 2026, go live 1 January 2027. Late appointment fine AED 5,000 a month.
+
+Above 500 invoices you pay for your exact number of invoices, no slabs or brackets. Supplier invoices you receive are not counted.
 
 ## Pages
 - [Calculator (home)](https://einvoicecost.ae/): exact price by software and invoices per year
@@ -26,6 +37,7 @@
 - [Tally](https://einvoicecost.ae/tally)
 - [Wafeq](https://einvoicecost.ae/wafeq)
 - [Other software](https://einvoicecost.ae/other-software)
+- [Switch to Zoho Books, Tally or Wafeq](https://einvoicecost.ae/switch-accounting-software)
 - [Full price list](https://einvoicecost.ae/pricing.md)
 
 ## Contact

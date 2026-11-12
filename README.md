@@ -14,9 +14,11 @@ UAE e-invoicing cost calculator and software guides, built with [Astro](https://
 ## Structure
 
 - `src/layouts/BaseLayout.astro` - head, SEO, Open Graph/Twitter, canonical, JSON-LD (ProfessionalService always; FAQPage and BreadcrumbList from `faqs` / `breadcrumbs` props)
-- `src/pages/*.astro` - home calculator + 7 software guides
+- `src/pages/*.astro` - home calculator + 7 software guides + the switch-software page
 - `src/styles/home.css`, `guide.css` - design tokens (`--navy: #12305A`, `--surface: #FFFFFF`, ...) and page styles
-- `src/scripts/*.js` - calculator and per-page price logic
+- `src/config/prices.js` - single source of truth for every price
+- `src/components/PriceBox.astro`, `PriceTable.astro` - shared price box and price tables used on every guide page
+- `src/scripts/*.js` - calculator, price box and per-page behaviour
 - `public/` - `robots.txt`, `llms.txt`, `pricing.md`, `_redirects`, favicon, `og-image.png`
 
 ## Deploy (Netlify)
@@ -25,4 +27,4 @@ Connect the GitHub repo; `netlify.toml` sets build command `npm run build` and p
 
 ## Updating prices
 
-Prices live in the scripts (`src/scripts/index.js` and each guide script) and in the copy, `public/llms.txt` and `public/pricing.md`. Keep them in sync.
+All prices live in ONE file: `src/config/prices.js`. It feeds the home calculator and comparison table (`src/scripts/index.js`), the shared price box (`src/components/PriceBox.astro` + `src/scripts/pricebox.js`), the guide-page price tables (`src/components/PriceTable.astro`) and the price text, FAQ schema and meta descriptions in the pages. Change a price there, rebuild, then update the two hand-written text files `public/llms.txt` and `public/pricing.md` and the "Prices checked" date (`PRICES_CHECKED`).

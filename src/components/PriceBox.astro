@@ -1,0 +1,28 @@
+---
+/**
+ * PriceBox - the ONE price box used on every guide page (same breakdown as the
+ * home page estimate). Prices come from src/config/prices.js; the box itself is
+ * rendered by src/scripts/pricebox.js.
+ *
+ * Usage: <PriceBox sw="qbo" />   (qbo | qbd | excel | other | zoho | tally | wafeq)
+ */
+import '../styles/pricebox.css';
+import { SOFTWARE, price, fmt } from '../config/prices.js';
+export interface Props {
+  sw: 'qbo' | 'qbd' | 'excel' | 'other' | 'zoho' | 'tally' | 'wafeq';
+}
+const { sw } = Astro.props;
+const s = SOFTWARE[sw];
+const p = price(sw, 500);
+---
+
+<div class="pbox" data-sw={sw}>
+  <noscript>
+    <p style="padding:18px 22px">
+      {s.name}: first year AED {fmt(p.firstYear)}{s.other ? ' + connector price' : ''} at 500 invoices, then AED {fmt(p.everyYear)} a year. Prices exclude VAT.
+    </p>
+  </noscript>
+</div>
+<script>
+  import '../scripts/pricebox.js';
+</script>

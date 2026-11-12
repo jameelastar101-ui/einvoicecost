@@ -199,3 +199,14 @@ footer{margin-top:48px;border-top:1px solid var(--line);padding-top:20px;color:v
   .steps5 li::before{width:34px;height:34px;font-size:16px}
 }
 .dock .fy.cta{font-size:16px;line-height:1.25}
+
+/* shared price box + fee boxes + switching callout */
+.covers li b span{font-weight:600;color:var(--muted);font-size:14px;white-space:nowrap}
+.callout{margin-top:22px;padding:16px 18px;border:1px solid #b8cbe4;background:var(--accent-soft);border-radius:var(--r);font-size:15px}
+.callout a{font-weight:700;text-decoration:none}
+.callout a:hover{text-decoration:underline}
+
+/* switch-software page: stay-or-switch table */
+table.swt{min-width:680px;font-size:14px}
+table.swt th,table.swt td{text-align:left;white-space:normal;vertical-align:top}
+table.swt td:first-child{color:var(--muted);font-size:13px;width:24%}
