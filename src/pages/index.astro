@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../components/SiteFooter.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/home.css';
 import { PRICES, PRICES_CHECKED, aed, firstYearText, everyYearText } from '../config/prices.js';
@@ -26,7 +27,8 @@ const faqs = [
   },
   {
     q: "How much does e-invoicing cost in the UAE?",
-    a: `It depends on your software and how many invoices you send. With us, the first year for up to 500 invoices is AED ${qboFy} for QuickBooks Online, AED ${qbdFy} for QuickBooks Desktop and AED ${excelFy} for Excel. For any other software it is AED ${otherFy} plus the connector, which we quote on WhatsApp. After that it is AED ${ny} a year: the ${aed(PRICES.platform)} platform fee plus ${aed(PRICES.feeMin)} for your invoices. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Zoho Books, TallyPrime and Wafeq have e-invoicing built in, with no ASP or platform fee. Prices exclude VAT.`
+    a: `It depends on your software and how many invoices you send. With us, the first year for up to 500 invoices is AED ${qboFy} for QuickBooks Online, AED ${qbdFy} for QuickBooks Desktop and AED ${excelFy} for Excel. For any other software it is AED ${otherFy} plus the connector, which we quote on WhatsApp. After that it is AED ${ny} a year: the ${aed(PRICES.platform)} platform fee plus ${aed(PRICES.feeMin)} for your invoices. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Zoho Books, TallyPrime and Wafeq have e-invoicing built in, with no ASP or platform fee. Prices exclude VAT.`,
+    html: `It depends on your software and how many invoices you send. With us, the first year for up to 500 invoices is AED ${qboFy} for QuickBooks Online, AED ${qbdFy} for QuickBooks Desktop and AED ${excelFy} for Excel. For any other software it is AED ${otherFy} plus the connector, which we quote on WhatsApp. After that it is AED ${ny} a year: the ${aed(PRICES.platform)} platform fee plus ${aed(PRICES.feeMin)} for your invoices. Above 500, you pay for your exact number of invoices, with no slabs or brackets. Zoho Books, TallyPrime and Wafeq have e-invoicing built in, with no ASP or platform fee. Prices exclude VAT. <a href="/blog/uae-e-invoicing-cost">Read the complete UAE e-invoicing cost guide</a>.`
   },
   {
     q: "What is the auto-send connector?",
@@ -220,7 +222,7 @@ const faqs = [
         <div><h2>Ready before the deadline?</h2><p class="sub">Message us your software and invoice count. We reply with your price and next steps.</p></div>
         <a class="btn-wa" id="finalWa" href="#" target="_blank" rel="noopener" style="padding:14px 22px;font-size:16px">Message us on WhatsApp</a>
       </section>
-      <footer class="pfoot"><span>Prices checked: {PRICES_CHECKED}</span><span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span></footer>
+      <SiteFooter />
     </main>
 
   </div>

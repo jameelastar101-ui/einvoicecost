@@ -1,0 +1,465 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, invoiceFee, zohoFee, price, firstYearText, everyYearText, connectorText } from '../../config/prices.js';
+
+/** Update these two whenever prices or rules change. */
+const PUBLISHED = '2026-11-13';
+const UPDATED_ISO = '2026-11-13';
+const UPDATED = '13 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/uae-e-invoicing-cost';
+const N0 = P.feeCovered; // 500
+const first = (k: string, n = N0) => price(k, n).firstYear;
+const every = (k: string, n = N0) => price(k, n).everyYear;
+const avg = (n: number) => (invoiceFee(n) / n).toFixed(2);
+const vat = (n: number) => fmt(n * 1.05);
+
+const qboFy = fmt(first('qbo'));
+const qbdFy = fmt(first('qbd'));
+const xlFy = fmt(first('excel'));
+const ny = everyYearText();
+const perExtra = P.feePerExtra.toFixed(2);
+const connQbo = connectorText('qbo');
+const connQbd = connectorText('qbd');
+const oneTime = P.onboarding + P.setup; // before connector
+const zoho = (n: number) => fmt(zohoFee(n));
+
+const title = 'UAE E-Invoicing Cost 2027: Complete Price Guide, Formula & Examples';
+const description =
+  'How much does e-invoicing cost in the UAE? Exact prices for QuickBooks, Excel, Zoho Books, TallyPrime, Wafeq and other software, the price formula, worked examples, hidden costs, deadlines and penalties.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your e-invoicing cost guide. I use [software], about [number] invoices a year. Please send me my price.');
+
+// Invoice counts used in the volume and full price tables
+const COUNTS = [300, 500, 800, 1000, 1500, 2000, 3000, 5000, 7500, 10000];
+
+type FAQ = { q: string; a: string };
+
+const costFaqs: FAQ[] = [
+  { q: 'How much does e-invoicing cost in the UAE?', a: `It depends on your accounting software and how many invoices you send. With einvoicecost.ae, the first year for up to ${N0} invoices costs ${aed(first('qbo'))} for QuickBooks Online, ${aed(first('qbd'))} for QuickBooks Desktop, ${aed(first('excel'))} for Excel, and ${aed(first('other'))} plus a connector for other software. Every year after costs ${aed(every('excel'))}. Zoho Books, TallyPrime and Wafeq have e-invoicing built in, so there is no ASP or platform fee; setup is free if you do it yourself or ${aed(P.help)} if we do it. Prices exclude 5% VAT.` },
+  { q: 'Is e-invoicing free in the UAE?', a: 'The government does not charge you for e-invoicing, but you must use an accredited service provider (ASP). It can be close to free if your accounting software is an ASP itself: TallyPrime includes it with an active TSS subscription and Wafeq includes it in paid plans. Zoho Books charges for e-invoicing packs. QuickBooks, Excel and most other software need an outside ASP, which charges a fee.' },
+  { q: 'What is the cheapest way to comply with UAE e-invoicing?', a: `If you already use TallyPrime or Wafeq, setting it up yourself is the cheapest, because e-invoicing is included. If you use QuickBooks or Excel, the cheapest route with einvoicecost.ae is the Excel upload option at ${aed(first('excel'))} in the first year and ${aed(every('excel'))} a year after, for up to ${N0} invoices. Switching software can lower the yearly cost but adds migration and retraining costs.` },
+  { q: 'How is the e-invoicing price calculated on einvoicecost.ae?', a: `First year = onboarding and ASP registration ${aed(P.onboarding)} + setup ${aed(P.setup)} + auto-send connector + platform fee ${aed(P.platform)} + invoice fee. The invoice fee is ${aed(P.feeMin)} for up to ${N0} invoices a year, plus AED ${perExtra} for each invoice above ${N0}. Every year after = platform fee ${aed(P.platform)} + invoice fee. The connector is ${aed(P.connector.qbo)} for QuickBooks Online, ${aed(P.connector.qbd)} for QuickBooks Desktop, not needed for Excel, and quoted for other software.` },
+  { q: 'Does the price per invoice go down as volume grows?', a: `Yes. The first ${N0} invoices cost ${aed(P.feeMin)} in total, and each invoice above ${N0} costs AED ${perExtra}. Because the fixed ${aed(P.feeMin)} is spread over more invoices, the average price per invoice falls from AED ${avg(500)} at 500 invoices to about AED ${avg(1000)} at 1,000, AED ${avg(2000)} at 2,000 and AED ${avg(10000)} at 10,000. It never goes below AED ${perExtra}. There are no slabs, so you pay for your exact invoice count.` },
+  { q: 'How much does QuickBooks Online e-invoicing cost in the UAE?', a: `With einvoicecost.ae, ${aed(first('qbo'))} in the first year for up to ${N0} invoices: onboarding ${aed(P.onboarding)}, setup ${aed(P.setup)}, auto-send connector ${aed(P.connector.qbo)}, platform fee ${aed(P.platform)} and invoices ${aed(P.feeMin)}. Then ${aed(every('qbo'))} a year. Your QuickBooks subscription is separate.` },
+  { q: 'How much does QuickBooks Desktop e-invoicing cost in the UAE?', a: `With einvoicecost.ae, ${aed(first('qbd'))} in the first year for up to ${N0} invoices, because the auto-send connector installed on your QuickBooks computer costs ${aed(P.connector.qbd)}. Then ${aed(every('qbd'))} a year.` },
+  { q: 'How much does e-invoicing cost without accounting software?', a: `With einvoicecost.ae, ${aed(first('excel'))} in the first year for up to ${N0} invoices using a ready Excel template and upload portal, then ${aed(every('excel'))} a year. No connector is needed.` },
+  { q: 'How much does Zoho Books e-invoicing cost?', a: `Zoho Books is an ASP itself. You need the Professional plan or higher (about AED 90 a month on yearly billing) and you buy one-time e-invoicing packs: about AED ${zoho(500)} for 500, AED ${zoho(1000)} for 1,000, AED ${zoho(5000)} for 5,000 and AED ${zoho(10000)} for 10,000. The first 100 are free once. Setup is free if you do it yourself, or ${aed(P.help)} with us.` },
+  { q: 'Is Tally e-invoicing free in the UAE?', a: `There is no per-invoice fee in TallyPrime while your TSS subscription is active. TSS Silver renewal is about AED 468 a year. Setup is free if you do it yourself, or ${aed(P.help)} with us.` },
+  { q: 'Do invoices I receive from suppliers count in the price?', a: 'Not with einvoicecost.ae. Our invoice fee counts only the sales invoices and credit notes you send. Some providers count received documents too, which can double the count, so ask before you sign.' },
+  { q: 'Do I need e-invoicing if I only sell to consumers (B2C)?', a: 'B2C transactions are excluded from UAE e-invoicing for now. If you also sell to businesses or government, those invoices are in scope.' },
+  { q: 'Is a PDF invoice still valid after e-invoicing starts?', a: 'Not for invoices in scope. They must be sent as structured e-invoices (PINT AE format) through an accredited service provider. A PDF or scanned invoice does not count.' },
+  { q: 'What is the deadline for UAE e-invoicing?', a: 'Businesses with revenue under AED 50 million must appoint an ASP by 31 March 2027 and go live on 1 July 2027. Businesses with AED 50 million or more had to appoint by 30 October 2026 and go live on 1 January 2027. Government entities go live on 1 October 2027.' },
+  { q: 'What is the penalty for not appointing an ASP on time?', a: 'AED 5,000 for each month under Cabinet Decision No. 106 of 2025. Not issuing an e-invoice or e-credit note can cost AED 100 each, up to AED 5,000 a month for each type.' },
+  { q: 'What is an ASP?', a: "An Accredited Service Provider approved by the UAE Ministry of Finance. It checks each invoice, converts it to the UAE format (PINT AE), sends it through the Peppol network to your customer's ASP and reports the data to the Federal Tax Authority. You appoint your ASP on EmaraTax." },
+  { q: 'Do both the seller and the buyer need an ASP?', a: 'Yes. Each business in scope appoints one ASP, which handles the e-invoices it sends and receives.' },
+  { q: 'Can I keep using QuickBooks or Excel?', a: 'Yes. QuickBooks and Excel are not ASPs, so they need an outside ASP plus a connector (QuickBooks) or an upload template (Excel). You do not have to change your accounting software.' },
+  { q: 'Is it cheaper to switch to Zoho, Tally or Wafeq?', a: 'The yearly e-invoicing cost is lower on built-in software, but switching adds a one-time data migration and staff retraining. For many small businesses with years of history in QuickBooks, staying is simpler. We quote migration on WhatsApp after checking your data.' },
+  { q: 'How long does e-invoicing setup take?', a: 'Usually about 1 week for Excel, 1 to 2 weeks for QuickBooks Online, 2 to 3 weeks for QuickBooks Desktop, and a few hours to a day for Zoho Books, TallyPrime or Wafeq if your data is clean.' },
+  { q: 'Are e-invoicing prices including VAT?', a: 'No. All einvoicecost.ae prices exclude 5% VAT. Multiply by 1.05 for the price including VAT.' },
+  { q: 'How much does e-invoicing cost for a group of companies?', a: 'Each company (each TRN) is set up and appointed separately, so each has its own setup and yearly fees. Transactions between members of the same tax group are excluded from e-invoicing for two years from 1 January 2027. Message us on WhatsApp for a group quote.' },
+];
+
+const moreGroups: { title: string; items: FAQ[] }[] = [
+  { title: 'Basics', items: [
+    { q: 'What is e-invoicing in the UAE?', a: "E-invoicing means sending invoices as structured data (an XML file in the PINT AE format) through an accredited service provider, instead of as PDF or paper. The provider checks each invoice, delivers it to your customer's provider over the Peppol network and reports the data to the Federal Tax Authority." },
+    { q: 'What is DCTCE and the five-corner model?', a: "DCTCE (Decentralised Continuous Transaction Control and Exchange) is the name of the UAE e-invoicing model. It works in five corners: the seller (1) sends the invoice to its ASP (2), which delivers it to the buyer's ASP (3), which passes it to the buyer (4), and the invoice data is reported to the FTA (5)." },
+    { q: 'What is PINT AE?', a: 'PINT AE is the UAE version of the Peppol International Invoice standard. It defines the format and the required fields of every UAE e-invoice. Your ASP converts your invoice into PINT AE.' },
+    { q: 'What is a Peppol ID?', a: "Your business's address on the Peppol network. It is created when you register with your ASP, and other businesses' providers use it to deliver e-invoices to you." },
+    { q: 'What are the benefits of e-invoicing for a small business?', a: 'Fewer invoice errors, faster delivery to customers, invoices checked before they are sent, less manual VAT work and a cleaner record if the FTA asks questions.' },
+  ] },
+  { title: 'Deadlines and scope', items: [
+    { q: 'Is there a minimum business size for e-invoicing in the UAE?', a: 'No. There is no small-business exemption. Businesses with revenue under AED 50 million are in the second phase: appoint an ASP by 31 March 2027 and go live on 1 July 2027. Only some transactions, such as sales to consumers (B2C), are excluded for now.' },
+    { q: 'What is the e-invoicing pilot or voluntary phase?', a: 'Businesses that are ready can start e-invoicing voluntarily from 1 July 2026, before their mandatory phase. Penalties apply only once your mandatory phase starts.' },
+  ] },
+  { title: 'Choosing and appointing an ASP', items: [
+    { q: 'How do I appoint an ASP on EmaraTax?', a: 'Log in to EmaraTax, open your business profile, go to the E-Invoicing section, select your ASP from the list, verify with your email and TIN, and submit. With TallyPrime and Zoho Books you start this step from inside the software. We guide you through it on a short call.' },
+    { q: 'How do I know if an e-invoicing provider is accredited?', a: "Check the Ministry of Finance list of eInvoicing Accredited Service Providers, which shows each provider's legal company name. It listed 86 providers on 11 November 2026. A provider that is not on the list may be reselling an accredited one." },
+    { q: 'How do I choose an e-invoicing service provider?', a: 'Compare the total cost for the first year and every year after, whether received invoices are counted, whether connecting your software is included, who fixes rejected invoices, how fast they reply, and whether the contract renews automatically.' },
+    { q: 'Is QuickBooks an accredited service provider in the UAE?', a: 'No. QuickBooks Online and QuickBooks Desktop are accounting software, not ASPs. QuickBooks users appoint an outside ASP and connect it to QuickBooks with a connector.' },
+    { q: 'Is Zoho Books an accredited service provider in the UAE?', a: 'Yes. Zoho is on the Ministry of Finance list as Zoho Software Trading LLC, so Zoho Books users appoint Zoho on EmaraTax and need no other provider. TallyPrime (Tally Software Solutions FZCO) and Wafeq are also on the list.' },
+    { q: 'Can my accountant set up e-invoicing for me?', a: 'Yes. An accountant or e-invoicing consultant can check your data, connect your software, test and go live for you. You still approve the ASP appointment on EmaraTax, usually with a one-time code.' },
+  ] },
+  { title: 'Issuing, correcting and receiving invoices', items: [
+    { q: 'How quickly must an e-invoice be issued?', a: 'Generally within 14 days of the supply, in line with UAE VAT invoice rules. Once your phase starts, an invoice in scope that is not issued and sent electronically can be fined AED 100.' },
+    { q: 'What information must a UAE e-invoice include?', a: "The fields required by PINT AE, including your TRN, your customer's TRN or tax ID, invoice number and date, item descriptions, quantities, VAT rate and VAT amount for each line, and totals. Missing customer TRNs and VAT codes are common reasons for rejection." },
+    { q: 'Can I edit or cancel an e-invoice after sending it?', a: 'No. Once sent, an e-invoice cannot be edited or deleted. You correct it by issuing an electronic credit note, which also goes through your ASP.' },
+    { q: 'What happens if my e-invoice is rejected?', a: 'Your ASP checks every invoice before sending it. If an invoice fails the checks, it is rejected and you must fix the data and send it again. With einvoicecost.ae, we find the cause and fix rejected invoices for you.' },
+    { q: 'Do I need an ASP to receive invoices from suppliers?', a: "Yes. Your ASP receives e-invoices from your suppliers' providers as well as sending yours. With einvoicecost.ae, received invoices are not counted in our fee." },
+  ] },
+  { title: 'Records and VAT', items: [
+    { q: 'Does e-invoicing replace VAT returns?', a: 'No. You still file your VAT returns as usual. E-invoicing changes how invoices are issued and reported, not your VAT return obligation.' },
+    { q: 'How long must I keep e-invoices?', a: 'For the period set by the Tax Procedures Law, generally 5 years from the end of the tax period. You must give the records to the FTA on request. The October 2026 amendments removed the rule that the data must be stored inside the UAE.' },
+  ] },
+];
+
+const faqs: FAQ[] = [...costFaqs, ...moreGroups.flatMap((g) => g.items)];
+const moreCount = faqs.length - costFaqs.length;
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'UAE e-invoicing cost', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'UAE e-invoicing cost 2027: complete price guide, formula and examples',
+  description:
+    'How much UAE e-invoicing costs for QuickBooks, Excel, Zoho Books, TallyPrime, Wafeq and other software, with the price formula, worked examples, price tables, hidden costs, deadlines and penalties.',
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+// Worked examples (all numbers computed)
+const e1 = price('qbo', 800), e2 = price('qbd', 1500), e3 = price('excel', 300), e4 = price('qbo', 3000), e5 = price('other', 2000);
+const base5 = P.onboarding + P.setup + P.platform; // first year before connector and invoice fee
+
+const toc = [
+  ['answer', 'Quick answer'], ['what', 'What you actually pay for'], ['prices', 'Our prices by software'], ['formula', 'The price formula'],
+  ['volume', 'Price for every invoice count'], ['examples', 'Worked examples'], ['tables', 'Full price tables'], ['software', 'Cost by accounting software'],
+  ['count', 'How to count your invoices'], ['hidden', 'Hidden costs to budget for'], ['budget', 'Budget examples by business'],
+  ['models', 'How e-invoicing pricing works in the market'], ['switch', 'Keep your software or switch?'], ['deadlines', 'Deadlines'],
+  ['penalties', 'Penalties: the cost of doing nothing'], ['scope', 'Who must use e-invoicing'], ['basics', 'E-invoicing basics in plain words'],
+  ['start', 'How to get started in 5 steps'], ['faq', 'Cost questions'], ['more', `${moreCount} more questions about UAE e-invoicing`], ['sources', 'Sources'],
+];
+
+const budget = [
+  ['Small trading company', 'Excel', 300, 'excel'],
+  ['Service company', 'QuickBooks Online', 800, 'qbo'],
+  ['Contractor', 'QuickBooks Desktop', 1500, 'qbd'],
+  ['Distributor', 'QuickBooks Online', 3000, 'qbo'],
+] as const;
+const guides = [
+  ['QuickBooks Online', '/quickbooks-online'], ['QuickBooks Desktop', '/quickbooks-desktop'], ['Excel', '/excel'],
+  ['Zoho Books', '/zoho-books'], ['Tally', '/tally'], ['Wafeq', '/wafeq'], ['Other software', '/other-software'],
+];
+const penalty6 = 6 * 5000;
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › Blog › UAE e-invoicing cost</p>
+      <p class="eyebrow">Blog · Complete price guide</p>
+      <h1>UAE e-invoicing cost 2027: the complete price guide</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>UAE e-invoicing costs between <b>AED 0 and about AED {fmt(Math.round(first('qbd') / 1000) * 1000)} in the first year</b> for a small business, depending on your accounting software and invoice count. With einvoicecost.ae, up to {N0} invoices costs <b>AED {qboFy} for QuickBooks Online</b>, <b>AED {qbdFy} for QuickBooks Desktop</b>, <b>AED {xlFy} for Excel</b> and <b>AED {fmt(first('other'))} plus a connector</b> for other software in the first year, then <b>AED {ny} a year</b>. Above {N0} invoices, add <b>AED {perExtra} per invoice</b>.</p>
+        <p><b>Zoho Books, TallyPrime and Wafeq</b> have e-invoicing built in: no ASP fee, no connector and no platform fee. Setup is free if you do it yourself, or {aed(P.help)} if we do it. Businesses under AED 50 million revenue must appoint an ASP by <b>31 March 2027</b>.</p>
+        <div class="facts">
+          <div><p class="k">Up to {N0} invoices</p><p class="v">{aed(P.feeMin)} a year</p></div>
+          <div><p class="k">Each invoice above {N0}</p><p class="v">AED {perExtra}</p></div>
+          <div><p class="k">Every year after</p><p class="v">{aed(P.platform)} + invoice fee</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="what">
+      <h2>What you actually pay for</h2>
+      <p>The UAE government does not charge businesses for e-invoicing. What you pay for is the service that sends your invoices in the government format. Every business in scope must appoint an <b>Accredited Service Provider (ASP)</b>, approved by the Ministry of Finance, to do this.</p>
+      <p>Your total e-invoicing cost has three parts:</p>
+      <ul class="know">
+        <li><b>The ASP and its setup.</b> Either your accounting software is an ASP itself (Zoho Books, TallyPrime, Wafeq), or you pay an outside ASP and someone to connect it to your software.</li>
+        <li><b>Your accounting software.</b> Some software needs a higher plan or an active subscription for e-invoicing to work.</li>
+        <li><b>Your own time.</b> Fixing customer TRNs, VAT codes and item data, training staff, and fixing rejected invoices. This is the cost most owners forget.</li>
+      </ul>
+      <p>einvoicecost.ae shows the first two in AED, upfront, and takes most of the third off your hands: we do the setup, data checks, testing and rejected-invoice fixes.</p>
+    </section>
+
+    <section id="prices">
+      <h2>Our prices by software</h2>
+      <p>For software without built-in e-invoicing, the price has five parts. Three are paid once. Two are paid every year, in advance.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Part</th><th>How often</th><th>QuickBooks Online</th><th>QuickBooks Desktop</th><th>Excel</th><th>Other software</th></tr></thead><tbody>
+        <tr><td>Onboarding &amp; ASP registration</td><td>One time</td><td>{fmt(P.onboarding)}</td><td>{fmt(P.onboarding)}</td><td>{fmt(P.onboarding)}</td><td>{fmt(P.onboarding)}</td></tr>
+        <tr><td>Setup</td><td>One time</td><td>{fmt(P.setup)}</td><td>{fmt(P.setup)}</td><td>{fmt(P.setup)}</td><td>{fmt(P.setup)}</td></tr>
+        <tr><td>Auto-send connector</td><td>One time</td><td>{connQbo}</td><td>{connQbd}</td><td>Not needed</td><td>Quoted</td></tr>
+        <tr><td>Platform fee</td><td>Every year</td><td>{fmt(P.platform)}</td><td>{fmt(P.platform)}</td><td>{fmt(P.platform)}</td><td>{fmt(P.platform)}</td></tr>
+        <tr><td>Invoice fee (up to {N0})</td><td>Every year</td><td>{fmt(P.feeMin)}</td><td>{fmt(P.feeMin)}</td><td>{fmt(P.feeMin)}</td><td>{fmt(P.feeMin)}</td></tr>
+        <tr><td><b>First year</b></td><td></td><td><b>{qboFy}</b></td><td><b>{qbdFy}</b></td><td><b>{xlFy}</b></td><td><b>{fmt(first('other'))} + connector</b></td></tr>
+        <tr><td><b>Every year after</b></td><td></td><td><b>{ny}</b></td><td><b>{ny}</b></td><td><b>{ny}</b></td><td><b>{ny}</b></td></tr>
+      </tbody></table></div>
+      <p class="small">The <b>auto-send connector</b> sends each invoice from your software to the FTA and your customer automatically. Excel users upload a ready template instead, so they need no connector. For other software (Odoo, Sage, Xero, Microsoft Dynamics, ERPNext and others) every price is the same; only the connector is quoted, because each software connects differently.</p>
+    </section>
+
+    <section id="formula">
+      <h2>The price formula</h2>
+      <p>Use this to work out the price for any invoice count. <b>n</b> is the number of sales invoices and credit notes you send in a year.</p>
+      <div class="formula"><p class="fh">einvoicecost.ae price formula (AED, excl. VAT)</p><pre>{`Invoice fee        = ${P.feeMin}                      if n is ${N0} or less
+                   = ${P.feeMin} + ${perExtra} × (n − ${N0})   if n is more than ${N0}
+
+One-time fees      = Onboarding ${fmt(P.onboarding)} + Setup ${fmt(P.setup)} + Connector
+Connector          = QuickBooks Online ${connQbo}
+                     QuickBooks Desktop ${connQbd}
+                     Excel 0 (you upload)
+                     Other software: quoted on WhatsApp
+
+First year         = One-time fees + Platform fee ${fmt(P.platform)} + Invoice fee
+Every year after   = Platform fee ${fmt(P.platform)} + Invoice fee
+With VAT           = Price × 1.05`}</pre></div>
+      <p class="small">There are no slabs or brackets. Above {N0} invoices you pay for your exact count. More than 10,000 invoices a year: ask us on WhatsApp.</p>
+    </section>
+
+    <section id="volume">
+      <h2>Price for every invoice count: the rate drops as you grow</h2>
+      <p>Most providers sell e-invoicing in slabs or packs, so 501 invoices costs the same as 1,000. We charge for your <b>exact</b> invoice count instead. The first {N0} invoices cost {aed(P.feeMin)} in total, and each invoice after that costs AED {perExtra}.</p>
+      <p>Because the fixed {aed(P.feeMin)} is spread over more invoices, <b>your average price per invoice keeps falling as volume grows</b>, from AED {avg(500)} at {N0} invoices toward AED {perExtra}. It never goes below AED {perExtra}, and adding one invoice never adds more than AED {perExtra}.</p>
+      <div class="tablewrap"><table><thead><tr><th>Invoices a year</th><th>Invoice fee</th><th>Average per invoice</th><th>Every year after (fee + platform)</th></tr></thead><tbody>
+        {COUNTS.map((n) => <tr><td>{fmt(n)}</td><td>{fmt(invoiceFee(n))}</td><td>{avg(n)}{n < N0 ? ' (minimum fee)' : ''}</td><td>{fmt(P.platform + invoiceFee(n))}</td></tr>)}
+      </tbody></table></div>
+    </section>
+
+    <section id="examples">
+      <h2>Worked examples</h2>
+      <div class="ex"><h3>1. QuickBooks Online, 800 invoices a year</h3><p class="xcalc">{`Invoice fee = ${P.feeMin} + ${perExtra} × (800 − ${N0}) = ${fmt(e1.yearly)}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${connQbo} + ${fmt(P.platform)} + ${fmt(e1.yearly)} = ${fmt(e1.firstYear)}
+Every year after = ${fmt(P.platform)} + ${fmt(e1.yearly)} = ${fmt(e1.everyYear)}`}</p><p class="xans">AED {fmt(e1.firstYear)} in the first year, then AED {fmt(e1.everyYear)} a year.</p></div>
+      <div class="ex"><h3>2. QuickBooks Desktop, 1,500 invoices a year</h3><p class="xcalc">{`Invoice fee = ${P.feeMin} + ${perExtra} × 1,000 = ${fmt(e2.yearly)}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${connQbd} + ${fmt(P.platform)} + ${fmt(e2.yearly)} = ${fmt(e2.firstYear)}
+Every year after = ${fmt(P.platform)} + ${fmt(e2.yearly)} = ${fmt(e2.everyYear)}`}</p><p class="xans">AED {fmt(e2.firstYear)} in the first year, then AED {fmt(e2.everyYear)} a year.</p></div>
+      <div class="ex"><h3>3. Excel, 300 invoices a year</h3><p class="xcalc">{`Invoice fee = ${P.feeMin} (300 is under ${N0})
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + 0 + ${fmt(P.platform)} + ${fmt(e3.yearly)} = ${fmt(e3.firstYear)}
+Every year after = ${fmt(P.platform)} + ${fmt(e3.yearly)} = ${fmt(e3.everyYear)}`}</p><p class="xans">AED {fmt(e3.firstYear)} in the first year, then AED {fmt(e3.everyYear)} a year.</p></div>
+      <div class="ex"><h3>4. QuickBooks Online, 3,000 invoices a year</h3><p class="xcalc">{`Invoice fee = ${P.feeMin} + ${perExtra} × 2,500 = ${fmt(e4.yearly)}
+First year = ${fmt(oneTime + P.connector.qbo)} + ${fmt(P.platform)} + ${fmt(e4.yearly)} = ${fmt(e4.firstYear)}
+Every year after = ${fmt(P.platform)} + ${fmt(e4.yearly)} = ${fmt(e4.everyYear)}
+Average per invoice = ${fmt(e4.yearly)} ÷ 3,000 = ${avg(3000)}`}</p><p class="xans">AED {fmt(e4.firstYear)} in the first year, then AED {fmt(e4.everyYear)} a year.</p></div>
+      <div class="ex"><h3>5. Odoo (other software), 2,000 invoices a year</h3><p class="xcalc">{`Invoice fee = ${P.feeMin} + ${perExtra} × 1,500 = ${fmt(e5.yearly)}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + connector + ${fmt(P.platform)} + ${fmt(e5.yearly)} = ${fmt(base5 + e5.yearly)} + connector
+Every year after = ${fmt(P.platform)} + ${fmt(e5.yearly)} = ${fmt(e5.everyYear)}`}</p><p class="xans">AED {fmt(base5 + e5.yearly)} plus the connector in the first year, then AED {fmt(e5.everyYear)} a year.</p></div>
+      <div class="ex"><h3>6. TallyPrime, 1,000 invoices a year, set up by us</h3><p class="xcalc">{`ASP fee 0, connector 0, platform fee 0 (built in)
+Per-invoice fee 0 (free with active TSS)
+First year = setup ${fmt(P.help)}`}</p><p class="xans">AED {fmt(P.help)} one time, or AED 0 if you do it yourself. Keep TSS active.</p></div>
+      <div class="ex"><h3>7. Zoho Books, 1,000 invoices a year, set up by us</h3><p class="xcalc">{`Zoho pack for 1,000 invoices = about ${zoho(1000)} (paid to Zoho)
+Our setup = ${fmt(P.help)}
+First year = ${fmt(P.help + zohoFee(1000))} + your Zoho plan`}</p><p class="xans">About AED {fmt(P.help + zohoFee(1000))} in the first year plus your Zoho plan, then about AED {zoho(1000)} a year in packs.</p></div>
+      <div class="ex"><h3>8. Adding VAT</h3><p class="xcalc">{`QuickBooks Online, ${N0} invoices: ${qboFy} × 1.05 = ${vat(first('qbo'))}
+Every year after: ${ny} × 1.05 = ${vat(every('qbo'))}`}</p><p class="xans">AED {vat(first('qbo'))} including VAT in the first year, then AED {vat(every('qbo'))} a year.</p></div>
+    </section>
+
+    <section id="tables" class="wide">
+      <h2>Full price tables</h2>
+      <h3 class="sm">First year (AED, excl. VAT)</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Invoices a year</th><th>QuickBooks Online</th><th>QuickBooks Desktop</th><th>Excel</th><th>Other software</th><th>Zoho Books*</th><th>TallyPrime</th><th>Wafeq</th></tr></thead><tbody>
+        {COUNTS.map((n) => <tr><td>{fmt(n)}</td><td>{fmt(first('qbo', n))}</td><td>{fmt(first('qbd', n))}</td><td>{fmt(first('excel', n))}</td><td>{fmt(first('other', n))} + connector</td><td>{fmt(first('zoho', n))}</td><td>{fmt(first('tally', n))}</td><td>{fmt(first('wafeq', n))}</td></tr>)}
+      </tbody></table></div>
+      <p class="small">Zoho Books, TallyPrime and Wafeq: add AED {fmt(P.help)} one time if we do the setup. *Zoho figures are approximate e-invoicing pack costs paid to Zoho.</p>
+      <h3 class="sm">Every year after (AED, excl. VAT)</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Invoices a year</th><th>QuickBooks Online</th><th>QuickBooks Desktop</th><th>Excel</th><th>Other software</th><th>Zoho Books*</th><th>TallyPrime</th><th>Wafeq</th></tr></thead><tbody>
+        {COUNTS.map((n) => <tr><td>{fmt(n)}</td><td>{fmt(every('qbo', n))}</td><td>{fmt(every('qbd', n))}</td><td>{fmt(every('excel', n))}</td><td>{fmt(every('other', n))}</td><td>{fmt(every('zoho', n))}</td><td>{fmt(every('tally', n))}</td><td>{fmt(every('wafeq', n))}</td></tr>)}
+      </tbody></table></div>
+      <h3 class="sm">Including 5% VAT</h3>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software ({N0} invoices)</th><th>First year excl. VAT</th><th>VAT 5%</th><th>First year incl. VAT</th><th>Every year after incl. VAT</th></tr></thead><tbody>
+        {([['QuickBooks Online', 'qbo'], ['QuickBooks Desktop', 'qbd'], ['Excel', 'excel']] as const).map(([name, k]) => <tr><td>{name}</td><td>{fmt(first(k))}</td><td>{fmt(first(k) * 0.05)}</td><td>{vat(first(k))}</td><td>{vat(every(k))}</td></tr>)}
+      </tbody></table></div>
+      <p class="small">Your accounting software subscription is separate and paid to the software company.</p>
+    </section>
+
+    <section id="software" class="wide">
+      <h2>Cost by accounting software</h2>
+      <p>The biggest factor in your cost is whether your accounting software is an ASP itself. If it is, e-invoicing is built in. If it is not, you need an outside ASP and a connector or upload.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software</th><th>Is it an ASP?</th><th>What you pay the software company</th><th>Our fees</th></tr></thead><tbody>
+        <tr><td>Zoho Books</td><td class="txt">Yes</td><td class="txt">Professional plan or higher (about AED 90 a month, yearly billing) + one-time packs (500 = {zoho(500)}, 1,000 = {zoho(1000)}, 5,000 = {zoho(5000)})</td><td class="txt">Setup AED {fmt(P.help)}, optional</td></tr>
+        <tr><td>TallyPrime</td><td class="txt">Yes</td><td class="txt">Active TSS (Silver about AED 468 a year). No per-invoice fee.</td><td class="txt">Setup AED {fmt(P.help)}, optional</td></tr>
+        <tr><td>Wafeq</td><td class="txt">Yes</td><td class="txt">Paid plan from about AED 690 a year. E-invoicing included.</td><td class="txt">Setup AED {fmt(P.help)}, optional</td></tr>
+        <tr><td>QuickBooks Online</td><td class="txt">No</td><td class="txt">QuickBooks plan (about AED 77–327 a month)</td><td class="txt">{qboFy} first year, {ny} after</td></tr>
+        <tr><td>QuickBooks Desktop</td><td class="txt">No</td><td class="txt">Your existing licence</td><td class="txt">{qbdFy} first year, {ny} after</td></tr>
+        <tr><td>Excel / no software</td><td class="txt">No</td><td class="txt">Nothing</td><td class="txt">{xlFy} first year, {ny} after</td></tr>
+        <tr><td>Odoo, Sage, Xero, ERPs</td><td class="txt">Usually no</td><td class="txt">Your existing software</td><td class="txt">{fmt(first('other'))} + connector first year, {ny} after</td></tr>
+      </tbody></table></div>
+      <p class="small">Software plan prices are approximate and set by each software company. Check your own plan. Detailed guides: {guides.map(([n, h], i) => <Fragment>{i > 0 ? ' · ' : ''}<a href={h}>{n}</a></Fragment>)}</p>
+    </section>
+
+    <section id="count">
+      <h2>How to count your invoices</h2>
+      <p>Your yearly invoice fee depends on how many invoices you send, so a good estimate saves money.</p>
+      <ul class="know">
+        <li><b>Count:</b> sales invoices and credit notes you send to businesses and government.</li>
+        <li><b>Don't count:</b> invoices you receive from suppliers. They are free in our fee. (Some providers count received documents too, which can double your count. Ask before you sign.)</li>
+        <li><b>Don't count:</b> sales to consumers (B2C). They are outside e-invoicing for now.</li>
+        <li><b>Quick way:</b> look at the invoice numbers you issued last year. The last number minus the first number is your yearly count. Or take one busy month and multiply by 12.</li>
+        <li><b>Growing?</b> Add 10–20%. With exact pricing, if you send fewer invoices than you planned, your next year's fee goes down.</li>
+      </ul>
+    </section>
+
+    <section id="hidden">
+      <h2>Hidden costs to budget for</h2>
+      <p>These are the costs that surprise business owners. Plan for them before you choose a provider.</p>
+      <ul class="know">
+        <li><b>A higher software plan.</b> Zoho Books needs Professional or higher. Free and Standard plans do not include e-invoicing.</li>
+        <li><b>Keeping a subscription active.</b> TallyPrime e-invoicing stops working if TSS lapses.</li>
+        <li><b>Data clean-up.</b> Every business customer needs a correct TRN, every item a VAT code, and addresses must be complete. Missing data is a common reason invoices get rejected. We include this in our setup.</li>
+        <li><b>Old QuickBooks Desktop versions.</b> Some older versions cannot be connected. We check your version first.</li>
+        <li><b>A computer that stays on.</b> With QuickBooks Desktop, invoices go out only while the QuickBooks computer is on and online.</li>
+        <li><b>Received documents counted.</b> Some providers count supplier invoices as well as your sales invoices.</li>
+        <li><b>Pack expiry and overage.</b> Some providers sell yearly packs that expire, and charge extra once a pack runs out.</li>
+        <li><b>Support.</b> Some providers charge extra for WhatsApp or phone support, or reply by email only.</li>
+        <li><b>Several companies.</b> Each company (TRN) is appointed and set up separately.</li>
+        <li><b>Staff time.</b> Rejected invoices must be fixed and resent. We fix rejected invoices for you.</li>
+      </ul>
+    </section>
+
+    <section id="budget">
+      <h2>Budget examples by business</h2>
+      <p>Typical first-year and yearly costs with einvoicecost.ae, excluding VAT and software subscriptions.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business</th><th>Software</th><th>Invoices a year</th><th>First year</th><th>Every year after</th></tr></thead><tbody>
+        {budget.map(([biz, sw, n, k]) => <tr><td>{biz}</td><td>{sw}</td><td>{fmt(n)}</td><td>{fmt(first(k, n))}</td><td>{fmt(every(k, n))}</td></tr>)}
+        <tr><td>Distributor on Odoo</td><td>Other software</td><td>2,000</td><td>{fmt(first('other', 2000))} + connector</td><td>{fmt(every('other', 2000))}</td></tr>
+        <tr><td>Retailer selling to businesses</td><td>TallyPrime</td><td>5,000</td><td>0 (DIY) or {fmt(P.help)}</td><td>0 + TSS</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="models">
+      <h2>How e-invoicing pricing works in the market</h2>
+      <p>Providers price e-invoicing in different ways, which makes comparing hard. These are the common models:</p>
+      <ul class="know">
+        <li><b>Slabs or packs.</b> You buy a block of invoices (for example 1,000 or 5,000) for the year. If you send 1,100, you pay for the next block.</li>
+        <li><b>Licence per company.</b> A monthly or yearly fee for each company (TRN), plus document packs on top.</li>
+        <li><b>Built into the software.</b> Zoho Books, TallyPrime and Wafeq include e-invoicing in the software, sometimes with packs.</li>
+        <li><b>Exact per invoice (our model).</b> A fixed fee covers your first {N0} invoices, then you pay for each invoice you actually send.</li>
+      </ul>
+      <h3 class="sm">7 questions to ask any provider</h3>
+      <ol class="olist">
+        <li>Are you on the Ministry of Finance list of accredited service providers, or do you resell one?</li>
+        <li>What do I pay in total in the first year, and every year after?</li>
+        <li>Do you count invoices I receive, or only invoices I send?</li>
+        <li>What happens if I send more invoices than my pack? Do unused invoices expire?</li>
+        <li>Is connecting my software included, or extra?</li>
+        <li>Who fixes rejected invoices, and how fast do you reply?</li>
+        <li>Does the contract renew automatically, and how much notice do I need to cancel?</li>
+      </ol>
+    </section>
+
+    <section id="switch">
+      <h2>Keep your software or switch?</h2>
+      <p>Moving to Zoho Books, TallyPrime or Wafeq lowers the yearly e-invoicing cost, because they have it built in. But switching has its own costs: moving your data, retraining staff and changing how you work.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>3-year total (our fees)</th></tr></thead><tbody>
+        {([['QuickBooks Online', 'qbo'], ['QuickBooks Desktop', 'qbd'], ['Excel', 'excel']] as const).map(([name, k]) => <tr><td>{name}</td><td>{fmt(first(k))}</td><td>{fmt(every(k))}</td><td>{fmt(every(k))}</td><td><b>{fmt(first(k) + 2 * every(k))}</b></td></tr>)}
+        <tr><td>Zoho Books / TallyPrime / Wafeq (we set it up)</td><td>{fmt(P.help)}</td><td>0</td><td>0</td><td><b>{fmt(P.help)}</b> + software costs</td></tr>
+      </tbody></table></div>
+      <p class="small">Our fees only. Software subscriptions and any data migration are extra.</p>
+      <p><b>Usually keep your software</b> if you have years of history in it and your team knows it well. <b>Consider switching</b> if your QuickBooks Desktop version is old, you want no yearly e-invoicing fee, or you were planning to change software anyway. If you switch, <a href="/switch-accounting-software">we move your data and set up e-invoicing</a>.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Deadlines</h2>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Who</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td>1 January 2027</td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+        <tr><td>Voluntary early adopters</td><td>Before going live</td><td>From 1 July 2026</td></tr>
+      </tbody></table></div>
+      <p class="small">The deadline for large businesses to appoint an ASP was moved to 30 October 2026 by amendments announced in October 2026. Check the Ministry of Finance for any later change.</p>
+    </section>
+
+    <section id="penalties">
+      <h2>Penalties: the cost of doing nothing</h2>
+      <p>Cabinet Decision No. 106 of 2025 sets the e-invoicing penalties. They apply once your phase starts, and they are on top of normal VAT penalties.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not implementing e-invoicing or not appointing an ASP on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+        <tr><td>Not telling your ASP about changes to your business data in time</td><td>AED 1,000 for each day</td></tr>
+      </tbody></table></div>
+      <p>Waiting is not free. Six months without an ASP after the deadline can cost <b>AED {fmt(penalty6)}</b> in fines alone, far more than setting up e-invoicing.</p>
+    </section>
+
+    <section id="scope">
+      <h2>Who must use e-invoicing</h2>
+      <ul class="know">
+        <li><b>In scope:</b> invoices between businesses (B2B) and to government (B2G) in the UAE.</li>
+        <li><b>Excluded for now:</b> sales to consumers (B2C).</li>
+        <li><b>Other exclusions:</b> some transactions are excluded, such as certain government sovereign activities, certain international airline services and exempt financial services.</li>
+        <li><b>Tax groups:</b> transactions between members of the same tax group are excluded for two years from 1 January 2027, under the October 2026 amendments.</li>
+        <li><b>Not sure?</b> If you are VAT-registered and sell to other businesses in the UAE, assume it applies to you and check your case.</li>
+      </ul>
+    </section>
+
+    <section id="basics">
+      <h2>E-invoicing basics in plain words</h2>
+      <ul class="know">
+        <li><b>E-invoice:</b> an invoice sent as structured data (an XML file), not a PDF. The UAE format is called <b>PINT AE</b>.</li>
+        <li><b>ASP:</b> the accredited provider that checks your invoice, converts it to PINT AE and sends it. You appoint your ASP on <b>EmaraTax</b>.</li>
+        <li><b>Peppol:</b> the international network the invoices travel on. When you register, your business gets a <b>Peppol ID</b>, its address on the network.</li>
+        <li><b>How an invoice travels:</b> you create it, your ASP checks and sends it to your customer's ASP, which delivers it to your customer, and the data is reported to the Federal Tax Authority (FTA).</li>
+        <li><b>Both sides need an ASP:</b> the same ASP handles the invoices you send and the ones you receive.</li>
+        <li><b>Mistakes:</b> a sent e-invoice cannot be edited. You correct it with an <b>e-credit note</b>.</li>
+        <li><b>Records:</b> keep your e-invoice records for the period in the Tax Procedures Law (generally 5 years) and give them to the FTA on request. The October 2026 amendments removed the rule that the data must be stored inside the UAE.</li>
+      </ul>
+    </section>
+
+    <section id="start">
+      <h2>How to get started in 5 steps</h2>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Count your invoices</h3></div><p>Sales invoices and credit notes you send in a year. See <a href="#count">how to count</a>.</p></div></li>
+        <li><div><div class="st-head"><h3>Check your software</h3></div><p>Built in (Zoho Books, TallyPrime, Wafeq) or needs an ASP (QuickBooks, Excel, most others).</p></div></li>
+        <li><div><div class="st-head"><h3>See your exact price</h3></div><p>Pick your software and invoice count on the <a href="/">einvoicecost.ae calculator</a>.</p></div></li>
+        <li><div><div class="st-head"><h3>Appoint your ASP on EmaraTax</h3></div><p>Before 31 March 2027 if your revenue is under AED 50 million. We guide you on a short call.</p></div></li>
+        <li><div><div class="st-head"><h3>Test and go live</h3></div><p>Send test invoices and a credit note, fix anything rejected, then switch on. Setup takes about 1 week for Excel, 1–2 weeks for QuickBooks Online and 2–3 weeks for QuickBooks Desktop.</p></div></li>
+      </ol>
+      <p class="callout">Want your exact price without the maths? Pick your software and invoice count on the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>Cost questions</h2>
+      <div class="faq">
+        {costFaqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="more">
+      <h2>{moreCount} more questions about UAE e-invoicing</h2>
+      <p>The questions UAE business owners ask most about how e-invoicing works, answered in plain words.</p>
+      {moreGroups.map((g) => (
+        <Fragment>
+          <h3 class="sm">{g.title}</h3>
+          <div class="faq">{g.items.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div>
+        </Fragment>
+      ))}
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-ministry/mof-initiatives/einvoicing/pre-approved-einvoicing-service-providers" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="https://kpmg.com/us/en/taxnewsflash/news/2025/10/uae-framework-scope-implementation-e-invoicing-system.html" target="_blank" rel="noopener">KPMG: UAE framework, scope and implementation of the e-invoicing system</a></li>
+        <li><a href="https://thenationalnews.com/business/2026/10/19/uae-amends-e-invoicing-regulations-as-implementation-deadline-draws-closer" target="_blank" rel="noopener">The National: UAE amends e-invoicing regulations (October 2026)</a></li>
+        <li><a href="https://www.zoho.com/ae/books/academy/taxes-and-compliance/faq-einvoicing-uae.html" target="_blank" rel="noopener">Zoho Books: UAE e-invoicing FAQ</a></li>
+      </ul>
+      <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. Software plan prices are approximate and set by each software company. This guide is general information, not tax or legal advice.</p>
+    </section>
+
+    <section class="final">
+      <div><h2>Get your exact price</h2><p class="sub">Message us your software and invoice count. We reply with your price and next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>

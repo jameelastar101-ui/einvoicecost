@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../components/SiteFooter.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/guide.css';
 import PriceBox from '../components/PriceBox.astro';
@@ -96,6 +97,7 @@ const breadcrumbs = [
       <h2>How much does Zoho Books e-invoicing cost in the UAE?</h2>
       <p class="sub">Zoho Books is its own ASP, so there is <b>no ASP fee, no connector and no platform fee</b>. You pay Zoho for e-invoicing packs, and you need the Professional plan or higher. The first 100 e-invoicing transactions are free, once. Set it up yourself for free, or we do it for <b>{aed(PRICES.help)} one time</b>.</p>
       <PriceBox sw="zoho" />
+      <p class="small"><a href="/blog/uae-e-invoicing-cost#formula">See how the price is calculated →</a></p>
       <p class="small">Pack cost is approximate, based on Zoho's pack prices. Your Zoho Books plan is extra: Professional costs AED 1,080 a year on yearly billing.</p>
       <h3 class="sm">What you pay Zoho</h3>
       <h3 class="sm">Zoho e-invoicing pack prices (one-time, paid to Zoho)</h3>
@@ -158,10 +160,7 @@ const breadcrumbs = [
       <h2>E-invoicing cost for other software</h2>
       <div class="more"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/quickbooks-desktop">QuickBooks Desktop<span>Needs an ASP</span></a><a href="/excel">Excel / no software<span>Needs an ASP</span></a><a href="/tally">Tally Prime<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/other-software">Other software<span>Get a price</span></a><a href="/#compare">Compare all<span>Side by side</span></a></div>
     </section>
-    <footer>
-      <span>Prices checked: {PRICES_CHECKED}</span>
-      <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
-    </footer>
+    <SiteFooter />
   </main>
   <div class="dock">
     <div class="row">

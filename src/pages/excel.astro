@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../components/SiteFooter.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/guide.css';
 import PriceBox from '../components/PriceBox.astro';
@@ -91,6 +92,7 @@ const breadcrumbs = [
       <p class="sub">With us, <b>AED {fy} in the first year</b> for up to 500 invoices, then <b>AED {ny} a year</b>. One-time costs are onboarding and ASP registration {aed(PRICES.onboarding)}, setup {aed(PRICES.setup)}. There is no connector, because you upload your invoices. Every year you pay the platform fee of {aed(PRICES.platform)} plus {aed(PRICES.feeMin)} for up to 500 invoices. Above 500 invoices, you pay for your exact invoice count, with <b>no slabs or brackets</b>. Most providers only quote after a sales call. Here you see your exact price upfront. All prices in AED, excluding 5% VAT. Count the sales invoices and credit notes you send. Invoices you receive from suppliers are free.</p>
       <PriceBox sw="excel" />
       <PriceTable sw="excel" />
+      <p class="small"><a href="/blog/uae-e-invoicing-cost#formula">See how the price is calculated →</a></p>
       <p class="small">More than 10,000 invoices a year? <a id="bigWa" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a> for a price. The yearly fees are paid in advance.</p>
       <p class="small">No software to buy. You only need Excel.</p>
     </section>
@@ -156,10 +158,7 @@ const breadcrumbs = [
       <h2>E-invoicing cost for other software</h2>
       <div class="more"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/quickbooks-desktop">QuickBooks Desktop<span>Needs an ASP</span></a><a href="/zoho-books">Zoho Books<span>Built-in ASP</span></a><a href="/tally">Tally Prime<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/other-software">Other software<span>Get a price</span></a><a href="/#compare">Compare all<span>Side by side</span></a></div>
     </section>
-    <footer>
-      <span>Prices checked: {PRICES_CHECKED}</span>
-      <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
-    </footer>
+    <SiteFooter />
   </main>
   <div class="dock">
     <div class="row">

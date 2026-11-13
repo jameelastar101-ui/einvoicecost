@@ -124,9 +124,9 @@ tr:last-child td{border-bottom:0}
 .form{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end;padding:22px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
 .form label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
 .form input{font:inherit;color:var(--ink);padding:11px 12px;border:1px solid var(--navy);border-radius:var(--r);background:var(--surface);min-width:0}
-.final{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;margin-top:56px;padding:32px;background:var(--navy);border-radius:6px}
-.final h2{color:var(--on-navy);border:0;padding:0}
-.final .sub{color:var(--sky-muted);margin-top:6px}
+.final{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;margin-top:40px;padding:20px 28px;background:#E8EFF8;border:1px solid #C5D7EE;border-left:6px solid #128C4A;border-radius:6px}
+.final h2{color:var(--navy);border:0;padding:0}
+.final .sub{color:var(--ink);margin-top:6px}
 .btn-wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--wa);color:var(--wa-ink);text-decoration:none;font-weight:700;border-radius:var(--r);padding:14px 22px;font-size:16px;border:0;cursor:pointer;font-family:inherit}
 .btn-wa:hover{filter:brightness(1.08)}
 .btn-wa svg{width:18px;height:18px}
@@ -193,7 +193,7 @@ footer{margin-top:48px;border-top:1px solid var(--line);padding-top:20px;color:v
   .facts div + div{padding-left:0;border-left:0;border-top:1px solid var(--line);margin-top:12px}
   .flow,.cards{grid-template-columns:minmax(0,1fr)}
   .calc-out .val{font-size:28px}
-  .final{padding:24px 20px}
+  .final{padding:16px 18px}
   .handle-big,.handle-side{padding:22px 20px}
   .steps5 li{grid-template-columns:minmax(0,1fr);padding:18px}
   .steps5 li::before{width:34px;height:34px;font-size:16px}
