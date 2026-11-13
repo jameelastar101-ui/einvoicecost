@@ -22,6 +22,44 @@ Software without built-in e-invoicing (QuickBooks Online, QuickBooks Desktop, Ex
 
 Above 500 invoices, you pay for your exact number of invoices (0.75 per extra invoice), with no slabs or brackets. Use the calculator at https://einvoicecost.ae. Paid yearly in advance. Supplier invoices you receive are not counted.
 
+## The price formula
+
+Complete guide with worked examples: https://einvoicecost.ae/blog/uae-e-invoicing-cost
+
+```
+Invoice fee        = 500                      if n is 500 or less
+                   = 500 + 0.75 × (n − 500)   if n is more than 500
+
+One-time fees      = Onboarding 1,000 + Setup 1,500 + Connector
+Connector          = QuickBooks Online 2,000
+                     QuickBooks Desktop 3,000
+                     Excel 0 (you upload)
+                     Other software: quoted on WhatsApp
+
+First year         = One-time fees + Platform fee 1,000 + Invoice fee
+Every year after   = Platform fee 1,000 + Invoice fee
+With VAT           = Price × 1.05
+```
+
+n is the number of sales invoices and credit notes you send in a year.
+
+## Average price per invoice
+
+| Invoices a year | Invoice fee | Average per invoice | Every year after (fee + platform) |
+|---|---|---|---|
+| 300 | 500 | 1.67 (minimum fee) | 1,500 |
+| 500 | 500 | 1.00 | 1,500 |
+| 800 | 725 | 0.91 | 1,725 |
+| 1,000 | 875 | 0.88 | 1,875 |
+| 1,500 | 1,250 | 0.83 | 2,250 |
+| 2,000 | 1,625 | 0.81 | 2,625 |
+| 3,000 | 2,375 | 0.79 | 3,375 |
+| 5,000 | 3,875 | 0.78 | 4,875 |
+| 7,500 | 5,750 | 0.77 | 6,750 |
+| 10,000 | 7,625 | 0.76 | 8,625 |
+
+The average never goes below 0.75.
+
 Other software: send your software name and invoices per year on WhatsApp +971 50 875 9256 for the connector price.
 
 Built-in e-invoicing (Zoho Books, TallyPrime, Wafeq): no ASP fee, no connector, no platform fee. Optional setup by us: 1,500 one time.

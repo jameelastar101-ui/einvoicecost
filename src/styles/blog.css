@@ -1,0 +1,31 @@
+/* Blog guide extras. Loaded after guide.css; only adds what the guide layout does not have. */
+.byline{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--sky-muted);font-size:14px;margin-top:16px}
+.byline b{color:#fff;font-weight:600}
+.toc{margin-top:28px;padding:16px 20px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-size:15px}
+.toc ol{margin:8px 0 0;padding-left:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 24px}
+.toc a{text-decoration:none;font-weight:600}
+.blog section{max-width:880px}
+.blog section.wide,.blog section.final{max-width:none}
+.blog section > p{margin-top:14px;max-width:70ch}
+.blog section > p + p{margin-top:12px}
+.blog section > p.small{max-width:none}
+.blog h3.sm{margin-top:28px;font-size:20px}
+.blog .tablewrap table{min-width:560px}
+.blog .tablewrap table.w700{min-width:700px}
+.blog .tablewrap table.w900{min-width:900px}
+.blog td.txt{color:var(--ink)}
+.know{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.know li{font-size:15px;color:var(--muted)}
+.know li b{color:var(--ink)}
+.olist{margin:16px 0 0;padding-left:20px;display:grid;gap:6px}
+.formula{margin-top:18px;border:2px solid var(--navy);border-radius:6px;overflow:hidden}
+.formula .fh{background:var(--navy);color:#fff;padding:12px 18px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.formula pre{margin:0;padding:16px 18px;background:var(--paper);font:500 15px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);white-space:pre;overflow-x:auto}
+.ex{border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-top:12px}
+.ex h3{font-family:var(--sans);font-size:16px;color:var(--ink)}
+.ex .xcalc{font:500 14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ex .xans{margin-top:8px;font-weight:700;color:var(--navy)}
+.blog section > .ex p{max-width:none}
+.srclist{margin:16px 0 0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.blog .faq details p{max-width:72ch}
+@media (max-width:640px){.toc ol{grid-template-columns:minmax(0,1fr)}}
