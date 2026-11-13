@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import '../../styles/guide.css';
+---
+
+<BaseLayout
+  title="UAE E-Invoicing Insights | einvoicecost.ae"
+  description="Guides and insights on UAE e-invoicing costs, software and compliance."
+  breadcrumbs={[{ name: 'Home', url: 'https://einvoicecost.ae/' }, { name: 'Insights', url: 'https://einvoicecost.ae/blog' }]}
+>
+  <main class="wrap" style="max-width:860px;margin:0 auto;padding:32px 16px">
+    <p class="crumb"><a href="/">Home</a> › Insights</p>
+    <h1 style="font-family:var(--serif);color:var(--navy)">Insights</h1>
+    <p class="sub">Plain-language guides on UAE e-invoicing costs, software and compliance.</p>
+    <ul style="margin-top:24px;padding-left:18px">
+      <li><a href="/blog/uae-e-invoicing-cost">UAE e-invoicing cost: the complete guide</a></li>
+    </ul>
+    <SiteFooter />
+  </main>
+</BaseLayout>

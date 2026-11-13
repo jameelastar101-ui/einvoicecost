@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../components/SiteFooter.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/home.css';
 import { PRICES, PRICES_CHECKED, aed, firstYearText, everyYearText } from '../config/prices.js';
@@ -221,7 +222,7 @@ const faqs = [
         <div><h2>Ready before the deadline?</h2><p class="sub">Message us your software and invoice count. We reply with your price and next steps.</p></div>
         <a class="btn-wa" id="finalWa" href="#" target="_blank" rel="noopener" style="padding:14px 22px;font-size:16px">Message us on WhatsApp</a>
       </section>
-      <footer class="pfoot"><span>Prices checked: {PRICES_CHECKED}</span><span><a href="/blog/uae-e-invoicing-cost">UAE e-invoicing cost guide</a></span><span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span></footer>
+      <SiteFooter />
     </main>
 
   </div>

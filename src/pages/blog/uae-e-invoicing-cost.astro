@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../../components/SiteFooter.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/guide.css';
 import '../../styles/blog.css';
@@ -459,10 +460,6 @@ Every year after: ${ny} × 1.05 = ${vat(every('qbo'))}`}</p><p class="xans">AED 
       <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
     </section>
 
-    <footer>
-      <span>Prices checked: {UPDATED}</span>
-      <span><a href="/blog/uae-e-invoicing-cost">UAE e-invoicing cost guide</a></span>
-      <span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
-    </footer>
+    <SiteFooter />
   </main>
 </BaseLayout>

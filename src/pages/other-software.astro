@@ -1,4 +1,5 @@
 ---
+import SiteFooter from '../components/SiteFooter.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/guide.css';
 import PriceBox from '../components/PriceBox.astro';
@@ -132,10 +133,7 @@ const breadcrumbs = [
       <h2>E-invoicing cost for other software</h2>
       <div class="more"><a href="/quickbooks-online">QuickBooks Online<span>Needs an ASP</span></a><a href="/quickbooks-desktop">QuickBooks Desktop<span>Needs an ASP</span></a><a href="/excel">Excel / no software<span>Needs an ASP</span></a><a href="/zoho-books">Zoho Books<span>Built-in ASP</span></a><a href="/tally">Tally Prime<span>Built-in ASP</span></a><a href="/wafeq">Wafeq<span>Built-in ASP</span></a><a href="/#compare">Compare all<span>Side by side</span></a></div>
     </section>
-    <footer>
-      <span>Prices checked: {PRICES_CHECKED}</span>
-      <span><a href="/blog/uae-e-invoicing-cost">UAE e-invoicing cost guide</a></span><span>einvoicecost.ae · Exact UAE e-invoicing prices, shown upfront · Dubai</span>
-    </footer>
+    <SiteFooter />
   </main>
   <div class="dock">
     <div class="row">

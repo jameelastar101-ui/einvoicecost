@@ -102,7 +102,7 @@ a.tile{text-decoration:none}
 .lock b{color:var(--ink);font-weight:600}
 
 /* sections */
-section.band{padding-block:56px 0}
+section.band{padding-block:40px 20px}
 section.band h2{font-family:var(--serif);font-size:clamp(26px,3vw,34px);font-weight:700;color:var(--navy)}
 .sub{color:var(--muted);margin-top:8px;max-width:60ch}
 .legend{font-size:13px;color:var(--muted);margin-top:14px}
@@ -171,9 +171,9 @@ table.ct col.c-lab{width:190px}
 .faq summary::after{content:"+";color:var(--navy);font-weight:700}
 .faq details[open] summary::after{content:"–"}
 .faq details p{color:var(--muted);margin-top:8px;max-width:65ch}
-.final{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;margin-top:56px;padding:36px;background:var(--navy);border-radius:6px}
-.final h2{color:var(--on-navy)!important}
-.final .sub{color:var(--sky-muted)}
+.final{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;margin-top:40px;padding:20px 28px;background:var(--accent-soft);border:1px solid #C5D7EE;border-left:6px solid var(--wa);border-radius:6px}
+.final h2{color:var(--navy)!important;border:0;padding:0}
+.final .sub{color:var(--ink)}
 
 /* mobile sticky WhatsApp */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;background:var(--surface);border-top:1px solid var(--line);
@@ -204,7 +204,7 @@ table.ct col.c-lab{width:190px}
   .band-navy{padding-bottom:116px}
   table.ct col.c-lab{width:128px}
   .ct th,.ct td{padding:12px 10px}
-  .final{padding:24px 20px}
+  .final{padding:16px 18px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
