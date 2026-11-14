@@ -1,0 +1,328 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, price, invoiceFee } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-14';
+const UPDATED_ISO = '2026-11-14';
+const UPDATED = '14 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/uae-e-invoicing-distributors';
+const N0 = P.feeCovered;
+const first = (k: string, n = N0) => price(k, n).firstYear;
+const every = (k: string, n = N0) => price(k, n).everyYear;
+const perExtra = P.feePerExtra.toFixed(2);
+
+const title = 'UAE E-Invoicing for Distributors 2027: Deadlines & Cost';
+const description =
+  'UAE e-invoicing for distributors and wholesalers: deadlines, returns and credit notes, master data, ERP options and exact prices from AED 4,000';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your distributor e-invoicing guide. I use [software], about [number] invoices a year. Please send me my price.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Do distributors and wholesalers have to issue e-invoices in the UAE?", a: "Yes. A distributor that sells to other businesses (B2B) or to government (B2G) has no special exemption. Tax invoices and credit notes in scope must be structured e-invoices in the PINT AE format, sent through an accredited service provider (ASP) over the Peppol network. PDF, scanned and Word invoices are not valid e-invoices. Sales to consumers (B2C) are excluded for now." },
+  { q: "When does e-invoicing start for a distributor?", a: "It depends on the distributor's annual revenue. With revenue of AED 50 million or more, the ASP had to be appointed by 30 October 2026 and e-invoicing starts on 1 January 2027. With revenue under AED 50 million, appoint an ASP by 31 March 2027 and go live on 1 July 2027. Government entities go live on 1 October 2027." },
+  { q: "Which revenue figure decides a distributor's phase?", a: "Under Ministerial Decision No. 244 of 2025, the phase is set by the gross income shown in the distributor's most recent audited financial statements, not by net profit or taxable turnover alone. A distributor close to AED 50 million should check its audited figure before choosing its deadline." },
+  { q: "Does a small distributor below the VAT registration threshold still have to comply?", a: "Yes for B2B and B2G sales. A small distributor with revenue under AED 50 million still has to issue e-invoices for sales to business and government customers, even if its turnover is below the AED 375,000 VAT registration threshold. It simply goes live later, on 1 July 2027." },
+  { q: "Are transactions between companies in the same tax group excluded?", a: "Business transactions between members of the same approved tax group have a temporary 24-month exclusion starting on 1 January 2027. Sales from a distributor to customers outside the tax group are not covered by this exclusion, and neither are the other obligations of the group members." },
+  { q: "Do a distributor's counter sales and retail sales need e-invoices?", a: "Sales to consumers (B2C) are currently excluded from e-invoicing, although a distributor must still be able to receive purchase invoices through Peppol. A cash or counter sale to a business customer is still a B2B sale, so it needs an e-invoice with the buyer's details once your phase starts. Train counter staff to ask whether the buyer is a business and to capture its TRN." },
+  { q: "Can a distributor still send a PDF invoice to customers?", a: "A distributor can still send a PDF as a copy for the customer's store or accounts team, but for invoices in scope the PDF is not the legal invoice. The legal invoice is the structured PINT AE e-invoice sent through the distributor's ASP." },
+  { q: "How should a distributor handle returns, damaged goods and short deliveries?", a: "A sent e-invoice cannot be edited or deleted. Returns, damaged goods, short deliveries and price corrections are handled with an e-credit note that refers to the original invoice number and date, and a new e-invoice if the sale must be re-billed. Each credit note counts as one document." },
+  { q: "Do a distributor's van-sales invoices need to be e-invoices?", a: "Yes, if the customer is a business. Invoices raised on a van-sales or mobile app must reach the distributor's accounting or ERP system with a valid customer TRN, correct tax codes and unique invoice numbers, and then go through its ASP. Ask your app vendor how invoices are sent when the van has no mobile signal, and whether the app or your ERP issues the invoice number." },
+  { q: "Which master data problems cause a distributor's e-invoices to be rejected?", a: "The most common are missing or wrong customer TRNs, customer legal names that do not match the registered name, blank city or country fields, free-text units of measure such as 'pcs' or 'boxes', and items with no tax category. The data must match the mandatory fields of the PINT AE data dictionary, so fix these in your customer and item masters before go-live." },
+  { q: "Which unit-of-measure codes should a distributor use?", a: "Use the standard UN/ECE codes that your ASP's code list accepts, for example EA for each, KGM for kilogram and LTR for litre. Replace free-text units across the item master, and map carton, box and pack units to the correct codes." },
+  { q: "Which tax category codes does a distributor need on each item?", a: "Every item needs a specific PINT AE tax category instead of a generic system default: S for standard rate (5%), Z for zero-rated, E for exempt, O for out of scope, and AE for reverse charge. Check your ASP's code list and confirm the right category for each product with your tax adviser." },
+  { q: "Does it matter whether a distributor's customer is mainland or in a free zone?", a: "Yes. Flag each customer as mainland, designated zone or free zone, government, or export, because each type can trigger different transaction codes and VAT treatment. Confirm the correct treatment for each customer type with your tax adviser, then build it into the customer master." },
+  { q: "Does a distributor need a new ERP to issue e-invoices?", a: "Not necessarily. The software must produce correct invoice data: customer TRN, a tax category on every item, standard units and clean credit-note links. Large ERPs such as SAP S/4HANA, Oracle Cloud ERP and Dynamics 365 do not connect to the UAE Peppol network out of the box, so they need API middleware or an ASP connector. Mid-market ERPs such as SAP Business One, Odoo and NetSuite usually offer certified e-invoicing apps. TallyPrime, Zoho Books and Wafeq have e-invoicing built in. Old, unsupported versions, such as outdated Tally, SAP ECC or legacy Sage, may need a paid upgrade first." },
+  { q: "How long does a distributor's ERP integration take?", a: "For large ERPs, field mapping and sandbox testing typically take three to six months of IT and finance coordination. Smaller systems with ready connectors can be done in days to weeks. A distributor with a 1 January 2027 start date should begin now." },
+  { q: "What is a distributor's Peppol ID?", a: "After you appoint an ASP on EmaraTax, the ASP creates your Peppol participant ID in the format 0235 followed by your 10-digit TIN, which is the first 10 digits of your TRN. Your EmaraTax dashboard then shows your Peppol status as active." },
+  { q: "How much does e-invoicing cost for a distributor?", a: `With einvoicecost.ae, the invoice fee is ${aed(P.feeMin)} for up to ${N0} invoices a year, then AED ${perExtra} for each invoice above ${N0}. The first year adds ${aed(P.onboarding)} onboarding, ${aed(P.setup)} setup, ${aed(P.platform)} platform fee and a connector for QuickBooks Online (${aed(P.connector.qbo)}) or QuickBooks Desktop (${aed(P.connector.qbd)}). For example, 2,000 invoices on QuickBooks Online costs ${aed(first('qbo', 2000))} in the first year and ${aed(every('qbo', 2000))} a year after. Prices exclude 5% VAT.` },
+  { q: "What does e-invoicing cost a large distributor on SAP or Oracle?", a: "Across the market, large multi-warehouse distributors on SAP S/4HANA, Oracle Cloud ERP or Dynamics 365 typically report a first-year budget of AED 150,000 to AED 500,000 or more, because of custom API middleware, multi-entity routing and ERP upgrades. Ongoing ASP and software fees for 5,000 to 30,000 invoices a month range from AED 5,000 to AED 50,000 a month. Our ASP fee for the same volume is much lower, but the connector and ERP work are quoted separately." },
+  { q: "How do ASPs charge a distributor, and where is the break-even?", a: "Providers usually charge either per document, typically AED 0.35 to AED 1.00 each, falling at higher volume, or a monthly subscription from about AED 1,500 for mid-sized businesses up to AED 50,000 for high-volume enterprises. One UAE pricing guide puts the break-even at roughly 2,000 invoices a month: below that, per-invoice pricing is usually cheaper, and above it a flat subscription saves more. Always check whether received supplier invoices count toward the volume." },
+  { q: "Do the invoices a distributor receives from suppliers count in the price?", a: "Not with einvoicecost.ae. Our invoice fee counts only the sales invoices and credit notes you send. Many providers also count the purchase invoices you receive, which matters for a distributor that buys from many suppliers. Ask any provider how it counts before you sign." },
+  { q: "Does the FTA approve each of a distributor's invoices before it is valid?", a: "No. The UAE uses a decentralised model, not a clearance model. The distributor's ASP checks the invoice, delivers it to the customer's ASP over Peppol and reports the tax data to the Federal Tax Authority. The FTA does not approve each invoice before it is issued." },
+  { q: "What are the penalties for a distributor that is not ready?", a: "Under Cabinet Decision No. 106 of 2025, not implementing e-invoicing or not appointing an ASP on time costs AED 5,000 for each month. Not issuing or sending an e-invoice can cost AED 100 per invoice, up to AED 5,000 a month, and the same applies to e-credit notes. A distributor issuing thousands of invoices a month reaches the cap quickly." },
+  { q: "What if a distributor's customers or suppliers are not ready for e-invoicing?", a: "Each business has its own deadline, so a customer under AED 50 million revenue may go live months after a large distributor. Collect every customer's and supplier's TIN, TRN and Peppol ID early, ask each when it will start, and ask your tax adviser how invoices received before a supplier's start date should be treated for input VAT." },
+  { q: "How long does a distributor have to keep e-invoices?", a: "Plan to archive e-invoices, credit notes and supporting data for five years. Many ASPs include compliant cloud storage in their plans, but some charge extra for large volumes of signed XML files, so ask what is included and how you can export your documents." },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'UAE e-invoicing for distributors', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['answer', 'Quick answer'], ['deadlines', 'Who goes live when'], ['flow', 'How a distributor invoice travels'],
+  ['events', 'Which document for which sales event'], ['master', 'Master data checklist'], ['software', 'Software and ERP options'],
+  ['cost', 'What it costs'], ['cost-examples', 'Cost examples for distributors'], ['hidden', 'Costs outside the ASP fee'],
+  ['start', 'Connect to an ASP in 6 steps'], ['penalties', 'Penalties'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+
+/** Typical distributor volumes for the price table (all values from prices.js). */
+const volumes = [500, 1000, 2000, 5000, 10000];
+const rows = volumes.map((n) => ({
+  n,
+  fee: invoiceFee(n),
+  avg: (invoiceFee(n) / n).toFixed(2),
+  qbo: first('qbo', n),
+  qbd: first('qbd', n),
+  excel: first('excel', n),
+  other: first('other', n),
+  every: every('excel', n),
+}));
+const feeAt = (n: number) => invoiceFee(n);
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Distributors</p>
+      <p class="eyebrow">Blog · Distributors and wholesalers</p>
+      <h1>UAE e-invoicing for distributors and wholesalers: deadlines, master data, ERP and cost</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Distributors and wholesalers must send <b>invoices and credit notes to business and government customers as structured e-invoices</b> (PINT AE format) through an accredited service provider (ASP) on the Peppol network. Distributors with revenue of AED 50 million or more go live on <b>1 January 2027</b>, about seven weeks from now. Everyone else appoints an ASP by <b>31 March 2027</b> and goes live on <b>1 July 2027</b>.</p>
+        <p>Distributors send many invoices, so the price per invoice matters. With einvoicecost.ae, up to {N0} invoices costs <b>{aed(first('excel'))} (Excel) to {aed(first('qbd'))} (QuickBooks Desktop) in the first year</b>, then <b>{aed(every('excel'))} a year</b>. Above {N0}, each invoice costs AED {perExtra}. Invoices you receive from suppliers are <b>not counted</b>.</p>
+        <div class="facts">
+          <div><p class="k">Customer returns</p><p class="v">E-credit note linked to the invoice</p></div>
+          <div><p class="k">Retail counter sales (B2C)</p><p class="v">Not e-invoiced for now</p></div>
+          <div><p class="k">Up to {N0} invoices</p><p class="v">{aed(P.feeMin)} a year</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="deadlines">
+      <h2>Who goes live when</h2>
+      <p>Your start date depends on <b>your own annual revenue</b>. Revenue only decides when you start, not whether e-invoicing applies to you. There is no exemption for small distributors that sell to businesses.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Distributor type</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities (your B2G customers)</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <ul class="know">
+        <li><b>Which revenue counts.</b> Under Ministerial Decision No. 244 of 2025, your phase is set by the gross income in your most recent audited financial statements, not by net profit or taxable turnover alone.</li>
+        <li><b>Small distributors.</b> Even a distributor below the AED 375,000 VAT registration threshold must issue e-invoices for B2B and B2G sales once its phase starts.</li>
+        <li><b>Tax groups.</b> Business transactions between members of the same approved tax group have a temporary 24-month exclusion starting on 1 January 2027.</li>
+      </ul>
+      <p>Large distributors that have not yet appointed an ASP are already past the 30 October 2026 deadline and face the monthly penalty. Appoint one now. Check the Ministry of Finance and the Federal Tax Authority for any later change.</p>
+    </section>
+
+    <section id="flow">
+      <h2>How a distributor invoice travels</h2>
+      <p>Instead of emailing a PDF, your system creates the invoice data, your ASP checks it, converts it to <b>PINT AE</b> XML and sends it over the Peppol network to your customer's ASP. The tax data is reported to the Federal Tax Authority (FTA). This is called the five-corner model.</p>
+      <p><b>The FTA does not approve each invoice before it is valid.</b> The UAE uses a decentralised model. Your ASP does the checking, and invoices with missing data are rejected before they go out. For a distributor with hundreds or thousands of daily invoices across warehouses, delivery routes and price tiers, one bad master data field can reject a whole batch.</p>
+      <p><b>In scope:</b> sales and credit notes to business (B2B) and government (B2G) customers, including cash sales to a business. <b>Out of scope for now:</b> sales to consumers (B2C). You must still be able to <b>receive</b> supplier invoices through your ASP.</p>
+    </section>
+
+    <section id="events">
+      <h2>Which document for which sales event</h2>
+      <p>Distribution creates more document types than a simple sale: returns, rebates, short deliveries and price corrections. A sent e-invoice cannot be edited or deleted, so each event needs its own document.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Distribution event</th><th>What you issue</th></tr></thead><tbody>
+        <tr><td>Delivery or sale to a business customer (credit or cash)</td><td class="txt">E-invoice (tax invoice) with the buyer's TRN, a tax category on each item and standard units.</td></tr>
+        <tr><td>Goods returned, damaged or rejected</td><td class="txt">E-credit note referring to the original invoice number and date.</td></tr>
+        <tr><td>Short delivery or price correction after invoicing</td><td class="txt">E-credit note, then a new e-invoice if the sale must be re-billed.</td></tr>
+        <tr><td>Volume rebate or trade discount agreed after invoicing</td><td class="txt">E-credit note for the discount amount. Keep the rebate agreement reference in your records.</td></tr>
+        <tr><td>Discount given at the time of sale</td><td class="txt">Shown on the e-invoice line or document, with a standard discount reason.</td></tr>
+        <tr><td>Sale to a free-zone or designated-zone customer</td><td class="txt">E-invoice with the customer flagged as free zone. VAT treatment follows the VAT law, so confirm it with your tax adviser.</td></tr>
+        <tr><td>Export sale</td><td class="txt">E-invoice with the zero-rated or export treatment your tax adviser confirms.</td></tr>
+        <tr><td>Sale to a government entity (B2G)</td><td class="txt">E-invoice once your own phase has started. Government entities themselves go live on 1 October 2027.</td></tr>
+        <tr><td>Retail counter sale to a consumer (B2C)</td><td class="txt">Not an e-invoice for now. A counter sale to a business is still B2B.</td></tr>
+      </tbody></table></div>
+      <p class="small">Your tax adviser decides the VAT treatment of each event. Your system should link every credit note to the invoice it corrects.</p>
+    </section>
+
+    <section id="master">
+      <h2>Master data checklist</h2>
+      <p>Clean these four tables in your ERP or accounting software before you connect to an ASP. Your data must match the 51 mandatory fields of the PINT AE data dictionary, which sits inside a format of more than 89 business terms. This is the work that decides whether go-live is smooth or full of rejections.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Master data table</th><th>What must be correct</th><th>Why it matters</th></tr></thead><tbody>
+        <tr><td><b>Your company (seller)</b></td><td class="txt">Legal name exactly as on your trade licence; 15-digit TRN and 10-digit TIN (the first 10 digits of the TRN); street address, city, emirate and country code AE.</td><td class="txt">A seller name or number that does not match the registry is rejected.</td></tr>
+        <tr><td><b>Customers and suppliers</b></td><td class="txt">Verified 15-digit TRN or tax ID; legal name, not trading name; full billing address; buyer type: mainland, free zone, government or export.</td><td class="txt">Blank or wrong buyer data is the most common cause of rejection.</td></tr>
+        <tr><td><b>Items (SKUs)</b></td><td class="txt">A specific tax category code on every item (S standard 5%, Z zero-rated, E exempt, O out of scope, AE reverse charge), standard UN/ECE units such as EA, KGM and LTR, and a clear item name.</td><td class="txt">Free-text units and default tax codes fail validation or give the wrong VAT.</td></tr>
+        <tr><td><b>Billing controls</b></td><td class="txt">Unique invoice numbers across all warehouses, branches and vans; every credit note linked to its original invoice; currency (AED) and payment terms mapped to standard codes.</td><td class="txt">Duplicate numbers and unlinked credit notes break the audit trail.</td></tr>
+      </tbody></table></div>
+      <h3 class="sm">Distributor-specific checks</h3>
+      <ul class="know">
+        <li><b>Unique invoice numbers.</b> Warehouses, branches and van-sales routes must never issue the same number twice.</li>
+        <li><b>Van-sales and mobile apps.</b> They must pass a clean customer TRN and item tax codes into your core system. Ask the app vendor how invoices are sent when there is no signal.</li>
+        <li><b>Price tiers and discounts.</b> Give every discount a clear reason so it can be shown on the e-invoice.</li>
+        <li><b>Credit note linking.</b> Return and rebate credit notes must reference the original invoice number and date.</li>
+        <li><b>Customers with blanks.</b> Run a report of customers with no TRN, no city or no country, and fix them first.</li>
+      </ul>
+    </section>
+
+    <section id="software" class="wide">
+      <h2>Software and ERP options</h2>
+      <p>Whether your software is an ASP itself decides most of your cost. No system sends PINT AE invoices to the UAE network on its own unless it has a built-in or certified e-invoicing module. Software that is not an ASP needs an outside ASP plus a connector or an upload template.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Your software</th><th>Is it an ASP?</th><th>How e-invoicing works</th><th>Our price, up to {N0} invoices</th></tr></thead><tbody>
+        <tr><td>TallyPrime</td><td>Yes</td><td class="txt">Built in. Link your ASP details and generate the e-invoice from the voucher.</td><td class="txt">Setup {aed(P.help)}, optional. Needs active TSS.</td></tr>
+        <tr><td>Zoho Books</td><td>Yes</td><td class="txt">Built in. Packs are paid to Zoho. Needs Professional plan or higher.</td><td class="txt">Setup {aed(P.help)}, optional.</td></tr>
+        <tr><td>Wafeq</td><td>Yes</td><td class="txt">Included in paid plans.</td><td class="txt">Setup {aed(P.help)}, optional.</td></tr>
+        <tr><td>QuickBooks Online</td><td>No</td><td class="txt">Outside ASP plus connector.</td><td class="txt">{fmt(first('qbo'))} first year, {fmt(every('qbo'))} after</td></tr>
+        <tr><td>QuickBooks Desktop</td><td>No</td><td class="txt">Outside ASP plus connector.</td><td class="txt">{fmt(first('qbd'))} first year, {fmt(every('qbd'))} after</td></tr>
+        <tr><td>Excel / no software</td><td>No</td><td class="txt">Outside ASP plus upload template.</td><td class="txt">{fmt(first('excel'))} first year, {fmt(every('excel'))} after</td></tr>
+        <tr><td>SAP Business One, Odoo, NetSuite, Sage X3, Epicor, Dynamics BC</td><td>Usually no</td><td class="txt">Certified localisation apps or ASP connectors. Check your version is supported.</td><td class="txt">{fmt(first('other'))} + connector first year, {fmt(every('other'))} after</td></tr>
+        <tr><td>SAP S/4HANA, Oracle Cloud ERP, Dynamics 365 F&amp;O</td><td>No</td><td class="txt">API middleware or ASP connector, with field mapping and sandbox testing.</td><td class="txt">{fmt(first('other'))} + connector first year, {fmt(every('other'))} after</td></tr>
+        <tr><td>Custom or legacy in-house system</td><td>No</td><td class="txt">A direct API or file drop (JSON, CSV) that an ASP converts to PINT AE.</td><td class="txt">Quoted</td></tr>
+      </tbody></table></div>
+      <p class="small">Guides: <a href="/quickbooks-online">QuickBooks Online</a> · <a href="/quickbooks-desktop">QuickBooks Desktop</a> · <a href="/excel">Excel</a> · <a href="/zoho-books">Zoho Books</a> · <a href="/tally">Tally</a> · <a href="/wafeq">Wafeq</a> · <a href="/other-software">Other software</a>. Software subscriptions are paid to the software company.</p>
+      <h3 class="sm">What to expect by type of system</h3>
+      <ul class="know">
+        <li><b>Enterprise ERPs (SAP S/4HANA, Oracle Cloud ERP, Dynamics 365).</b> Best for large distributors with complex supply chains and high daily volumes. They do not connect to the UAE Peppol network out of the box, so you need API middleware or a pre-built ASP connector to map custom fields, such as mainland and free-zone customer codes and batch discounts, into PINT AE and bring clearance statuses back. Field mapping and sandbox testing typically take 3 to 6 months.</li>
+        <li><b>Mid-market ERPs (SAP Business One, Sage X3, Epicor, Odoo, NetSuite).</b> Most are listed on the FTA Accredited Tax Accounting Software Register and offer native modules or certified ASP add-ons. Odoo and NetSuite, for example, use certified localisation apps that create PINT AE XML when the invoice is posted. The main risk is third-party van-sales apps and warehouse systems that pass dirty TRNs or tax codes into the ERP.</li>
+        <li><b>SME accounting software (TallyPrime, Zoho Books, QuickBooks, Xero).</b> You link your ASP details in the settings and generate the e-invoice from the invoice. The main risk is blank customer TRNs, postal codes and unit codes.</li>
+        <li><b>Custom or legacy systems.</b> Build a direct REST API integration, or drop structured JSON or CSV files into an ASP's secure SFTP or middleware gateway, which converts them to PINT AE XML.</li>
+      </ul>
+      <p>Older, unsupported versions of on-premise ERPs, such as outdated Tally, SAP ECC or legacy Sage, may need a paid upgrade before they can produce PINT AE data.</p>
+    </section>
+
+    <section id="cost">
+      <h2>What it costs</h2>
+      <p>Prices are the same for distributors and everyone else. The full explanation, with all tables, is in our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a>. In short:</p>
+      <div class="formula"><p class="fh">einvoicecost.ae price formula (AED, excl. VAT)</p><pre>{`Invoice fee        = ${fmt(P.feeMin)}                      if n is ${fmt(N0)} or less
+                   = ${fmt(P.feeMin)} + ${perExtra} × (n − ${fmt(N0)})   if n is more than ${fmt(N0)}
+
+First year         = Onboarding ${fmt(P.onboarding)} + Setup ${fmt(P.setup)} + Connector
+                     + Platform fee ${fmt(P.platform)} + Invoice fee
+Every year after   = Platform fee ${fmt(P.platform)} + Invoice fee
+Connector          = QuickBooks Online ${fmt(P.connector.qbo)}, QuickBooks Desktop ${fmt(P.connector.qbd)},
+                     Excel ${fmt(P.connector.excel)}, other software quoted`}</pre></div>
+      <p class="small"><b>n</b> is the number of sales invoices and credit notes you send in a year. Return credit notes count as documents. Invoices you receive are not counted.</p>
+      <h3 class="sm">Price for typical distributor volumes</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Invoices a year</th><th>Invoice fee</th><th>Average per invoice</th><th>First year: QuickBooks Online</th><th>First year: QuickBooks Desktop</th><th>First year: Excel</th><th>First year: other software</th><th>Every year after</th></tr></thead><tbody>
+        {rows.map((r) => <tr><td>{fmt(r.n)}</td><td>{fmt(r.fee)}</td><td>{r.avg}</td><td>{fmt(r.qbo)}</td><td>{fmt(r.qbd)}</td><td>{fmt(r.excel)}</td><td>{fmt(r.other)} + connector</td><td>{fmt(r.every)}</td></tr>)}
+      </tbody></table></div>
+      <p class="small">Zoho Books, TallyPrime and Wafeq have e-invoicing built in. See <a href="#software">software and ERP options</a>.</p>
+      <h3 class="sm">How providers charge</h3>
+      <p>Accredited providers use one of two models:</p>
+      <ul class="know">
+        <li><b>Per document.</b> Typically AED 0.35 to AED 1.00 per document, falling at higher volume. For example, Zoho Books includes 100 free transactions and then charges AED 41 per 100 (AED 0.41 each), and InvoiceNow Biz has a free tier for up to 120 documents a year before paid packs.</li>
+        <li><b>Subscription.</b> Flat monthly packages start around AED 1,500 a month for mid-sized businesses and rise from AED 5,000 to AED 50,000 a month for high-volume enterprises.</li>
+      </ul>
+      <p>One UAE pricing guide (TrustBill) puts the break-even at roughly 2,000 invoices a month: below that, per-invoice pricing is usually cheaper, and above it a flat subscription saves more. For comparison, 2,000 invoices a month is 24,000 a year, where our invoice fee is {aed(feeAt(24000))}, an average of AED {(feeAt(24000) / 24000).toFixed(2)} per invoice. The two things that change the total most are <b>whether received supplier invoices count toward your volume</b> and <b>whether setup, connectors and storage are extra</b>. A distributor that buys from many suppliers can receive several times more documents than it sends, so compare total yearly cost, not the headline rate.</p>
+      <h3 class="sm">Typical market budgets by distributor size</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Distributor size</th><th>Typical software</th><th>One-time setup and integration</th><th>Ongoing ASP and software fees</th><th>Realistic year-1 budget</th></tr></thead><tbody>
+        <tr><td>Small (under 500 invoices a month)</td><td class="txt">Zoho Books, TallyPrime, Wafeq</td><td class="txt">AED 0 to 5,000</td><td class="txt">AED 60 to 400 a month</td><td class="txt">AED 1,000 to 15,000</td></tr>
+        <tr><td>Mid-market (500 to 5,000 invoices a month)</td><td class="txt">Odoo, SAP Business One, NetSuite, Dynamics BC</td><td class="txt">AED 15,000 to 60,000 (connector, WMS and POS field mapping, testing)</td><td class="txt">AED 1,500 to 5,000 a month</td><td class="txt">AED 40,000 to 120,000</td></tr>
+        <tr><td>Large (5,000 to 30,000+ invoices a month)</td><td class="txt">SAP S/4HANA, Oracle Cloud ERP, Dynamics 365 F&amp;O</td><td class="txt">AED 50,000 to 250,000+ (custom API middleware, multi-entity routing, ERP upgrades)</td><td class="txt">AED 5,000 to 50,000 a month</td><td class="txt">AED 150,000 to 500,000+</td></tr>
+      </tbody></table></div>
+      <p class="small">Market ranges are indicative and vary by provider and project. They are not einvoicecost.ae prices and exclude 5% VAT. Document counts include both sent and received documents where a provider counts both.</p>
+    </section>
+
+    <section id="cost-examples">
+      <h2>Cost examples for distributors</h2>
+      <div class="ex"><h3>1. Regional FMCG distributor, TallyPrime, 1,200 invoices a year</h3><p class="xcalc">{`TallyPrime is an ASP itself, so there is no ASP fee, connector or platform fee
+E-invoicing cost paid to the software company = 0 (with active TSS)
+Our setup (optional) = ${fmt(P.help)}`}</p><p class="xans">AED 0 if you set it up yourself, or {aed(P.help)} one time if we set it up. The 1,200 invoices do not change the price, because there is no per-invoice fee on built-in software.</p></div>
+      <div class="ex"><h3>2. Building-materials wholesaler, QuickBooks Online, 2,000 invoices a year</h3><p class="xcalc">{`Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (2,000 − ${N0}) = ${fmt(feeAt(2000))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${fmt(P.connector.qbo)} + ${fmt(P.platform)} + ${fmt(feeAt(2000))} = ${fmt(first('qbo', 2000))}
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(2000))} = ${fmt(every('qbo', 2000))}
+Average per invoice = ${fmt(feeAt(2000))} ÷ 2,000 = ${(feeAt(2000) / 2000).toFixed(2)}`}</p><p class="xans">{aed(first('qbo', 2000))} in the first year, then {aed(every('qbo', 2000))} a year.</p></div>
+      <div class="ex"><h3>3. Food-service distributor with van sales, QuickBooks Desktop, 5,000 invoices a year</h3><p class="xcalc">{`Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (5,000 − ${N0}) = ${fmt(feeAt(5000))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${fmt(P.connector.qbd)} + ${fmt(P.platform)} + ${fmt(feeAt(5000))} = ${fmt(first('qbd', 5000))}
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(5000))} = ${fmt(every('qbd', 5000))}
+Average per invoice = ${fmt(feeAt(5000))} ÷ 5,000 = ${(feeAt(5000) / 5000).toFixed(2)}`}</p><p class="xans">{aed(first('qbd', 5000))} in the first year, then {aed(every('qbd', 5000))} a year. If the van invoices come from a separate mobile app, we quote the extra connection.</p></div>
+      <div class="ex"><h3>4. Large distributor (revenue AED 50 million or more) on SAP, Oracle or Dynamics, 10,000 invoices a year</h3><p class="xcalc">{`Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (10,000 − ${N0}) = ${fmt(feeAt(10000))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + connector + ${fmt(P.platform)} + ${fmt(feeAt(10000))} = ${fmt(first('other', 10000))} + connector
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(10000))} = ${fmt(every('other', 10000))}
+Average per invoice = ${fmt(feeAt(10000))} ÷ 10,000 = ${(feeAt(10000) / 10000).toFixed(2)}`}</p><p class="xans">{aed(first('other', 10000))} plus a quoted connector in the first year, then {aed(every('other', 10000))} a year. If the distributor also receives 6,000 supplier invoices a year, a provider that counts received documents would count 16,000. We count 10,000.</p></div>
+      <p class="callout">Want your exact price? Send your software and yearly invoice count on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="hidden">
+      <h2>Costs outside the ASP fee</h2>
+      <p>Distributors often meet four extra costs. Plan for them when you set your budget.</p>
+      <ul class="know">
+        <li><b>External system connectors.</b> Van-sales apps, warehouse management systems and B2B ordering portals must feed invoice data into your core system before the e-invoice is created.</li>
+        <li><b>Master data cleaning.</b> Fixing missing customer TRNs, standardising units across thousands of SKUs and setting mainland and free-zone rules can need accounting or IT hours.</li>
+        <li><b>Older ERP versions.</b> Unsupported on-premise versions may need an upgrade to produce PINT AE data.</li>
+        <li><b>Archiving.</b> Plan to keep e-invoices and credit notes for five years. Ask whether your ASP includes storage for your volume.</li>
+      </ul>
+    </section>
+
+    <section id="start">
+      <h2>Connect to an ASP in 6 steps</h2>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Choose your ASP</h3></div><p>Pick a provider from the Ministry of Finance register of accredited providers (86 at the time of writing). Confirm it supports your software version and has a way to see and fix rejected invoices.</p></div></li>
+        <li><div><div class="st-head"><h3>Appoint it on EmaraTax</h3></div><p>Log in with UAE Pass or your authorised credentials, open your entity profile, go to the e-invoicing tab, find your ASP and start the authorisation.</p></div></li>
+        <li><div><div class="st-head"><h3>Complete the ASP onboarding</h3></div><p>Enter your EmaraTax email and your 10-digit TIN, check the pre-filled trade licence details and submit.</p></div></li>
+        <li><div><div class="st-head"><h3>Receive your Peppol ID</h3></div><p>Your ASP creates your Peppol participant ID, which uses 0235 followed by your 10-digit TIN. EmaraTax then shows your Peppol status as active.</p></div></li>
+        <li><div><div class="st-head"><h3>Connect your software</h3></div><p>Install the connector, set up the API keys or file transfer, and map your cleaned fields to PINT AE.</p></div></li>
+        <li><div><div class="st-head"><h3>Test every scenario, then go live</h3></div><p>Send test documents for standard B2B invoices, multi-line discounts, zero-rated sales, credit notes and incoming supplier invoices. Fix anything rejected, then switch on.</p></div></li>
+      </ol>
+      <p class="small">We guide you through steps 2 to 4 on a short call. See our <a href="/blog/uae-e-invoicing-cost#more">step-by-step answers</a>.</p>
+    </section>
+
+    <section id="penalties">
+      <h2>Penalties</h2>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. They apply once your phase starts or your appointment deadline passes, on top of normal VAT penalties.</p>
+      <div class="tablewrap"><table><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not implementing e-invoicing or not appointing an ASP on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+      </tbody></table></div>
+      <p>A distributor with thousands of invoices a month reaches the monthly cap quickly, so missing the start date costs more than setting up.</p>
+    </section>
+
+    <section id="faq">
+      <h2>Questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-ministry/mof-initiatives/einvoicing/pre-approved-einvoicing-service-providers" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="https://www.bdo.global/en-gb/insights/tax/indirect-tax/united-arab-emirates-e-invoicing-the-regulatory-build-out-and-the-road-ahead" target="_blank" rel="noopener">BDO: UAE e-invoicing, the regulatory build-out and the road ahead</a></li>
+        <li><a href="https://docs.sovos.com/indirect-tax/indirect-tax-products/einvoicing/compliance-network/country-setup-guides/united-arab-emirates/about-united-arab-emirates" target="_blank" rel="noopener">Sovos: UAE e-invoicing compliance model (DCTCE)</a></li>
+      </ul>
+      <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. Market ranges and rates for other providers come from published provider price lists and UAE pricing guides, and vary by provider. Software plan prices are approximate and set by each software company. This guide is general information, not tax or legal advice. VAT treatment of free-zone sales, exports, rebates and returns depends on your facts, so confirm it with your tax adviser.</p>
+    </section>
+
+    <section class="final">
+      <div><h2>Get your exact price</h2><p class="sub">Message us your software and yearly invoice count. We reply with your price and next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>

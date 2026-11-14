@@ -38,6 +38,7 @@ Above 500 invoices you pay for your exact number of invoices, no slabs or bracke
 - [Wafeq](https://einvoicecost.ae/wafeq)
 - [Other software](https://einvoicecost.ae/other-software)
 - [Switch to Zoho Books, Tally or Wafeq](https://einvoicecost.ae/switch-accounting-software)
+- [UAE e-invoicing for distributors 2027: deadlines and cost](https://einvoicecost.ae/blog/uae-e-invoicing-distributors): returns and credit notes, master data, ERP options, deadlines, penalties and prices by software
 - [UAE e-invoicing for contractors: retention, IPCs and cost 2027](https://einvoicecost.ae/blog/uae-e-invoicing-contractors): retention billing, progress certificates, variation orders, deadlines, penalties and prices by software
 - [UAE e-invoicing for small traders: 2027 deadlines and rules](https://einvoicecost.ae/blog/uae-e-invoicing-small-traders): who must use e-invoicing, deadlines, software options, VAT, costs and fines
 - [UAE e-invoicing cost: complete price guide](https://einvoicecost.ae/blog/uae-e-invoicing-cost): prices by software, formula, examples, hidden costs, deadlines and penalties
