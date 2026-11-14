@@ -1,0 +1,323 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, price } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-13';
+const UPDATED_ISO = '2026-11-13';
+const UPDATED = '13 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/uae-e-invoicing-small-traders';
+const N0 = P.feeCovered;
+const first = (k: string, n = N0) => price(k, n).firstYear;
+const every = (k: string, n = N0) => price(k, n).everyYear;
+const perExtra = P.feePerExtra.toFixed(2);
+
+const title = 'UAE E-Invoicing for Small Traders: 2027 Deadlines & Rules';
+const description =
+  'UAE small traders: learn who must use e-invoicing, the 2027 deadlines, software options, costs and fines. Simple guide with real examples.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your e-invoicing guide for small traders. I use [software], about [number] invoices a year. Please send me my price.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "When does mandatory e-invoicing start for small traders?", a: "Small traders with annual revenue below AED 50 million must appoint an ASP by 31 March 2027. Mandatory e-invoicing for small traders starts on 1 July 2027." },
+  { q: "Does a small trader need e-invoicing if the business earns less than AED 375,000?", a: "Yes, a small trader may still need it. The VAT registration threshold and e-invoicing are separate matters. If a small trader issues B2B or B2G invoices, it may need to comply even if it is not registered for VAT." },
+  { q: "Does a small trader need to register for VAT before using e-invoicing?", a: "No. VAT registration is not a general condition for e-invoicing. Non-VAT-registered small traders can also fall within the rules." },
+  { q: "Can a small trader continue sending PDF invoices?", a: "PDF invoices alone will not meet the structured e-invoicing rules for B2B and B2G transactions once mandatory use begins. Small traders will need a compatible electronic invoicing system." },
+  { q: "Do small traders need to change their POS systems?", a: "Not necessarily. If a small trader sells only to individual consumers, its normal retail receipts may not need to change under the current B2C exclusion. But if a small trader sells to companies, it should check whether its POS can handle structured B2B invoices." },
+  { q: "Does a small trader need an ASP if it only sells to individual customers?", a: "A small trader may not need to send e-invoices for B2C sales. But it should think about how it will receive structured e-invoices from suppliers. Small traders should check the requirements that apply to their business." },
+  { q: "Can small traders use Excel to prepare e-invoices?", a: "Excel can help small traders manage business data. But it cannot send structured e-invoices through the Peppol network on its own. Small traders will need an ASP. Some ASPs let Excel users upload a ready template, so they do not have to change their software." },
+  { q: "Does e-invoicing replace VAT returns for small traders?", a: "No. E-invoicing does not replace regular VAT return filing. VAT-registered small traders must keep meeting their VAT reporting duties." },
+  { q: "Can small traders use the same software to send and receive e-invoices?", a: "This depends on the software and ASP integration. Before choosing, small traders should confirm that the software supports both outgoing and incoming e-invoices." },
+  { q: "What happens if a small trader sells to both businesses and individuals?", a: "A small trader must identify which transactions fall within the e-invoicing rules. For example, a stationery shop can keep issuing normal consumer receipts. It sends structured e-invoices only for company sales." },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'UAE e-invoicing for small traders', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['answer', 'Quick answer'], ['what', 'What is UAE e-invoicing?'], ['must', 'Do small traders need it?'], ['deadlines', 'Key deadlines'],
+  ['who', 'Which small traders must use it?'], ['channel', 'How your sales channel affects you'], ['software', 'Accounting and POS software'],
+  ['choose', 'Which software to choose'], ['vat', 'Does VAT registration matter?'], ['how', 'How the system works'], ['asp', 'What is an ASP?'],
+  ['penalties', 'Penalties'], ['cost', 'How much it costs'], ['prepare', 'How to prepare'], ['first', 'What to do first'],
+  ['faq', 'FAQ'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Small traders</p>
+      <p class="eyebrow">Blog · Guide for small traders</p>
+      <h1>UAE e-invoicing for small traders: 2027 deadlines and rules</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Yes, small traders must use e-invoicing for <b>B2B and B2G sales</b>. There is no small-business exemption, and VAT registration does not decide it. If your revenue is under AED 50 million, you must <b>appoint an ASP by 31 March 2027</b> and send structured e-invoices from <b>1 July 2027</b>. Sales to individual consumers (B2C) are excluded for now.</p>
+        <div class="facts">
+          <div><p class="k">Appoint your ASP by</p><p class="v">31 March 2027</p></div>
+          <div><p class="k">Mandatory from</p><p class="v">1 July 2027</p></div>
+          <div><p class="k">Fine for no ASP</p><p class="v">AED 5,000 a month</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="what">
+      <h2>What is UAE e-invoicing?</h2>
+      <p>If you run a small trading business in the UAE, you may soon need to change how you create and send invoices. The UAE is introducing a new electronic invoicing system for business transactions. It does not apply only to large companies. Small traders, wholesalers, freelancers and service providers may also need to comply.</p>
+      <p>Your business size is not the only factor. Who you sell to, how you create invoices and whether you are registered for VAT can all affect your requirements. A small wholesale shop that sells to other companies may need to use e-invoicing. A retail shop that sells only to individual customers is currently excluded.</p>
+      <p>UAE e-invoicing lets businesses create, send, receive and report invoices electronically. It is more than sending an invoice by email. Invoices must be created in a structured digital format called <b>PINT AE</b>. It is an XML format, and a valid invoice needs <b>51 specific data fields</b>, such as names, addresses, tax numbers, items, amounts and VAT. You do not type XML yourself. Your software creates it for you.</p>
+      <p><b>Example.</b> You own a small stationery wholesale business in Sharjah. You sell 20 boxes of printer paper to an office in Dubai. Today you create an invoice in Excel and email it. Under the new system, you send a structured e-invoice from compatible software or a ready Excel upload template. Your Accredited Service Provider (ASP) validates it and sends it through the electronic network. The buyer receives it through its own provider.</p>
+      <p>A PDF invoice or a scanned paper invoice will no longer be enough for B2B transactions covered by the new rules.</p>
+    </section>
+
+    <section id="must">
+      <h2>Do small traders in the UAE need to follow e-invoicing rules?</h2>
+      <p>Yes. Small traders must comply if they do business-to-business (B2B) or business-to-government (B2G) transactions covered by the rules. The system does not apply only to businesses with large revenues or VAT registration. The rules come from Ministerial Decision No. 244 of 2025 (as amended).</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Key deadlines for small traders</h2>
+      <p>For businesses with annual revenue below AED 50 million:</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Milestone</th><th>Deadline</th><th>What you need to do</th></tr></thead><tbody>
+        <tr><td>Voluntary adoption</td><td>1 July 2026</td><td>Test and adopt the system voluntarily. No penalties apply.</td></tr>
+        <tr><td>ASP appointment</td><td><b>31 March 2027</b></td><td>Appoint an Accredited Service Provider</td></tr>
+        <tr><td>Mandatory implementation</td><td><b>1 July 2027</b></td><td>Send all B2B and B2G invoices and credit notes as structured e-invoices</td></tr>
+      </tbody></table></div>
+      <p>The voluntary window is open right now, which gives small traders time to prepare. Check your current invoicing system early. A small electronics trading company, for example, should check whether its accounting software supports the required format and whether its software provider connects to an approved ASP.</p>
+      <p class="small">Businesses with revenue of AED 50 million or more have an earlier timeline. See the <a href="/blog/uae-e-invoicing-cost#deadlines">full deadline table</a>.</p>
+    </section>
+
+    <section id="who">
+      <h2>Which small traders must use e-invoicing?</h2>
+      <p>The main factor is the type of customer you sell to.</p>
+
+      <h3 class="sm">Wholesale traders</h3>
+      <p>Yes. Wholesalers usually sell to other businesses, so their B2B invoices fall within the rules. Imagine you import mobile phone accessories and sell them to phone shops, electronics retailers, online stores, corporate purchasing departments and other distributors. These sales need structured e-invoices once the rules become mandatory for you. Keep customer records correct: company names, addresses and tax identification details.</p>
+      <p><b>Returns.</b> If a customer buys 100 phone chargers and returns 10 damaged ones, you cannot simply change the original invoice. You must issue an electronic credit note through the system.</p>
+
+      <h3 class="sm">Retail shops</h3>
+      <p>It depends on who buys. Retail businesses that sell only to individual consumers (B2C) are currently excluded. A small grocery shop in Ajman that sells milk, bread and vegetables to walk-in customers keeps issuing normal receipts.</p>
+      <p>The situation changes when the shop sells to another business. If a nearby restaurant orders 15 boxes of bottled water and asks for an invoice in its company name, that B2B sale must follow the e-invoicing rules. Even one such invoice counts.</p>
+
+      <h3 class="sm">Businesses that sell to both companies and individuals</h3>
+      <p>You do not need to change every customer receipt. Identify the transactions that fall within the rules. A stationery shop selling notebooks to students and parents (B2C) keeps normal receipts. A company buying 20 boxes of printer paper, a school buying in bulk or an office ordering monthly (B2B) needs a structured e-invoice. Your billing system should make it easy to spot business customers.</p>
+
+      <h3 class="sm">Freelancers and home-based businesses</h3>
+      <p>Yes, if they do B2B or B2G transactions covered by the rules. A home office does not exempt you. A freelance graphic designer in Dubai who invoices a marketing agency, a construction company and a restaurant must e-invoice those clients. Sales to individual consumers are treated differently. The same applies to web developers, digital marketing consultants, freelance writers, business consultants, home-based caterers and other independent providers.</p>
+
+      <h3 class="sm">Cafes and restaurants</h3>
+      <p>A customer who buys two coffees gets a normal consumer receipt. A company that orders 100 lunch boxes for a training session gets an invoice, and that invoice must follow the e-invoicing rules. Restaurants that supply food to offices, schools or hotels should prepare for B2B e-invoicing.</p>
+
+      <h3 class="sm">Maintenance and repair businesses</h3>
+      <p>Yes, when they serve businesses or government entities. An AC technician repairing a unit in a private villa issues a B2C receipt. The same technician repairing several units in an office building must issue an e-invoice. This also applies to plumbing, electrical, cleaning, painting, building maintenance, pest control and equipment repair businesses.</p>
+
+      <h3 class="sm">Free Zone businesses</h3>
+      <p>No exemption. A small electronics trader in JAFZA or SAIF Zone that sells to mainland UAE businesses must follow the e-invoicing rules for those B2B sales, with the same deadlines as a mainland shop.</p>
+    </section>
+
+    <section id="channel">
+      <h2>How your sales channel affects your requirements</h2>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business model</th><th>E-invoicing requirement</th></tr></thead><tbody>
+        <tr><td>B2B wholesale</td><td>E-invoices for business sales</td></tr>
+        <tr><td>B2C retail only</td><td>Currently excluded from sending e-invoices</td></tr>
+        <tr><td>Mixed B2B and B2C</td><td>E-invoices for B2B sales only</td></tr>
+        <tr><td>Freelance services to companies</td><td>E-invoices for B2B sales</td></tr>
+        <tr><td>Government contracts</td><td>E-invoices for B2G sales</td></tr>
+      </tbody></table></div>
+      <p>Even if you sell only to individuals, you still need a way to <b>receive</b> e-invoices from suppliers. A grocery shop that sells only to walk-in customers may still get structured e-invoices from its beverage distributor. Think about both sides: how you send invoices to customers, and how you receive them from suppliers.</p>
+    </section>
+
+    <section id="software">
+      <h2>How your accounting or POS software affects e-invoicing</h2>
+      <p>Your current billing software can make the change easy or hard. The right setup depends on the tools you use today.</p>
+      <ul class="know">
+        <li><b>Zoho Books:</b> you may not need to replace it. Zoho is an ASP itself, so you appoint Zoho on EmaraTax and need no other provider. You need the Professional plan or higher (Free and Standard plans do not include e-invoicing) and a one-time e-invoicing pack. Packs cost about AED 185 for 500 invoices and AED 330 for 1,000. The first 100 invoices are free once. <a href="/zoho-books">Zoho Books guide</a></li>
+        <li><b>QuickBooks Online:</b> creating an invoice in QuickBooks does not make it a compliant UAE e-invoice. QuickBooks is not an ASP, so you need an outside ASP and a connector. Confirm that your version supports the required UAE fields, that invoices can be sent automatically, that received invoices can be processed and what the integration costs. <a href="/quickbooks-online">QuickBooks Online guide</a></li>
+        <li><b>Xero:</b> check its UAE e-invoicing plans before changing systems. Confirm it can create the structured invoice data, connect to an approved ASP and support credit notes and incoming supplier invoices. If a separate integration is needed, ask about cost and setup. <a href="/other-software">Other software guide</a></li>
+        <li><b>TallyPrime:</b> it is an ASP itself, with e-invoicing built in. You need no outside ASP, connector or platform fee, and there is no per-invoice fee while your TSS subscription is active (TSS Silver renewal is about AED 468 a year). Keep TSS active, run a current version, start the ASP appointment from inside TallyPrime and clean up customer TRNs and item VAT codes. <a href="/tally">TallyPrime guide</a></li>
+        <li><b>Sage 50 and other desktop software:</b> older versions may not support direct e-invoice transmission. Ask your provider whether a UAE connector exists before replacing anything. A building materials trader on Sage 50, for example, may need a supported version or another compatible platform.</li>
+        <li><b>POS systems:</b> they process sales quickly but may lack fields needed for B2B invoices. Check whether your POS supports business customer details, customer TRN or TIN, PINT AE generation, ASP connectivity, electronic credit notes and invoice storage. If not, use a separate accounting app for B2B invoices.</li>
+        <li><b>Excel:</b> you do not have to change your software. Excel cannot send e-invoices on its own, but an outside ASP can take your invoice data from a ready Excel template. You upload the file, and the ASP converts it to PINT AE, sends it and reports it to the FTA. No connector is needed. With einvoicecost.ae this costs {aed(first('excel'))} in the first year and {aed(every('excel'))} a year after, for up to {N0} invoices. <a href="/excel">Excel guide</a></li>
+      </ul>
+      <p>A PDF sent by email will not meet the rules for B2B invoices. Switching to accounting software is optional. It can help if you send many invoices.</p>
+    </section>
+
+    <section id="choose">
+      <h2>Which software should small traders choose?</h2>
+      <p>The best software depends on your business size, invoice volume and current process.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software type</th><th>Examples</th><th>What to check</th></tr></thead><tbody>
+        <tr><td>Built-in e-invoicing (the software is an ASP)</td><td class="txt">Zoho Books, TallyPrime, Wafeq</td><td class="txt">Zoho: Professional plan or higher, plus e-invoicing packs. TallyPrime: active TSS. Wafeq: a paid plan.</td></tr>
+        <tr><td>Needs an outside ASP and a connector</td><td class="txt">QuickBooks Online, QuickBooks Desktop</td><td class="txt">Connector price and setup. QuickBooks is not an ASP.</td></tr>
+        <tr><td>Other software</td><td class="txt">Xero, Odoo, Sage 50, SAP, ERPNext</td><td class="txt">Connector price. Ask your provider.</td></tr>
+        <tr><td>Retail POS</td><td class="txt">Foodics, Lightspeed, local POS apps</td><td class="txt">Support for B2B invoices and ASP connections</td></tr>
+        <tr><td>Excel</td><td class="txt">Excel</td><td class="txt">A ready upload template through an outside ASP</td></tr>
+      </tbody></table></div>
+      <p>Do not choose software based only on its name. Before you subscribe, ask the provider:</p>
+      <ol class="olist">
+        <li>Does the software support the UAE PINT AE format?</li>
+        <li>Is the company an Accredited Service Provider, or does it integrate with one?</li>
+        <li>Can I send and receive e-invoices?</li>
+        <li>Can I issue electronic credit notes?</li>
+        <li>Does it support non-VAT-registered businesses?</li>
+        <li>What are the monthly and transaction fees?</li>
+        <li>Can I keep using my current accounting software?</li>
+      </ol>
+      <p>Also confirm the provider's accreditation against the official Ministry of Finance list.</p>
+    </section>
+
+    <section id="vat">
+      <h2>Does VAT registration affect UAE e-invoicing?</h2>
+      <p>VAT registration does not decide whether you must follow the rules. A business may need e-invoicing even if it is not registered for VAT. The difference is how the business identifies itself and handles VAT information.</p>
+      <h3 class="sm">If you are registered for VAT</h3>
+      <p>You already have a 15-digit Tax Registration Number (TRN). Your ASP uses it as your digital address on the network. A building materials trader in Abu Dhabi that charges 5% VAT must include the required seller and buyer details, transaction information and VAT information on every e-invoice. Check that your customer records have the correct TRNs, because a wrong or missing buyer TRN can cause problems when you create an invoice.</p>
+      <h3 class="sm">If you are not registered for VAT</h3>
+      <p>You may still need e-invoicing. A freelance website designer earning AED 200,000 a year is below the mandatory VAT registration threshold of AED 375,000 and does not charge 5% VAT. But if the designer builds websites for UAE companies, those B2B invoices still fall within the rules.</p>
+      <p>Non-VAT-registered businesses must register with the FTA for a Tax Identification Number (TIN), which works as the electronic address. This is different from a VAT TRN. Check the FTA's current guidance for the exact TIN format and registration steps.</p>
+      <h3 class="sm">Do I need to charge 5% VAT when I start e-invoicing?</h3>
+      <p>No. E-invoicing does not make your business VAT-registered. A VAT-registered trader issues invoices with VAT. A non-VAT-registered trader does not charge VAT just because it uses e-invoicing. A business that becomes liable for VAT must follow the VAT registration rules. E-invoicing changes how invoice data is created and sent. It does not replace the VAT system.</p>
+    </section>
+
+    <section id="how">
+      <h2>How the UAE e-invoicing system works</h2>
+      <p>The UAE is adopting a decentralised "5-corner" model based on the Peppol framework. Businesses do not send invoices through one central government portal. The system connects businesses through Accredited Service Providers.</p>
+      <p>Take a wholesale food supplier in Sharjah that sells to a supermarket in Dubai:</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Create the invoice</h3></div><p>The supplier creates it in compatible accounting software, with seller and buyer details, products, quantities, prices and VAT where applicable.</p></div></li>
+        <li><div><div class="st-head"><h3>Send it to the ASP</h3></div><p>The software sends the structured invoice data to the supplier's ASP.</p></div></li>
+        <li><div><div class="st-head"><h3>Validate</h3></div><p>The ASP checks the data against the required technical and business rules.</p></div></li>
+        <li><div><div class="st-head"><h3>Deliver</h3></div><p>The ASP sends the invoice through the Peppol network to the buyer's ASP, and the buyer receives it.</p></div></li>
+        <li><div><div class="st-head"><h3>Report</h3></div><p>The required invoice data is also reported to the Federal Tax Authority.</p></div></li>
+      </ol>
+      <p>This cuts manual invoice handling and lets transaction data move between businesses more smoothly.</p>
+    </section>
+
+    <section id="asp">
+      <h2>What is an Accredited Service Provider (ASP)?</h2>
+      <p>An ASP is an approved provider that connects businesses to the UAE e-invoicing network. Small traders need one to send and receive structured e-invoices. Think of it as a trusted post office between your accounting software and the network: it checks the invoice, delivers it and reports the tax data. You appoint your ASP on EmaraTax.</p>
+      <p>When choosing an ASP, consider accreditation status, compatibility with your software, monthly fees, charges per invoice, support for incoming and outgoing invoices, customer service, data security and technical support. A business with 20 invoices a month needs a different plan from a wholesaler issuing 1,000. Compare services and costs before you sign.</p>
+    </section>
+
+    <section id="penalties">
+      <h2>What happens if I do not comply?</h2>
+      <p>Businesses that miss the requirements may face administrative fines under Cabinet Decision No. 106 of 2025.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Non-compliance</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not implementing e-invoicing or not appointing an ASP on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+        <tr><td>Not telling your ASP about changes to your business data in time</td><td>AED 1,000 for each day</td></tr>
+      </tbody></table></div>
+      <p>A small wholesale trader that misses the ASP deadline may face monthly penalties. If the same trader sends 80 invoices late in one month, that is AED 8,000 at AED 100 each, but the cap limits this part to AED 5,000. Credit notes have their own AED 5,000 monthly cap. Confirm current penalty rules with the FTA before making compliance decisions.</p>
+    </section>
+
+    <section id="cost">
+      <h2>How much does UAE e-invoicing cost for small businesses?</h2>
+      <p>The UAE government does not charge businesses for e-invoicing. You pay for the service that sends your invoices in the government format. The prices below are einvoicecost.ae prices in AED, excluding 5% VAT. Your accounting software subscription is separate.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software</th><th>First year (up to {N0} invoices)</th><th>Every year after</th></tr></thead><tbody>
+        <tr><td>QuickBooks Online</td><td>{fmt(first('qbo'))}</td><td>{fmt(every('qbo'))}</td></tr>
+        <tr><td>QuickBooks Desktop</td><td>{fmt(first('qbd'))}</td><td>{fmt(every('qbd'))}</td></tr>
+        <tr><td>Excel</td><td>{fmt(first('excel'))}</td><td>{fmt(every('excel'))}</td></tr>
+        <tr><td>Other software (Xero, Odoo, Sage, SAP and more)</td><td>{fmt(first('other'))} + connector</td><td>{fmt(every('other'))}</td></tr>
+        <tr><td>Zoho Books, TallyPrime, Wafeq (built in)</td><td class="txt">No ASP, connector or platform fee. Setup free if you do it yourself, or {aed(P.help)} if we do it.</td><td class="txt">Software costs only</td></tr>
+      </tbody></table></div>
+      <p>Above {N0} invoices you pay AED {perExtra} for each extra invoice, with no slabs. Invoices you receive from suppliers are not counted. A small trading business using Excel with 300 invoices a year pays {aed(first('excel'))} in the first year and {aed(every('excel'))} a year after.</p>
+      <p class="callout">See the <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing cost guide</a> for the price formula and worked examples, or use the <a href="/">einvoicecost.ae calculator</a> for your exact price.</p>
+    </section>
+
+    <section id="prepare">
+      <h2>How small traders can prepare</h2>
+      <p>You do not need to wait until 2027 to start. A few simple steps make the change easier.</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Identify your sales channels</h3></div><p>List B2B customers (companies, wholesale buyers, offices, restaurants, schools, government) and B2C customers (walk-in shoppers, individuals). This shows how many sales need e-invoicing.</p></div></li>
+        <li><div><div class="st-head"><h3>Organise customer information</h3></div><p>Collect legal company name, physical address, VAT TRN or TIN where applicable, and contact details. Do not rely on informal shop names or old invoice records.</p></div></li>
+        <li><div><div class="st-head"><h3>Check your accounting software</h3></div><p>Ask your provider whether it supports PINT AE and connects to an accredited ASP. Excel users can keep Excel with an upload template. You do not need an expensive enterprise system.</p></div></li>
+        <li><div><div class="st-head"><h3>Compare ASPs</h3></div><p>Compare pricing, software compatibility, support and invoice limits. Aim to sign up well before 31 March 2027.</p></div></li>
+        <li><div><div class="st-head"><h3>Prepare supplier records</h3></div><p>E-invoicing also affects incoming invoices. A mini-mart that buys stock from several distributors needs a way to receive, process and store them.</p></div></li>
+        <li><div><div class="st-head"><h3>Test before the deadline</h3></div><p>Use the voluntary period. Create sample invoices and credit notes, and check customer details, product descriptions, VAT calculations, sending, receiving and credit note processing.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="first">
+      <h2>What should I do first based on my business type?</h2>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Your business</th><th>Recommended first step</th></tr></thead><tbody>
+        <tr><td>Wholesale trader</td><td>Review your accounting software and B2B customer records</td></tr>
+        <tr><td>Retail shop</td><td>Check whether you issue company invoices</td></tr>
+        <tr><td>Restaurant or cafe</td><td>Separate corporate orders from walk-in sales</td></tr>
+        <tr><td>Freelancer</td><td>Check your B2B invoicing and TIN requirements</td></tr>
+        <tr><td>Maintenance contractor</td><td>Identify business and residential customers</td></tr>
+        <tr><td>Free Zone trader</td><td>Check your accounting software and ASP options</td></tr>
+        <tr><td>Online seller</td><td>Find out whether you sell to businesses, consumers or both</td></tr>
+        <tr><td>Excel user</td><td>Ask about an Excel upload option</td></tr>
+        <tr><td>POS user</td><td>Ask your provider about B2B e-invoice support</td></tr>
+      </tbody></table></div>
+      <p>You do not need to replace your whole accounting system. First learn which transactions are covered, then check whether your current software can support them.</p>
+    </section>
+
+    <section id="faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section>
+      <h2>Is your small business ready?</h2>
+      <p>UAE e-invoicing will change how small traders create, send and receive business invoices, but the change does not need to be complicated. Start by understanding your customer base. Then review your accounting software. If you are not VAT-registered, do not assume you are exempt, because your B2B and B2G sales may still fall within the rules. A small business that organises its records, checks its software and picks a suitable ASP early will have a much easier transition.</p>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-ministry/mof-initiatives/einvoicing/pre-approved-einvoicing-service-providers" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="https://thenationalnews.com/business/2026/10/19/uae-amends-e-invoicing-regulations-as-implementation-deadline-draws-closer" target="_blank" rel="noopener">The National: UAE amends e-invoicing regulations (October 2026)</a></li>
+      </ul>
+      <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. This guide is general information, not tax or legal advice. Rules can change, so always check the latest updates from the UAE Ministry of Finance and the Federal Tax Authority (FTA).</p>
+    </section>
+
+    <section class="final">
+      <div><h2>Get your exact price</h2><p class="sub">Message us your software and invoice count. We reply with your price and next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
