@@ -1,5 +1,6 @@
 ---
 import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/guide.css';
 import '../../styles/blog.css';
@@ -317,6 +318,8 @@ Average per invoice = ${fmt(feeAt(10000))} ÷ 10,000 = ${(feeAt(10000) / 10000).
       </ul>
       <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. Market ranges and rates for other providers come from published provider price lists and UAE pricing guides, and vary by provider. Software plan prices are approximate and set by each software company. This guide is general information, not tax or legal advice. VAT treatment of free-zone sales, exports, rebates and returns depends on your facts, so confirm it with your tax adviser.</p>
     </section>
+
+    <RelatedGuides current="uae-e-invoicing-distributors" />
 
     <section class="final">
       <div><h2>Get your exact price</h2><p class="sub">Message us your software and yearly invoice count. We reply with your price and next steps, usually the same day.</p></div>

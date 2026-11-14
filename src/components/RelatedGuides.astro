@@ -1,0 +1,21 @@
+---
+// Cross-links every blog post to all the others, regardless of topic.
+const { current } = Astro.props as { current: string };
+
+const posts = [
+  { slug: 'uae-e-invoicing-cost', title: 'UAE e-invoicing cost 2027: complete price guide', desc: 'Exact prices by software, the formula and worked examples.' },
+  { slug: 'uae-e-invoicing-small-traders', title: 'UAE e-invoicing for small traders', desc: 'Deadlines, rules, software choices and fines for small businesses.' },
+  { slug: 'uae-e-invoicing-contractors', title: 'UAE e-invoicing for contractors', desc: 'Retention billing, IPCs, variation orders and subcontractors.' },
+  { slug: 'uae-e-invoicing-distributors', title: 'UAE e-invoicing for distributors', desc: 'Returns, credit notes, master data and ERP options.' },
+];
+const others = posts.filter((p) => p.slug !== current);
+---
+
+<section id="related">
+  <h2>Related guides</h2>
+  <ul class="srclist">
+    {others.map((p) => (
+      <li><a href={`/blog/${p.slug}`}>{p.title}</a>. {p.desc}</li>
+    ))}
+  </ul>
+</section>

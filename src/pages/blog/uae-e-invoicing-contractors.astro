@@ -1,5 +1,6 @@
 ---
 import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/guide.css';
 import '../../styles/blog.css';
@@ -303,6 +304,8 @@ Every year after = ${fmt(P.platform)} + ${fmt(feeAt(900))} = ${fmt(every('other'
       </ul>
       <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. Software plan prices are approximate and set by each software company. This guide is general information, not tax or legal advice. VAT treatment of retention, variations and deductions depends on your contract.</p>
     </section>
+
+    <RelatedGuides current="uae-e-invoicing-contractors" />
 
     <section class="final">
       <div><h2>Get your exact price</h2><p class="sub">Message us your software and yearly invoice count. We reply with your price and next steps, usually the same day.</p></div>
