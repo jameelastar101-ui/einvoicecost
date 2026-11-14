@@ -1,0 +1,314 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, price, invoiceFee } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-14';
+const UPDATED_ISO = '2026-11-14';
+const UPDATED = '14 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/uae-e-invoicing-contractors';
+const N0 = P.feeCovered;
+const first = (k: string, n = N0) => price(k, n).firstYear;
+const every = (k: string, n = N0) => price(k, n).everyYear;
+const perExtra = P.feePerExtra.toFixed(2);
+
+const title = 'UAE E-Invoicing for Contractors: Retention & Cost 2027';
+const description =
+  'UAE e-invoicing for contractors and subcontractors: retention billing, IPCs, variation orders, deadlines, penalties and prices by software.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your contractor e-invoicing guide. I use [software], about [number] invoices a year. Please send me my price.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Do contractors have to issue e-invoices in the UAE?", a: "Yes. A contractor or subcontractor that sells to other businesses (B2B) or to government (B2G) has no special exemption. Progress invoices, retention invoices, variation invoices and credit notes in scope must be structured e-invoices (PINT AE format) sent through an accredited service provider (ASP), not PDF or paper. Sales to consumers (B2C) are excluded for now." },
+  { q: "Do subcontractors need e-invoicing too?", a: "Yes. A subcontractor billing a main contractor is a B2B transaction, so the subcontractor must issue e-invoices through its own ASP. There is no small-business exemption. A subcontractor with revenue under AED 50 million goes live on 1 July 2027." },
+  { q: "When does e-invoicing start for a contractor or subcontractor?", a: "It depends on the contractor's or subcontractor's annual revenue, not on its client. With revenue of AED 50 million or more, you had to appoint an ASP by 30 October 2026 and go live on 1 January 2027. With revenue under AED 50 million, appoint an ASP by 31 March 2027 and go live on 1 July 2027. Government entities go live on 1 October 2027." },
+  { q: "How does a contractor show retention on a UAE e-invoice?", a: "Under the UAE e-invoicing guidelines (version 1.1, 1 June 2026), a contractor's interim progress e-invoice may cover the net amount payable after retention is deducted. When the retention becomes payable, for example after completion or the defects liability period, a separate e-invoice is issued for the retention amount. The detailed retention calculation usually stays in the contractor's project system or contract schedule, not on the invoice." },
+  { q: "Does a subcontractor issue one invoice or two for a certificate with retention?", a: "Usually two over the life of the certificate: one e-invoice for the net amount when the certificate is approved, and a second e-invoice later when the retention is released. If the main contractor releases retention in two stages, for example at practical completion and at the end of the defects liability period, the subcontractor issues one e-invoice for each release." },
+  { q: "When is VAT due on retention for a contractor?", a: "VAT timing follows the VAT law, not the e-invoicing rules. Under the Federal Tax Authority's real estate guidance, VAT on retention is generally due at the earlier of the retention being paid or an invoice for it being issued. A contractor or subcontractor should confirm the treatment for its contract with a tax adviser." },
+  { q: "Can a contractor edit an IPC e-invoice after it is sent?", a: "No. A sent e-invoice cannot be edited or deleted. If a contractor's certificate was wrong, it issues an e-credit note and, if needed, a new e-invoice. A contractor or subcontractor should check the certified figures before sending, because every correction is an extra document." },
+  { q: "How does a contractor bill a variation order approved after the IPC?", a: "The contractor or subcontractor issues a new e-invoice for the approved variation, or an e-credit note if the amount must come down. It should not try to change the IPC e-invoice that was already sent. Keep the variation reference and the original contract reference in your project records so you can explain each document." },
+  { q: "Can a subcontractor still send a PDF IPC to the main contractor?", a: "A subcontractor can still send a PDF as a copy for the main contractor's project team, but for invoices in scope the PDF is not the e-invoice. The legal invoice is the structured PINT AE e-invoice sent through the subcontractor's ASP once its phase starts." },
+  { q: "Does e-invoicing apply when a contractor's client is a government developer?", a: "Yes. Business-to-government (B2G) invoices from a contractor or subcontractor are in scope. The contractor's own deadline depends on its revenue. Government entities themselves go live on 1 October 2027, so a contractor should ask its government client how it will receive e-invoices before then." },
+  { q: "How much does e-invoicing cost for a contractor or subcontractor?", a: `With einvoicecost.ae, a contractor or subcontractor sending up to ${N0} invoices a year pays ${aed(first('qbo'))} in the first year for QuickBooks Online, ${aed(first('qbd'))} for QuickBooks Desktop, ${aed(first('excel'))} for Excel, and ${aed(first('other'))} plus a connector for other software such as SAP, Oracle, Dynamics, Odoo or Sage. Every year after costs ${aed(every('excel'))}. Above ${N0} invoices, add AED ${perExtra} per invoice. Zoho Books, TallyPrime and Wafeq have e-invoicing built in. Prices exclude 5% VAT.` },
+  { q: "Do the supplier and subcontractor invoices a main contractor receives count in the price?", a: "Not with einvoicecost.ae. Our invoice fee counts only the sales invoices and credit notes a contractor sends. This matters for main contractors, who may receive many times more invoices from subcontractors and suppliers than they send. Some providers count received documents too, so ask before you sign." },
+  { q: "Does each retention release add to a contractor's invoice fee?", a: `Yes, each retention release is one more e-invoice for the contractor or subcontractor. The cost is small. Up to ${N0} invoices a year it adds nothing, because the fee is fixed at ${aed(P.feeMin)}. Above ${N0}, each extra invoice costs AED ${perExtra}.` },
+  { q: "Does the FTA approve a contractor's invoice before it is valid?", a: "No. The UAE uses a decentralised model, not a clearance model. A contractor's ASP checks the invoice, delivers it to the client's ASP over the Peppol network and reports the tax data to the Federal Tax Authority. The FTA does not approve each invoice before it can be issued." },
+  { q: "What if a subcontractor is not ready for e-invoicing?", a: "Each business has its own deadline, so a subcontractor under AED 50 million revenue may go live months after a large main contractor. The main contractor should collect its subcontractors' TINs, TRNs and Peppol IDs early, ask each one when it will go live, and ask its tax adviser how invoices received before then should be handled for input VAT." },
+  { q: "Does a contractor need a construction ERP for e-invoicing?", a: "No. A contractor or subcontractor needs software or a template that can produce correct invoice data: customer TRN, VAT code on each line, and separate documents for progress, retention release, variation and credit note. QuickBooks, Excel, TallyPrime, Zoho Books, Wafeq and most ERPs can do this with an ASP and the right setup." },
+  { q: "What are the penalties for a contractor or subcontractor who is not ready?", a: "Under Cabinet Decision No. 106 of 2025, not appointing an ASP on time costs AED 5,000 for each month. Not issuing an e-invoice or e-credit note can cost AED 100 each, up to AED 5,000 a month for each type. A contractor with monthly IPCs on many projects can reach the cap quickly." },
+  { q: "What should a contractor or subcontractor collect from clients before go-live?", a: "Each client's legal name, TRN or tax ID, address and Peppol ID if they have one. Missing or wrong customer TRNs and VAT codes are the most common reasons a contractor's or subcontractor's e-invoices are rejected." },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'UAE e-invoicing for contractors', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['answer', 'Quick answer'], ['deadlines', 'Who goes live when'], ['flow', 'How a contractor invoice travels'],
+  ['documents', 'Which document for which event'], ['retention', 'Retention billing'], ['examples', 'Retention examples with numbers'],
+  ['variations', 'Variations, corrections, back-charges'], ['subs', 'Subcontractors and received invoices'], ['cost', 'What it costs'],
+  ['cost-examples', 'Cost examples for contractors'], ['software', 'Software contractors use'], ['start', 'Get ready in 6 steps'],
+  ['penalties', 'Penalties'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+
+/** Typical contractor volumes for the price table (all values from prices.js). */
+const volumes = [60, 150, 300, 500, 720, 900, 1500];
+const rows = volumes.map((n) => ({
+  n,
+  fee: invoiceFee(n),
+  avg: (invoiceFee(n) / n).toFixed(2),
+  qbo: first('qbo', n),
+  qbd: first('qbd', n),
+  excel: first('excel', n),
+  other: first('other', n),
+  every: every('excel', n),
+}));
+const feeAt = (n: number) => invoiceFee(n);
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Contractors</p>
+      <p class="eyebrow">Blog · Contractors and subcontractors</p>
+      <h1>UAE e-invoicing for contractors and subcontractors: retention, IPCs, variations and cost</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Contractors and subcontractors must send <b>progress invoices, retention invoices, variation invoices and credit notes as structured e-invoices</b> through an accredited service provider (ASP). Large contractors (revenue AED 50 million or more) go live on <b>1 January 2027</b>. Everyone else appoints an ASP by <b>31 March 2027</b> and goes live on <b>1 July 2027</b>.</p>
+        <p>Most contractors bill by certificate, so their yearly invoice count is often low. With einvoicecost.ae, up to {N0} invoices costs <b>{aed(first('excel'))} (Excel) to {aed(first('qbd'))} (QuickBooks Desktop) in the first year</b>, then <b>{aed(every('excel'))} a year</b>. Invoices you receive from subcontractors and suppliers are <b>not counted</b>.</p>
+        <div class="facts">
+          <div><p class="k">Retention</p><p class="v">Net invoice now, second invoice at release</p></div>
+          <div><p class="k">Edit a sent IPC invoice</p><p class="v">Not possible: credit note or new invoice</p></div>
+          <div><p class="k">Up to {N0} invoices</p><p class="v">{aed(P.feeMin)} a year</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="deadlines">
+      <h2>Who goes live when</h2>
+      <p>Your deadline depends on <b>your own annual revenue</b>, not on your client's. Revenue only decides when you start, not whether e-invoicing applies to you. There is no small-business exemption.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Contractor type</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Main contractor, revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Contractor or subcontractor, revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities (your clients)</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p class="small">One result: a large main contractor goes live six months before many of its subcontractors. See <a href="#subs">subcontractors and received invoices</a>. Check the Ministry of Finance for any later change.</p>
+    </section>
+
+    <section id="flow">
+      <h2>How a contractor invoice travels</h2>
+      <p>Instead of emailing a PDF, you create the invoice data in your software, your ASP checks it, converts it to the UAE format (<b>PINT AE</b>) and sends it over the Peppol network to your client's ASP, and your client receives it in its own system. The tax data is reported to the Federal Tax Authority (FTA). This is called the five-corner model.</p>
+      <p><b>The FTA does not approve each invoice before it is valid.</b> The UAE uses a decentralised model, not a clearance model like Saudi Arabia. Your ASP does the checking, and invoices with missing data are rejected by the ASP before they go out. That is why correct customer details and VAT codes matter more than speed.</p>
+    </section>
+
+    <section id="documents">
+      <h2>Which document for which billing event</h2>
+      <p>Contracts create more billing events than ordinary sales. Each event needs its own document, and a sent e-invoice cannot be edited.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Billing event</th><th>What you issue</th></tr></thead><tbody>
+        <tr><td>Interim payment certificate (IPC) approved</td><td class="txt">E-invoice for the certified amount payable. If retention applies, it may show the net amount after retention.</td></tr>
+        <tr><td>Retention released (completion or end of defects liability period)</td><td class="txt">A separate e-invoice for the retention amount.</td></tr>
+        <tr><td>Advance or mobilisation payment received</td><td class="txt">E-invoice when the advance is received, if VAT is due on it. The final invoice covers only the balance and refers to the advance invoice.</td></tr>
+        <tr><td>Variation order approved</td><td class="txt">New e-invoice for the variation.</td></tr>
+        <tr><td>Error in an invoice already sent</td><td class="txt">E-credit note, then a new e-invoice if needed.</td></tr>
+        <tr><td>Reduction agreed after invoicing</td><td class="txt">E-credit note.</td></tr>
+      </tbody></table></div>
+      <p class="small">Based on the UAE e-invoicing guidelines version 1.1 (1 June 2026) as summarised by Crowe, and BDO's review of the regulations. Your contract and tax adviser decide the exact treatment for your project.</p>
+    </section>
+
+    <section id="retention">
+      <h2>Retention billing</h2>
+      <p>Retention is the part of each payment the client holds back, often 5% to 10%, until completion or the end of the defects liability period. The e-invoicing guidelines handle it with <b>two invoices</b>:</p>
+      <ol class="olist">
+        <li><b>Progress e-invoice.</b> Issued when the certificate is approved. It may cover only the net amount payable after retention, with VAT on that net amount.</li>
+        <li><b>Retention e-invoice.</b> Issued later, when the retention becomes payable. It is a separate e-invoice for the retention amount.</li>
+      </ol>
+      <p>The guidelines also say businesses may keep their existing invoicing and accounting practices for contractual retention, as long as they follow the VAT law. The retention calculation itself usually stays in your project system or contract schedule, not on the invoice.</p>
+      <p><b>VAT on retention.</b> VAT timing comes from the VAT law, not from the e-invoicing rules. The Federal Tax Authority's real estate guidance generally treats VAT on retention as due at the earlier of payment or the issue of an invoice for it. Confirm this for your contract with your tax adviser.</p>
+      <p class="small">Setting up retention in software: keep retention as its own item or account that is not part of the invoice total, so the e-invoice carries only the net certified amount. Then test one progress invoice and one retention release before go-live.</p>
+    </section>
+
+    <section id="examples">
+      <h2>Retention examples with numbers</h2>
+      <div class="ex"><h3>1. Subcontractor billing a main contractor</h3><p class="xcalc">Work certified            = 1,000,000
+Retention 10%             = 100,000
+Progress e-invoice        = 900,000 + VAT 5% 45,000 = 945,000
+Later, retention release  = 100,000 + VAT 5% 5,000 = 105,000</p><p class="xans">Two e-invoices: AED 945,000 now and AED 105,000 when retention is released.</p></div>
+      <div class="ex"><h3>2. Main contractor billing a developer (IPC with retention)</h3><p class="xcalc">IPC certified gross       = 10,000,000
+Retention 10%             = 1,000,000
+IPC e-invoice (net)       = 9,000,000 + VAT 5% 450,000 = 9,450,000</p><p class="xans">The IPC e-invoice is AED 9,450,000. The AED 1,000,000 retention is invoiced separately when it is released.</p></div>
+      <div class="ex"><h3>3. Variation order approved after the IPC</h3><p class="xcalc">Approved variation        = 200,000
+Retention 10% on it       = 20,000
+New e-invoice (net)       = 180,000 + VAT 5% 9,000 = 189,000</p><p class="xans">A new e-invoice of AED 189,000. The IPC e-invoice already sent stays as it is.</p></div>
+      <p class="small">Examples assume 10% retention and 5% VAT, and that retention applies to the variation. Check your contract.</p>
+    </section>
+
+    <section id="variations">
+      <h2>Variations, corrections and back-charges</h2>
+      <ul class="know">
+        <li><b>You cannot edit a sent e-invoice.</b> A wrong IPC is corrected with an e-credit note and, if needed, a new e-invoice. Partial credit notes are allowed.</li>
+        <li><b>Approve before you invoice.</b> Many contracts approve variations months after the work. Each correction is an extra document for you and for your client's finance team, so bill only certified amounts.</li>
+        <li><b>Keep references.</b> Record the contract number, IPC number and variation number against each document so you can explain it if the FTA or your client asks.</li>
+        <li><b>Delay damages and back-charges.</b> How a deduction should be documented depends on the contract and on whether it adjusts the price or is a separate charge. Agree the treatment with your tax adviser before go-live, and do not silently net it off a certificate.</li>
+      </ul>
+    </section>
+
+    <section id="subs">
+      <h2>Subcontractors and received invoices</h2>
+      <p>E-invoicing works in both directions. Your ASP also <b>receives</b> the e-invoices your subcontractors and suppliers send you.</p>
+      <ul class="know">
+        <li><b>Collect IDs early.</b> Ask each subcontractor and supplier for its TIN, TRN and Peppol ID, and each client for the same.</li>
+        <li><b>Dates differ.</b> A subcontractor under AED 50 million revenue goes live on 1 July 2027. A main contractor of AED 50 million or more goes live on 1 January 2027. Ask each subcontractor when it will start issuing e-invoices.</li>
+        <li><b>Input VAT.</b> Ask your tax adviser how invoices received before a supplier's go-live date, and invoices rejected or missing, should be handled for input VAT recovery.</li>
+        <li><b>Check your ASP's counting rule.</b> Some providers count received invoices in your volume. For a main contractor that can be several times the number of invoices it sends.</li>
+      </ul>
+    </section>
+
+    <section id="cost">
+      <h2>What it costs</h2>
+      <p>Prices are the same for contractors and everyone else. The full explanation, with all tables, is in our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a>. In short:</p>
+      <div class="formula"><p class="fh">einvoicecost.ae price formula (AED, excl. VAT)</p><pre>{`Invoice fee        = ${fmt(P.feeMin)}                      if n is ${fmt(N0)} or less
+                   = ${fmt(P.feeMin)} + ${perExtra} × (n − ${fmt(N0)})   if n is more than ${fmt(N0)}
+
+First year         = Onboarding ${fmt(P.onboarding)} + Setup ${fmt(P.setup)} + Connector
+                     + Platform fee ${fmt(P.platform)} + Invoice fee
+Every year after   = Platform fee ${fmt(P.platform)} + Invoice fee
+Connector          = QuickBooks Online ${fmt(P.connector.qbo)}, QuickBooks Desktop ${fmt(P.connector.qbd)},
+                     Excel ${fmt(P.connector.excel)}, other software quoted`}</pre></div>
+      <p class="small"><b>n</b> is the number of sales invoices and credit notes you send in a year. A retention release is one invoice, and each credit note counts as one document. Invoices you receive are not counted.</p>
+      <h3 class="sm">Price for typical contractor volumes</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Invoices a year</th><th>Invoice fee</th><th>Average per invoice</th><th>First year: QuickBooks Online</th><th>First year: QuickBooks Desktop</th><th>First year: Excel</th><th>First year: other software</th><th>Every year after</th></tr></thead><tbody>
+        {rows.map((r) => <tr><td>{fmt(r.n)}</td><td>{fmt(r.fee)}</td><td>{r.avg}</td><td>{fmt(r.qbo)}</td><td>{fmt(r.qbd)}</td><td>{fmt(r.excel)}</td><td>{fmt(r.other)} + connector</td><td>{fmt(r.every)}</td></tr>)}
+      </tbody></table></div>
+      <p class="small">Zoho Books, TallyPrime and Wafeq have e-invoicing built in. See <a href="#software">software contractors use</a>.</p>
+      <h3 class="sm">What retention adds to your invoice count</h3>
+      <p>A project billed monthly for 12 months with retention released in two stages is 12 progress invoices plus 2 retention invoices, 14 in total. Up to {N0} invoices a year, those two extra invoices cost nothing, because the fee is fixed at {aed(P.feeMin)}. Above {N0}, they cost 2 × AED {perExtra} = AED {(2 * P.feePerExtra).toFixed(2)}.</p>
+    </section>
+
+    <section id="cost-examples">
+      <h2>Cost examples for contractors</h2>
+      <div class="ex"><h3>1. Small MEP subcontractor, Excel, 60 invoices a year</h3><p class="xcalc">{`4 live contracts: 4 × 12 progress = 48
++ 4 retention releases + 8 variations or credit notes = 60
+Invoice fee = ${fmt(feeAt(60))} (minimum, under ${N0})
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + 0 + ${fmt(P.platform)} + ${fmt(feeAt(60))} = ${fmt(first('excel', 60))}
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(60))} = ${fmt(every('excel', 60))}`}</p><p class="xans">{aed(first('excel', 60))} in the first year, then {aed(every('excel', 60))} a year. Its supplier bills are not counted.</p></div>
+      <div class="ex"><h3>2. Contractor with maintenance contracts, QuickBooks Online, 720 invoices a year</h3><p class="xcalc">{`Monthly maintenance billing plus project certificates = 720
+Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (720 − ${N0}) = ${fmt(feeAt(720))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${fmt(P.connector.qbo)} + ${fmt(P.platform)} + ${fmt(feeAt(720))} = ${fmt(first('qbo', 720))}
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(720))} = ${fmt(every('qbo', 720))}
+Average per invoice = ${fmt(feeAt(720))} ÷ 720 = ${(feeAt(720) / 720).toFixed(2)}`}</p><p class="xans">{aed(first('qbo', 720))} in the first year, then {aed(every('qbo', 720))} a year.</p></div>
+      <div class="ex"><h3>3. Main contractor, QuickBooks Desktop, 1,500 invoices a year</h3><p class="xcalc">{`Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (1,500 − ${N0}) = ${fmt(feeAt(1500))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${fmt(P.connector.qbd)} + ${fmt(P.platform)} + ${fmt(feeAt(1500))} = ${fmt(first('qbd', 1500))}
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(1500))} = ${fmt(every('qbd', 1500))}`}</p><p class="xans">{aed(first('qbd', 1500))} in the first year, then {aed(every('qbd', 1500))} a year.</p></div>
+      <div class="ex"><h3>4. Large main contractor (revenue AED 50 million or more) on SAP, Oracle or Dynamics, 900 invoices a year</h3><p class="xcalc">{`Invoice fee = ${fmt(P.feeMin)} + ${perExtra} × (900 − ${N0}) = ${fmt(feeAt(900))}
+First year = ${fmt(P.onboarding)} + ${fmt(P.setup)} + connector + ${fmt(P.platform)} + ${fmt(feeAt(900))} = ${fmt(first('other', 900))} + connector
+Every year after = ${fmt(P.platform)} + ${fmt(feeAt(900))} = ${fmt(every('other', 900))}`}</p><p class="xans">{aed(first('other', 900))} plus a quoted connector in the first year, then {aed(every('other', 900))} a year. If it also receives 3,600 invoices a year from subcontractors and suppliers, a provider that counts received documents would count 4,500. We count 900.</p></div>
+      <div class="ex"><h3>5. Subcontractor on TallyPrime, set up by us</h3><p class="xcalc">ASP fee 0, connector 0, platform fee 0 (built in)
+{`Setup = ${fmt(P.help)}`}</p><p class="xans">{aed(P.help)} one time, or AED 0 if you do it yourself. Keep TSS active.</p></div>
+      <p class="callout">Want your exact price? Send your software and yearly invoice count on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="software" class="wide">
+      <h2>Software contractors use</h2>
+      <p>Whether your software is an ASP itself decides most of your cost. Software that is not an ASP needs an outside ASP plus a connector or an upload template.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software</th><th>Is it an ASP?</th><th>Typical user</th><th>Our price, up to {N0} invoices</th></tr></thead><tbody>
+        <tr><td>TallyPrime</td><td>Yes</td><td>Subcontractors, trading and fit-out firms</td><td class="txt">Setup {aed(P.help)}, optional. Needs active TSS.</td></tr>
+        <tr><td>Zoho Books</td><td>Yes</td><td>Small and mid-size contractors</td><td class="txt">Setup {aed(P.help)}, optional. Packs paid to Zoho.</td></tr>
+        <tr><td>Wafeq</td><td>Yes</td><td>Small contractors and subcontractors</td><td class="txt">Setup {aed(P.help)}, optional.</td></tr>
+        <tr><td>QuickBooks Online</td><td>No</td><td>Mid-size contractors</td><td class="txt">{fmt(first('qbo'))} first year, {fmt(every('qbo'))} after</td></tr>
+        <tr><td>QuickBooks Desktop</td><td>No</td><td>Established contractors</td><td class="txt">{fmt(first('qbd'))} first year, {fmt(every('qbd'))} after</td></tr>
+        <tr><td>Excel / no software</td><td>No</td><td>Small subcontractors</td><td class="txt">{fmt(first('excel'))} first year, {fmt(every('excel'))} after</td></tr>
+        <tr><td>SAP, Oracle, Dynamics, Odoo, Sage, Xero, ERPNext</td><td>Usually no</td><td>Larger main contractors</td><td class="txt">{fmt(first('other'))} + connector first year, {fmt(every('other'))} after</td></tr>
+      </tbody></table></div>
+      <p class="small">Guides: <a href="/quickbooks-online">QuickBooks Online</a> · <a href="/quickbooks-desktop">QuickBooks Desktop</a> · <a href="/excel">Excel</a> · <a href="/zoho-books">Zoho Books</a> · <a href="/tally">Tally</a> · <a href="/wafeq">Wafeq</a> · <a href="/other-software">Other software</a>. Software subscriptions are paid to the software company.</p>
+    </section>
+
+    <section id="start">
+      <h2>Get ready in 6 steps</h2>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Check your revenue tier</h3></div><p>AED 50 million or more: live 1 January 2027. Under AED 50 million: appoint by 31 March 2027, live 1 July 2027.</p></div></li>
+        <li><div><div class="st-head"><h3>Count your invoices</h3></div><p>Progress, retention, variation and credit-note documents you send in a year. Received invoices are not counted by us.</p></div></li>
+        <li><div><div class="st-head"><h3>Clean your client data</h3></div><p>Correct legal name, TRN or tax ID and address for every client, and a VAT code on every item.</p></div></li>
+        <li><div><div class="st-head"><h3>Set up retention</h3></div><p>Keep retention outside the invoice total so the progress invoice shows the net amount, and plan the retention release invoice.</p></div></li>
+        <li><div><div class="st-head"><h3>Appoint your ASP on EmaraTax</h3></div><p>We guide you on a short call. See our <a href="/blog/uae-e-invoicing-cost#more">step-by-step answers</a>.</p></div></li>
+        <li><div><div class="st-head"><h3>Test, then go live</h3></div><p>Send a test progress invoice, a retention release and a credit note. Fix anything rejected, then switch on.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="penalties">
+      <h2>Penalties</h2>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. They apply once your phase starts, on top of normal VAT penalties.</p>
+      <div class="tablewrap"><table><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not implementing e-invoicing or not appointing an ASP on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+      </tbody></table></div>
+      <p>A contractor with monthly IPCs on many projects can reach the monthly cap quickly, so missing the start date costs more than setting up.</p>
+    </section>
+
+    <section id="faq">
+      <h2>Questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://www.crowe.com/ae/news/uae-e-invoicing-guidelines-updated-to-version" target="_blank" rel="noopener">Crowe: UAE e-invoicing guidelines updated to version 1.1 (advances and retention)</a></li>
+        <li><a href="https://www.bdo.global/en-gb/insights/tax/indirect-tax/united-arab-emirates-e-invoicing-the-regulatory-build-out-and-the-road-ahead" target="_blank" rel="noopener">BDO: UAE e-invoicing, the regulatory build-out and the road ahead</a></li>
+        <li><a href="https://ae-www.bdo.global/en-gb/news/news/vat-update-changes-to-the-real-estate-guide" target="_blank" rel="noopener">BDO: FTA real estate VAT guide, date of supply for retention</a></li>
+        <li><a href="https://docs.sovos.com/indirect-tax/indirect-tax-products/einvoicing/compliance-network/country-setup-guides/united-arab-emirates/about-united-arab-emirates" target="_blank" rel="noopener">Sovos: UAE e-invoicing compliance model (DCTCE)</a></li>
+        <li><a href="https://mof.gov.ae/en/about-ministry/mof-initiatives/einvoicing/pre-approved-einvoicing-service-providers" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+      </ul>
+      <p class="small">Prices on this page are einvoicecost.ae prices, checked on {UPDATED}. Software plan prices are approximate and set by each software company. This guide is general information, not tax or legal advice. VAT treatment of retention, variations and deductions depends on your contract.</p>
+    </section>
+
+    <section class="final">
+      <div><h2>Get your exact price</h2><p class="sub">Message us your software and yearly invoice count. We reply with your price and next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
