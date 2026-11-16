@@ -1,0 +1,372 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-16';
+const UPDATED_ISO = '2026-11-16';
+const UPDATED = '16 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/wafeq-e-invoicing-uae-guide';
+
+const title = 'WAFEQ E-INVOICING UAE 2027: COST, SETUP AND EXAMPLES FOR SERVICE FIRMS, TRADERS, DISTRIBUTORS AND CONTRACTORS';
+const description =
+  'Wafeq UAE e-invoicing: no per-invoice fee, plans from AED 690 a year, a 5-step setup and real examples for service firms, traders, distributors and contractors.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I use Wafeq and read your guide. I would like you to set up e-invoicing.');
+const setupWa = ctaWa;
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Is Wafeq an accredited service provider (ASP) in the UAE?", a: "Yes. Wafeq FZ-LLC is an accredited ASP with ASP ID 129932. Wafeq users appoint Wafeq on EmaraTax. They do not need another provider." },
+  { q: "Is Wafeq e-invoicing free in the UAE?", a: "There is no extra charge for e-invoicing and no per-invoice fee. It is included in the Starter, Plus and Premium plans. You still pay for the plan: AED 690, AED 960 or AED 2,400 a year." },
+  { q: "How much does Wafeq e-invoicing cost for a small business?", a: "A small service firm can start on Starter at AED 690 a year. That is about AED 57 a month. The e-invoicing fee is AED 0, whether you send 50 invoices or 5,000." },
+  { q: "Which Wafeq plan do I need for e-invoicing?", a: "Any paid plan works. E-invoicing is in all three. Pick by the accounting features and limits you need, not by e-invoicing." },
+  { q: "How do I set up e-invoicing in Wafeq?", a: "Switch on e-invoicing in Wafeq. Appoint Wafeq FZ-LLC on EmaraTax. Choose your start date and check that the status is active. Then fix any gaps and send a test invoice and credit note." },
+  { q: "How long does Wafeq e-invoicing setup take?", a: "Most businesses finish in about a day. The forms are quick. The slow part is cleaning customer and item data." },
+  { q: "Do I need an EmaraTax account to use Wafeq e-invoicing?", a: "Yes. You appoint your ASP on EmaraTax. If someone else holds the login, Wafeq says you can send them an approval link." },
+  { q: "What do I need before I start?", a: "You need your 15-digit TRN, your EmaraTax access, your trade licence details and a paid Wafeq plan. You also need a TRN and legal name for every business customer." },
+  { q: "Can Wafeq handle credit notes for returns?", a: "You must issue an e-credit note linked to the original invoice when you correct a sent invoice. Create it in Wafeq and send a test credit note before you go live. Each credit note counts as one document." },
+  { q: "Can I edit a Wafeq invoice after I send it as an e-invoice?", a: "No. Once an e-invoice is sent, you cannot edit it. You issue a credit note to correct it. Then you send a new e-invoice if the sale must be billed again." },
+  { q: "Do walk-in retail sales need e-invoices?", a: "Not for now. Sales to consumers (B2C) are outside the system. But a walk-in buyer who gives you a company TRN is a B2B customer. That sale needs an e-invoice once your phase starts." },
+  { q: "How does a contractor bill retention in Wafeq?", a: "Keep retention outside the invoice total. The progress e-invoice may cover the net certified amount. When the retention is released, you issue a separate e-invoice for it. Confirm the treatment with your tax adviser." },
+  { q: "Is Wafeq good for distributors with many invoices?", a: "It can be. Wafeq says its accounting product suits businesses that send fewer than 500 invoices a month. Above that, or with a large ERP, ask Wafeq whether your plan fits." },
+  { q: "Can I move my data from QuickBooks or Excel to Wafeq?", a: "Yes. We move your data and quote the price on WhatsApp, because it depends on your data. See our switching page." },
+  { q: "What if I already use another ASP?", a: "You can switch to Wafeq. Offboard your current ASP on EmaraTax, then appoint Wafeq right after." },
+  { q: "When is the e-invoicing deadline for Wafeq users?", a: "It is the same as for every business. With revenue under AED 50 million, appoint an ASP by 31 March 2027 and go live on 1 July 2027. With revenue of AED 50 million or more, the appointment date was 30 October 2026 and go-live is 1 January 2027. Government entities go live on 1 October 2027." },
+  { q: "What is the penalty for missing the e-invoicing deadline?", a: "Not appointing an ASP on time costs AED 5,000 for each month. After go-live, each invoice not issued electronically can cost AED 100, up to AED 5,000 a month. Credit notes have the same rule." },
+  { q: "Can einvoicecost.ae set up Wafeq e-invoicing for me?", a: `Yes. We do the full setup for ${aed(P.help)}, one time. It covers data fixes, your EmaraTax appointment, a test invoice and credit note, and fixes for rejected invoices. Or set it up yourself for free with the steps in this guide.` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'Wafeq e-invoicing UAE', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['what', 'What it is'], ['travel', 'How an invoice travels'], ['deadlines', 'Who goes live when'], ['cost', 'What it costs'], ['plans', 'Which plan fits'],
+  ['setup', 'Set up in 5 steps'], ['data', 'Data to fix first'], ['services', 'Service companies'], ['traders', 'Small traders'],
+  ['distributors', 'Distributors'], ['contractors', 'Contractors'], ['subs', 'Subcontractors'], ['compare', 'Five business types'],
+  ['mistakes', 'Mistakes that cause rejections'], ['know', 'Before you start'], ['switch', 'Thinking of switching'], ['help', 'Yourself or with help'],
+  ['faq', 'Questions'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Wafeq</p>
+      <p class="eyebrow">Blog · Wafeq</p>
+      <h1>WAFEQ E-INVOICING UAE 2027: COST, SETUP AND EXAMPLES FOR SERVICE FIRMS, TRADERS, DISTRIBUTORS AND CONTRACTORS</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Wafeq e-invoicing in the UAE has <b>no per-invoice fee</b>. Wafeq is an accredited service provider (ASP), so you need no other provider. It is included in the Starter (<b>AED 690 a year</b>), Plus (<b>AED 960</b>) and Premium (<b>AED 2,400</b>) plans. Set it up yourself in five steps, or we do it for <b>{aed(P.help)}</b>.</p>
+        <div class="facts">
+          <div><p class="k">Per-invoice fee</p><p class="v">AED 0, at any volume</p></div>
+          <div><p class="k">Wafeq plans</p><p class="v">AED 690, 960 or 2,400 a year</p></div>
+          <div><p class="k">Setup with us</p><p class="v">{aed(P.help)}, one time, optional</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="what">
+      <h2>What is Wafeq e-invoicing in the UAE?</h2>
+      <p>Wafeq e-invoicing lets you send official digital invoices from inside Wafeq. You do not need a second tool. You do not need a second contract.</p>
+      <p>Here is the old way. You made a PDF. You emailed it. A clerk at your customer's office retyped the numbers into another system. A PDF is like a photo of a letter. A person has to read it. An e-invoice is different. It is the data inside the letter. Your customer's system reads it on its own. Nobody retypes anything.</p>
+      <p>The UAE e-invoice uses a data format called <b>PINT AE</b>. It travels over a secure network called <b>Peppol</b>. Your software company does the converting, the checking and the sending. Here, that company is Wafeq.</p>
+      <p>Wafeq FZ-LLC is an accredited service provider (ASP). Its ASP ID is 129932, and it sits on the Ministry of Finance register. This matters because every UAE e-invoice must pass through an ASP. When your software company is the ASP, you do not hire a second one. You appoint Wafeq on EmaraTax, the Federal Tax Authority (FTA) portal. Then you are connected.</p>
+      <p>Not every program works this way. QuickBooks and Excel are not ASPs. Their users need an outside provider. Our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a> explains that route. This guide stays with Wafeq. If you want the short version, see our <a href="/wafeq">Wafeq page</a>.</p>
+      <h3 class="sm">What Wafeq does for each invoice</h3>
+      <p>Wafeq describes these steps on its own site:</p>
+      <ul class="know">
+        <li>It checks your invoice for errors.</li>
+        <li>It converts the invoice to PINT AE.</li>
+        <li>It sends the invoice over Peppol to your customer's ASP.</li>
+        <li>It reports the tax data to the FTA.</li>
+        <li>It shows you why an invoice was rejected, so you can fix it and send it again.</li>
+        <li>It shows the status of each invoice. You can see if the FTA has it and if your customer got it.</li>
+      </ul>
+      <p>Wafeq also works in Arabic and English. Wafeq says Starter, Plus and Premium customers can send, receive and report e-invoices.</p>
+    </section>
+
+    <section id="travel">
+      <h2>How does one Wafeq e-invoice travel?</h2>
+      <p>Take a simple sale. Hana runs a cleaning company in Dubai. This business is made up, but the numbers are real. She cleans the offices of a property manager every month. The fee is AED 8,000. VAT at 5% adds AED 400. The total is AED 8,400.</p>
+      <p>Hana creates the invoice in Wafeq, as she does today. She adds the manager's Tax Registration Number (TRN). She picks the service and the VAT rate. Then she finalizes the invoice. Wafeq says e-invoicing happens at that moment.</p>
+      <p>Next, Wafeq checks the data. If something is missing, Wafeq says what. Hana fixes it and tries again.</p>
+      <p>When the invoice passes, Wafeq turns it into PINT AE. It sends it over Peppol to the property manager's ASP. The manager's system receives it. At the same time, the tax data goes to the FTA.</p>
+      <p>Five parties are involved here: Hana, her ASP, the customer's ASP, the customer and the FTA. People call this the five-corner model.</p>
+      <p><b>The FTA does not approve each invoice before it goes out.</b> The UAE uses a decentralised model, not a clearance model. Your ASP does the checking. So clean data matters more than speed.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Who must use e-invoicing in the UAE, and by when?</h2>
+      <p>Every business that sells to other businesses (B2B) or to government (B2G) must send e-invoices. Sales to ordinary consumers (B2C) are outside the system for now. Your revenue decides <b>when</b> you start. It does not decide <b>whether</b> you must. A small business with a low turnover still has to comply for its B2B sales.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business group</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p>Wafeq users get no extra time. The same dates apply to everyone. If your revenue is AED 50 million or more, go-live is about six weeks away, and the appointment date has passed. Appoint Wafeq now so the monthly fine stops growing. If your revenue is under AED 50 million, you have more time. But data clean-up takes longer than most owners expect. Start early.</p>
+      <h3 class="sm">What a missed deadline costs</h3>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. They come on top of normal VAT penalties.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not appointing an ASP or implementing e-invoicing on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+      </tbody></table></div>
+      <p>Do the sums. Three months of delay costs AED 15,000. The cheapest Wafeq plan costs AED 690 a year.</p>
+    </section>
+
+    <section id="cost">
+      <h2>How much does Wafeq e-invoicing cost in the UAE?</h2>
+      <p>The e-invoicing part costs nothing extra. Wafeq announced on 7 October 2026 that e-invoicing is included in its Starter, Plus and Premium plans. It said plan prices did not change. There is no per-invoice fee. It does not matter if you send 50 invoices or 5,000. What you pay for is the Wafeq plan itself. That plan also gives you your accounting.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Wafeq plan</th><th>AED per year</th><th>About AED per month</th><th>E-invoicing fee</th></tr></thead><tbody>
+        <tr><td>Starter</td><td>690</td><td>57</td><td>0</td></tr>
+        <tr><td>Plus</td><td>960</td><td>80</td><td>0</td></tr>
+        <tr><td>Premium</td><td>2,400</td><td>200</td><td>0</td></tr>
+        <tr><td>Our setup (optional)</td><td>{fmt(P.help)} one time</td><td></td><td class="txt">Or do it yourself for free</td></tr>
+      </tbody></table></div>
+      <p class="small">Wafeq lists these as yearly prices, billed once a year. Plans and limits can change, so check Wafeq's plan page before you buy. Also check whether VAT is added at checkout. Wafeq offers a 14-day free trial with no credit card.</p>
+      <h3 class="sm">The Wafeq cost formula</h3>
+      <div class="formula"><p class="fh">Wafeq yearly cost (AED, excl. VAT)</p><pre>{`Your yearly cost   = Wafeq plan price
+                     (Starter 690, Plus 960 or Premium 2,400)
+
+E-invoicing fee    = 0, at any number of invoices
+
+One-time help      = 1,500, only if you want us to set it up`}</pre></div>
+      <p>That is it. No connector. No platform fee. No ASP registration fee.</p>
+      <h3 class="sm">Three-year cost at a glance</h3>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Plan</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Three-year total</th><th>With our setup (+{fmt(P.help)})</th></tr></thead><tbody>
+        <tr><td>Starter</td><td>690</td><td>690</td><td>690</td><td>2,070</td><td>3,570</td></tr>
+        <tr><td>Plus</td><td>960</td><td>960</td><td>960</td><td>2,880</td><td>4,380</td></tr>
+        <tr><td>Premium</td><td>2,400</td><td>2,400</td><td>2,400</td><td>7,200</td><td>8,700</td></tr>
+      </tbody></table></div>
+      <p class="small">This assumes the plan price stays the same. It may not. Check Wafeq each year.</p>
+      <h3 class="sm">What if your software is not Wafeq?</h3>
+      <p>This is where Wafeq looks cheap. If you use QuickBooks or Excel, you need an outside ASP, a setup and often a connector. Here is what the e-invoicing part alone costs on that route, using our own prices.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Invoices a year</th><th>Wafeq e-invoicing cost</th><th>QuickBooks Online: first year</th><th>QuickBooks Online: each year after</th><th>Excel: first year</th><th>Excel: each year after</th></tr></thead><tbody>
+        <tr><td>500</td><td>0</td><td>6,000</td><td>1,500</td><td>4,000</td><td>1,500</td></tr>
+        <tr><td>2,000</td><td>0</td><td>7,125</td><td>2,625</td><td>5,125</td><td>2,625</td></tr>
+        <tr><td>5,000</td><td>0</td><td>9,375</td><td>4,875</td><td>7,375</td><td>4,875</td></tr>
+      </tbody></table></div>
+      <p>Read this table with care. Your Wafeq plan is not free. It replaces your accounting software subscription. The QuickBooks subscription is not in these numbers either. We are comparing only the cost of e-invoicing.</p>
+      <p>Still, the gap is real. On Wafeq, every invoice you send adds AED 0. On the outside route, every invoice above 500 adds AED 0.75. For the full formula, read our <a href="/blog/uae-e-invoicing-cost">UAE e-invoicing cost guide</a>.</p>
+      <h3 class="sm">How many invoices can Wafeq handle?</h3>
+      <p>Wafeq says its accounting product suits businesses that send fewer than 500 invoices a month. That is about 6,000 a year. Above that, or if you run a large ERP such as SAP or Oracle, ask Wafeq whether your plan fits. You can also ask us. We quote other software on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a> and on our <a href="/other-software">other software page</a>.</p>
+    </section>
+
+    <section id="plans">
+      <h2>Which Wafeq plan fits which business?</h2>
+      <p>Wafeq does not pick your plan for e-invoicing. All three plans include it. You choose by the accounting features and limits you need. Wafeq's higher plans add more features. Check the exact limits on its plan page. Our suggestion below is only a starting point.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business</th><th>Where to start</th><th>Per year</th><th>Why</th></tr></thead><tbody>
+        <tr><td>Service company</td><td>Starter</td><td>690</td><td class="txt">Simple invoicing and VAT. No stock to track.</td></tr>
+        <tr><td>Small trader</td><td>Starter or Plus</td><td>690 to 960</td><td class="txt">Mostly walk-in sales plus some credit customers. Step up if you need more features.</td></tr>
+        <tr><td>Distributor</td><td>Premium, if you need its extra features</td><td>2,400</td><td class="txt">Many invoices, returns and stock. Check limits first.</td></tr>
+        <tr><td>Contractor</td><td>Plus or Premium</td><td>960 to 2,400</td><td class="txt">Progress billing, project costs and several staff.</td></tr>
+        <tr><td>Subcontractor</td><td>Starter</td><td>690</td><td class="txt">A few invoices a month to a few main contractors.</td></tr>
+      </tbody></table></div>
+      <p>Not sure? Start on a lower plan and move up when you need more. Check Wafeq's plan page for how upgrades work.</p>
+    </section>
+
+    <section id="setup">
+      <h2>How to set up e-invoicing in Wafeq in five steps</h2>
+      <p>Setup happens once. Most businesses finish in a day. The slow part is cleaning customer data, not filling in forms. Before you start, gather three things: your 15-digit TRN, your EmaraTax login (or the person who holds it) and your trade licence details.</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Check your plan and your data</h3></div><p>Make sure you are on a paid Wafeq plan, Starter or higher. Check that your company details in Wafeq match your EmaraTax record. Check that every business customer has a TRN and that every item has a VAT code.</p></div></li>
+        <li><div><div class="st-head"><h3>Switch on e-invoicing in Wafeq</h3></div><p>Wafeq tells you in the app when to switch e-invoicing on, and it walks you through it. Enter your business details when it asks.</p></div></li>
+        <li><div><div class="st-head"><h3>Appoint Wafeq on EmaraTax</h3></div><p>Log in to EmaraTax and open the e-invoicing section. Find Wafeq FZ-LLC. Its ASP ID is 129932. Verify and submit the appointment. You do not have to be the one who signs in. Wafeq says you can send the approval link to whoever holds the EmaraTax login. That helps when your owner or finance director keeps the password.</p></div></li>
+        <li><div><div class="st-head"><h3>Choose your start date and check the status</h3></div><p>Go back to Wafeq. Choose the date from which Wafeq sends and reports your e-invoices. Then check that e-invoicing shows as active. Your e-invoicing address is now published on Peppol. Other businesses can send e-invoices to you, and you can send to them.</p></div></li>
+        <li><div><div class="st-head"><h3>Fix the gaps and send a test</h3></div><p>Fill in any missing customer TRNs and VAT codes. Then send one test invoice and one test credit note. Check the status on each. Do this before your start date, not on it. A sent e-invoice cannot be edited, so every mistake in real life costs an extra document.</p></div></li>
+      </ol>
+      <p class="callout">Short on time? We can do all five steps for {aed(P.help)}, one time. <a href={setupWa} target="_blank" rel="noopener">Message us on WhatsApp →</a></p>
+    </section>
+
+    <section id="data">
+      <h2>What data should you fix before you start?</h2>
+      <p>Bad data causes most rejections. So fix it first, in this order.</p>
+      <h3 class="sm">Your customers</h3>
+      <p>Every business customer needs a valid 15-digit TRN. It also needs a legal name and a full address. A trading name will not do. Use the name on the customer's trade licence or tax certificate. Start with your biggest clients. They send you most of your invoices. Ask them for their updated TRN and registered address at least two months before your deadline.</p>
+      <h3 class="sm">Your items and services</h3>
+      <p>Every line on an invoice needs the right VAT treatment. It may be standard-rated at 5%, zero-rated, exempt or out of scope. Do not rely on a default. Check each item. Every line also needs a unit. For services, use a clear unit such as hours, days or months. Do not type free text.</p>
+      <h3 class="sm">Your own details</h3>
+      <p>Your legal name, TRN and address in Wafeq must match your EmaraTax record. A small difference can cause a rejection. If your registered details change later, tell your ASP within five business days. That is Wafeq's advice too.</p>
+    </section>
+
+    <section id="services">
+      <h2>Wafeq e-invoicing for service companies</h2>
+      <p>Service firms hold no stock, so they have the quickest setup. Marketing agencies, IT support firms, consultants, cleaners and maintenance companies all fit here. They still need care in three places: units, monthly bills and re-billed costs.</p>
+      <p>Layla owns a marketing agency in Dubai. The business is made up. She has 20 corporate clients. Each pays a monthly retainer of AED 5,000. VAT adds AED 250 to each bill, so each invoice is AED 5,250. That is 240 invoices a year and AED 1.2 million in billing before VAT.</p>
+      <p>Her revenue is far below AED 50 million. So she appoints her ASP by 31 March 2027 and goes live on 1 July 2027. She picks Starter. She sets up the 20 monthly bills, checks each client's TRN once, and appoints Wafeq on EmaraTax. From July, each bill goes out as an e-invoice. She reviews them on the first of the month, then sends them. Her e-invoicing cost is AED 0. Her plan cost is AED 690 a year.</p>
+      <h3 class="sm">Re-billed expenses</h3>
+      <p>Service firms often pay a government fee or a vendor cost for a client, then bill it back. The VAT treatment can differ. A cost may be standard-rated. Or it may be a disbursement outside the scope of VAT. Tag each one correctly so your invoices match your VAT return. Your tax adviser can confirm the right treatment.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Starter is AED 690 a year. Over three years, that is AED 2,070. If Layla wants us to set it up, add {aed(P.help)} once.</p>
+    </section>
+
+    <section id="traders">
+      <h2>Wafeq e-invoicing for small traders</h2>
+      <p>Small traders often sell to two kinds of buyers. Some are walk-in shoppers. Others are companies with a trade licence and a TRN. Spare parts shops, mini-marts, repair shops and hardware stores fit here. Sales to individual shoppers (B2C) are outside e-invoicing for now. They keep getting a normal receipt. Only your business buyers need e-invoices.</p>
+      <p>Imran owns an auto spare parts shop in Sharjah. The shop is made up. Most customers are drivers who pay cash and take a receipt. But about 40 garages buy on credit. That is roughly 90 credit invoices a month, or about 1,080 a year.</p>
+      <p>A garage buys 30 sets of brake pads at AED 80 each. The goods cost AED 2,400. VAT adds AED 120. The invoice total is AED 2,520. Imran picks the garage from his saved customers. The TRN and address fill in by themselves. He finalizes the invoice. Wafeq sends it and reports it. The cash buyers? Nothing changes for them.</p>
+      <h3 class="sm">One trap: the walk-in buyer with a company</h3>
+      <p>A plumber walks in and says, "I need a tax invoice for my company." That buyer is now a business. The sale is B2B. It needs an e-invoice. Train your counter staff to ask one question: "Is this purchase for a company?" If the answer is yes, capture the TRN and the legal name.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Starter at AED 690 a year may be enough. If Imran needs more users or features, Plus is AED 960. The e-invoicing fee stays at AED 0 for all 1,080 invoices.</p>
+    </section>
+
+    <section id="distributors">
+      <h2>Wafeq e-invoicing for distributors</h2>
+      <p>Distributors send many invoices. They also handle returns, damaged goods, short deliveries and price changes. The big risk is item data. A blank unit or a missing tax category gets an invoice rejected. So fix every stock item before go-live. Start with your top 200 sellers. They usually make most of your invoices.</p>
+      <p>Omar runs a juice distribution business in Abu Dhabi. It is a made-up firm. He supplies about 60 cafés and hotels. He sends around 350 invoices a month, which is 4,200 a year. He needs stock tracking, so he looks at Premium at AED 2,400 a year. He checks its limits first.</p>
+      <p>One hotel orders 100 cases of juice at AED 40 each. That is AED 4,000. VAT adds AED 200. The invoice total is AED 4,200. Wafeq sends it and reports it. Two days later, the hotel returns 5 damaged cases. That is AED 200 plus AED 10 VAT, or AED 210. Omar cannot edit the sent invoice. He creates a credit note linked to the original invoice. The tax records stay correct.</p>
+      <h3 class="sm">Why the same volume costs more elsewhere</h3>
+      <p>Put Omar's 4,200 invoices on the QuickBooks Online route. The invoice fee is AED 500 plus AED 0.75 for each of the 3,700 invoices above 500. That is AED 3,275. The first year is AED 8,775. Each year after is AED 4,275. And the QuickBooks subscription is extra. On Wafeq, the e-invoicing cost for the same invoices is AED 0.</p>
+      <h3 class="sm">When a distributor outgrows the plan</h3>
+      <p>Say a distributor sends 400 orders a week. That is about 1,700 invoices a month. It is over the volume that Wafeq's accounting product is built for. Ask Wafeq whether your plan fits. If you run SAP, Oracle or Dynamics, you need a different path. Our <a href="/blog/uae-e-invoicing-distributors">distributor e-invoicing guide</a> covers master data, ERP options and returns in depth.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Premium is AED 2,400 a year. Three years is AED 7,200. Add {aed(P.help)} once if you want us to set it up.</p>
+    </section>
+
+    <section id="contractors">
+      <h2>Wafeq e-invoicing for contractors</h2>
+      <p>Contractors bill in stages. They take advances. They send progress claims. They hold retention. They agree variations. The rule is simple: <b>one billing event, one document</b>. Because a sent e-invoice cannot be edited, each document must be right the first time.</p>
+      <h3 class="sm">Set up retention the right way</h3>
+      <p>Retention is the part of each payment that the client holds back. It is often 5% to 10%. The client pays it at completion or at the end of the defects period. Under the UAE guidelines, a progress e-invoice may cover the net amount after retention. Later, when the retention becomes payable, you issue a second e-invoice for it. Your tax adviser confirms the right treatment for your contract. Our <a href="/blog/uae-e-invoicing-contractors">contractor e-invoicing guide</a> explains the retention rules in full.</p>
+      <p>Khalid runs a fit-out company in Dubai. It is a made-up firm. He wins an AED 2 million office project. He is on Wafeq Premium. He finishes 30% of the work. The certified amount is AED 600,000. The contract holds 10% retention, which is AED 60,000. So the progress e-invoice covers AED 540,000. VAT adds AED 27,000. The total is AED 567,000.</p>
+      <p>Months later, the client releases the retention. Khalid issues a second e-invoice. AED 60,000 plus AED 3,000 VAT is AED 63,000. Then the client agrees to a design change. The saving is AED 10,000. Khalid cannot edit the sent invoice. He issues a credit note for AED 10,500. That is AED 10,000 plus AED 500 VAT.</p>
+      <h3 class="sm">Check your main customer's dates</h3>
+      <p>A big developer with revenue over AED 50 million goes live on 1 January 2027. A fit-out contractor with revenue under AED 50 million goes live on 1 July 2027. The dates do not match. Ask your customers early when they start, and get their TRN and legal name.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>A mid-sized contractor with several accountants and quantity surveyors may need Plus or Premium. That is AED 960 to AED 2,400 a year. The e-invoicing fee stays AED 0, even with hundreds of progress claims.</p>
+    </section>
+
+    <section id="subs">
+      <h2>Wafeq e-invoicing for subcontractors</h2>
+      <p>Subcontractors have few invoices. But each one is big. And each one must pass the checks. If your invoice is rejected, your customer's accounts team may not accept it. That can delay your payment.</p>
+      <p>Faisal owns an electrical subcontracting company in Ajman. The firm is made up. He bills two main contractors, twice a month each. That is four invoices a month, or 48 a year. A typical invoice is AED 85,000 plus AED 4,250 VAT. The total is AED 89,250.</p>
+      <p>Faisal signs up for Starter. He enters each main contractor's TRN, legal name and address once. Every time he sends a bill, Wafeq checks the data first. Missing details show up before the invoice leaves, not after.</p>
+      <h3 class="sm">Why small senders feel the gap</h3>
+      <p>Faisal sends only 48 invoices. On the outside-ASP route with Excel, his first year would still cost AED 4,000. The invoice fee of AED 500 covers up to 500 invoices, and the setup and platform fees come on top. That route does not give him accounting software either. On Wafeq Starter, he pays AED 690 a year and gets both.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>AED 690 a year. Three years is AED 2,070.</p>
+    </section>
+
+    <section id="compare">
+      <h2>The five business types side by side</h2>
+      <p>The e-invoicing fee is the same for every business type. It is AED 0. What changes is the plan you pick and where you spend your setup time.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business</th><th>Main setup focus</th><th>Starting plan</th><th>Yearly plan cost</th><th>Example invoices a year</th></tr></thead><tbody>
+        <tr><td>Service company</td><td class="txt">Monthly bills, units, re-billed costs</td><td>Starter</td><td>690</td><td>240</td></tr>
+        <tr><td>Small trader</td><td class="txt">Separating B2B from walk-in B2C</td><td>Starter or Plus</td><td>690 to 960</td><td>1,080</td></tr>
+        <tr><td>Distributor</td><td class="txt">Item units, tax codes, returns</td><td>Premium</td><td>2,400</td><td>4,200</td></tr>
+        <tr><td>Contractor</td><td class="txt">Retention, variations, credit notes</td><td>Plus or Premium</td><td>960 to 2,400</td><td>Hundreds</td></tr>
+        <tr><td>Subcontractor</td><td class="txt">Customer TRNs and clean data</td><td>Starter</td><td>690</td><td>48</td></tr>
+      </tbody></table></div>
+      <p class="small">These are examples, not quotes. Add {aed(P.help)} once if you want us to do the setup.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>Mistakes that cause rejected e-invoices</h2>
+      <ul class="know">
+        <li><b>Missing customer TRNs.</b> This is the most common problem. Fix the gaps first.</li>
+        <li><b>Names that do not match.</b> The customer's legal name must match its registration. A trading name will not do. Check your own name too.</li>
+        <li><b>Items with no VAT treatment.</b> Every item needs the right treatment. Check each one.</li>
+        <li><b>Discounts with no reason.</b> A discount or charge that changes the invoice value should be clear and explained.</li>
+        <li><b>Editing after sending.</b> You cannot. Credit notes fix mistakes. Check every invoice before you send it.</li>
+        <li><b>Mixing B2B and B2C.</b> Do not skip a business customer. And do not treat a consumer receipt as an e-invoice. Mark customer types clearly.</li>
+        <li><b>Letting your plan lapse.</b> If your subscription ends, your e-invoicing may stop. Renew before the date.</li>
+      </ul>
+    </section>
+
+    <section id="know">
+      <h2>Things to know before you start</h2>
+      <ul class="know">
+        <li><b>A PDF is not an e-invoice.</b> Emailing a PDF will not count for invoices in scope. The legal invoice is the structured one that goes through your ASP. You can still send a PDF as a courtesy copy.</li>
+        <li><b>You appoint one ASP.</b> The same ASP handles the e-invoices you send and the ones you receive.</li>
+        <li><b>Already have another ASP?</b> You can move to Wafeq. Wafeq says you offboard your current ASP on EmaraTax, then appoint Wafeq straight after. Your current ASP must release you right away.</li>
+        <li><b>Keep your records.</b> Plan to keep e-invoices and credit notes for five years. Ask Wafeq what storage your plan includes and how you can export your documents.</li>
+        <li><b>Check the latest plan details.</b> Wafeq says e-invoicing is part of the plan, but it does not state every plan limit in one place. Read the plan page before you pay.</li>
+      </ul>
+    </section>
+
+    <section id="switch">
+      <h2>Using QuickBooks or Excel today? Think about switching</h2>
+      <p>Some businesses read this guide and ask a fair question: "Should I move to Wafeq?" It depends. If your accounting software already works for you, staying is fine. QuickBooks and Excel users can stay and add an outside ASP. We set that up. See our <a href="/quickbooks-online">QuickBooks Online</a> and <a href="/excel">Excel</a> pages for exact prices.</p>
+      <p>But if you are unhappy with your software, or the e-invoicing cost bothers you, moving to Wafeq is an option. Wafeq, Zoho Books and TallyPrime all have e-invoicing built in. We move your data from QuickBooks or Excel into Wafeq. The price depends on how much data you have, so we quote it on WhatsApp. Read <a href="/switch-accounting-software">how switching works</a>.</p>
+    </section>
+
+    <section id="help">
+      <h2>Set it up yourself, or get help?</h2>
+      <p>You can set up Wafeq yourself for free. The five steps above are enough for many businesses. If your customer and item data are clean, you may finish in an afternoon. Get help in three cases: your data is messy, you have many customers or items, or you have no time to test.</p>
+      <p>Our setup costs {aed(P.help)}, one time. We check your plan against your invoice count. We check and fix your customer TRNs, VAT codes and items. We handle your registration and EmaraTax appointment. We send a test invoice and a test credit note. We fix any rejected invoice. And we show your staff how it works.</p>
+      <p>Not on Wafeq? Other software has its own path. Zoho Books and TallyPrime also have e-invoicing built in. See our guides to <a href="/blog/zoho-e-invoicing-uae-guide">Zoho Books</a> and <a href="/blog/tally-e-invoicing-uae-guide">Tally</a>, or the page for <a href="/other-software">other software</a>.</p>
+      <p class="callout">Want help with your own Wafeq setup? Message us on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae price calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>Wafeq e-invoicing UAE: common questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li>
+        <li><a href="https://www.wafeq.com/en-ae/press-releases/business-regulations-brief/wafeq-uae-e-invoicing-included-at-no-extra-cost" target="_blank" rel="noopener">Wafeq: UAE e-invoicing included at no extra cost (7 October 2026)</a></li>
+        <li><a href="https://www.wafeq.com/en-ae/asp-e-invoicing-uae" target="_blank" rel="noopener">Wafeq: UAE e-invoicing, built into Wafeq Accounting</a></li>
+        <li><a href="https://www.wafeq.com/en-ae/features/e-invoicing" target="_blank" rel="noopener">Wafeq: e-invoicing features and setup</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="/wafeq">einvoicecost.ae: Wafeq e-invoicing cost and setup</a></li>
+      </ul>
+      <p class="small">Wafeq plan prices come from Wafeq and were last checked on 16 November 2026. Wafeq can change them, so check its plan page before you buy. Our prices exclude 5% VAT. Examples use made-up businesses and round numbers. This guide is general information, not tax or legal advice. VAT treatment of retention and re-billed costs depends on your contract and facts.</p>
+    </section>
+
+    <RelatedGuides current="wafeq-e-invoicing-uae-guide" />
+
+    <section class="final">
+      <div><h2>Get Wafeq e-invoicing set up</h2><p class="sub">Message us your Wafeq plan and EmaraTax status. We reply with next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
