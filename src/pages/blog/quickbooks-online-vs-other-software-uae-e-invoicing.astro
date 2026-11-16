@@ -1,0 +1,447 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, price, invoiceFee, TABLE_INVOICES } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-16';
+const UPDATED_ISO = '2026-11-16';
+const UPDATED = '16 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/quickbooks-online-vs-other-software-uae-e-invoicing';
+const N0 = P.feeCovered;
+const first = (n = N0) => price('qbo', n).firstYear;
+const every = (n = N0) => price('qbo', n).everyYear;
+const feeAt = invoiceFee;
+const perExtra = P.feePerExtra.toFixed(2);
+
+const title = 'QUICKBOOKS ONLINE VS ZOHO, TALLY & WAFEQ: UAE E-INVOICING COMPARED (2027)';
+const description =
+  'QuickBooks Online vs Zoho Books, Tally, Wafeq and other software for UAE e-invoicing: real AED costs, setup effort, 3-year totals and when to switch.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your QuickBooks Online vs other software guide. I use [software], about [number] invoices a year. Please send me my price.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Does QuickBooks Online support UAE e-invoicing?", a: "Not on its own. QuickBooks Online creates the invoice, but it cannot convert it to PINT AE or send it over Peppol. It must be connected to an accredited ASP through a connector." },
+  { q: "Is QuickBooks an accredited service provider in the UAE?", a: "No. QuickBooks is accounting software, not an accredited ASP. QuickBooks users must appoint an outside ASP on EmaraTax and connect it to QuickBooks." },
+  { q: "How much does QuickBooks Online e-invoicing cost in the UAE?", a: `With einvoicecost.ae, ${aed(first())} in the first year for up to ${fmt(N0)} invoices, then ${aed(every())} a year. The first year covers onboarding ${aed(P.onboarding)}, setup ${aed(P.setup)}, connector ${aed(P.connector.qbo)}, platform fee ${aed(P.platform)} and e-invoicing ${aed(P.feeMin)}. Above ${fmt(N0)} invoices, each extra invoice adds AED ${perExtra}. Your QuickBooks subscription is extra.` },
+  { q: "Which software has e-invoicing built in?", a: "Zoho Books, TallyPrime and Wafeq are accredited ASPs. They need no outside provider, no connector and no platform fee." },
+  { q: "Is Zoho Books cheaper than QuickBooks Online for e-invoicing?", a: "Usually, yes. At 500 invoices, Zoho Professional costs about AED 1,265 a year, including the plan and packs. QuickBooks Online Essentials costs about AED 7,368 in year one and AED 2,868 after, including the plan and our fees. Zoho needs the Professional plan or higher." },
+  { q: "Is Tally e-invoicing free?", a: "There is no per-invoice fee. E-invoicing is included while your TSS subscription is active. TSS renewal costs about AED 468 a year for Silver and AED 1,404 for Gold." },
+  { q: "Is Wafeq e-invoicing free?", a: "There is no extra charge and no per-invoice fee. It is included in the Starter, Plus and Premium plans, at AED 690, AED 960 and AED 2,400 a year." },
+  { q: "Does Xero have built-in UAE e-invoicing?", a: "Xero is not an ASP itself, so we treat it as software that needs an outside ASP and a connection. Check with Xero and the Ministry of Finance ASP list for any change. We quote the connector for Xero on WhatsApp. The rest of the price is the same fixed price as for every other software." },
+  { q: "Should I switch from QuickBooks Online to Zoho, Tally or Wafeq?", a: "Switch if you want a lower yearly cost, you are a new or small firm, or you are unhappy with your software. Stay if your team knows QuickBooks and your accounts are complex. Switching adds data migration and retraining, so start early." },
+  { q: "Can I keep QuickBooks and still meet the deadline?", a: "Yes. Add an outside ASP and a connector. Appoint the ASP by 31 March 2027 if your revenue is under AED 50 million, then go live on 1 July 2027. You can move to other software later." },
+  { q: "How long does QuickBooks Online e-invoicing setup take?", a: "About 1 to 2 weeks, depending on how complete your customer TRNs and VAT codes are. Built-in options take a few hours to a day." },
+  { q: "What does the auto-send connector do?", a: "It sends each invoice from your software to the FTA and your customer automatically. It means no one uploads or retypes invoices by hand." },
+  { q: "Do supplier invoices count toward the fee?", a: "No. We count only the sales invoices and credit notes you send. Invoices you receive from suppliers are free." },
+  { q: "Do I need an EmaraTax account?", a: "Yes. You appoint your ASP on EmaraTax, whichever software you use. If someone else holds the login, we can guide you through a one-time code step." },
+  { q: "What is the e-invoicing deadline?", a: "It depends on revenue, not software. Under AED 50 million: appoint an ASP by 31 March 2027 and go live on 1 July 2027. AED 50 million or more: the appointment date was 30 October 2026 and go-live is 1 January 2027. Government entities go live on 1 October 2027." },
+  { q: "What is the penalty for missing the deadline?", a: "Under Cabinet Decision No. 106 of 2025, not appointing an ASP on time costs AED 5,000 for each month. After go-live, each invoice not issued electronically can cost AED 100, up to AED 5,000 a month. Credit notes have their own cap." },
+  { q: "Can einvoicecost.ae move my data from QuickBooks to Zoho, Tally or Wafeq?", a: "Yes. We move your data and quote a fixed price on WhatsApp, because it depends on how much data you have." },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'QuickBooks Online vs other software', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const rows = TABLE_INVOICES.map((n) => ({
+  n,
+  avg: (feeAt(n) / n).toFixed(2),
+  first: first(n),
+  every: every(n),
+}));
+
+const toc = [
+  ['verdict', 'The short verdict'], ['routes', 'Built-in ASP vs outside ASP'], ['deadlines', 'Deadlines and penalties'],
+  ['side-by-side', 'All options side by side'], ['qbo-cost', 'What QuickBooks Online costs'], ['others-cost', 'What Zoho, Tally and Wafeq cost'],
+  ['three-year', 'Three-year cost'], ['examples', 'Four real examples'], ['beyond-price', 'Differences beyond price'],
+  ['other', 'Xero, Odoo, Sage and SAP'], ['decide', 'Stay or switch?'], ['mistakes', 'Mistakes to avoid'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › QuickBooks Online vs other software</p>
+      <p class="eyebrow">Blog · Comparison</p>
+      <h1>{title}</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>QuickBooks Online (QBO) is not an accredited service provider (ASP). It needs an outside ASP and an auto-send connector. With us, that costs <b>{aed(first())} in the first year</b> for up to {fmt(N0)} invoices, then <b>{aed(every())} a year</b>.</p>
+        <p>Zoho Books, TallyPrime and Wafeq are ASPs themselves. They need no connector and no platform fee. Their e-invoicing costs run from <b>AED 0 to about AED 185</b> a year at 500 invoices, on top of the software plan. <b>Stay on QuickBooks Online</b> if your team knows it well and your books are complex. <b>Consider switching</b> if you want the lowest yearly cost.</p>
+        <div class="facts">
+          <div><p class="k">QBO, first year, up to {fmt(N0)} invoices</p><p class="v">{aed(first())}</p></div>
+          <div><p class="k">QBO, every year after</p><p class="v">{aed(every())}</p></div>
+          <div><p class="k">Built-in ASP e-invoicing, 500 invoices</p><p class="v">AED 0 to 185</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="verdict">
+      <h2>The short verdict</h2>
+      <p>Most owners ask one thing. "Should I keep QuickBooks, or move to software that has e-invoicing built in?"</p>
+      <p>Here is the honest answer. It depends on three things. How many invoices you send. How much history sits in QuickBooks. And how much change your team can take before 1 July 2027.</p>
+      <ul class="know">
+        <li><b>Keep QuickBooks Online if</b> your team knows it, your accounts are complex, or you use QuickBooks add-ons you cannot replace.</li>
+        <li><b>Switch to Zoho Books if</b> you want a familiar cloud tool with low pack prices and you send under about 5,000 invoices a year.</li>
+        <li><b>Switch to Tally if</b> you run a trading or distribution firm, want zero per-invoice fees, or already own TallyPrime.</li>
+        <li><b>Switch to Wafeq if</b> you are small, want the lowest total bill, and like a simple plan price.</li>
+        <li><b>Use other software (Xero, Odoo, Sage, SAP) as it is</b> if it works for you. Same fixed prices apply, plus a connector quote.</li>
+      </ul>
+      <p>The rest of this guide shows the numbers behind each line.</p>
+    </section>
+
+    <section id="routes">
+      <h2>What does "built-in ASP" mean, and why does it change the price?</h2>
+      <p>Every UAE e-invoice must pass through an Accredited Service Provider (ASP). The ASP converts your invoice into a data file called PINT AE. It then sends that file over the Peppol network to your customer's ASP. It also reports the tax data to the Federal Tax Authority (FTA).</p>
+      <p>So the real question is simple. Who is your ASP? There are two routes.</p>
+      <p><b>Route one: your software company is the ASP.</b> Zoho, Tally and Wafeq are on the Ministry of Finance list. You appoint them on EmaraTax, the FTA portal. You use one login and one support team. Nothing else is needed.</p>
+      <p><b>Route two: you hire an outside ASP.</b> QuickBooks Online, QuickBooks Desktop, Excel, Xero, Odoo, Sage and SAP are not ASPs. They create the invoice. They cannot convert it or send it. So you add an ASP, and a connector that moves invoices from your software to the ASP.</p>
+      <p>Think of a post office. On route one, your software is the post office. You walk in and send the letter. On route two, your software is a desk at home. You write the letter there. Then a courier must collect it and take it to the post office. You pay for the desk and the courier.</p>
+      <p>That courier is why QuickBooks costs more per year for e-invoicing. It is not a fault in QuickBooks. It is how the system works.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th></th><th>Built-in route</th><th>Outside-ASP route</th></tr></thead><tbody>
+        <tr><td>Examples</td><td class="txt">Zoho Books, TallyPrime, Wafeq</td><td class="txt">QuickBooks Online, QuickBooks Desktop, Excel, Xero, Odoo, Sage, SAP</td></tr>
+        <tr><td>Who is your ASP?</td><td class="txt">Your software company</td><td class="txt">An outside accredited provider</td></tr>
+        <tr><td>Connector needed?</td><td class="txt">No</td><td class="txt">Yes (auto-send connector)</td></tr>
+        <tr><td>Systems to manage</td><td class="txt">One</td><td class="txt">Two</td></tr>
+        <tr><td>Who fixes a rejected invoice?</td><td class="txt">One support team</td><td class="txt">Your software and your ASP</td></tr>
+        <tr><td>Yearly e-invoicing cost</td><td class="txt">Low, or zero</td><td class="txt">Higher</td></tr>
+      </tbody></table></div>
+
+      <h3 class="sm">How one invoice travels on each route</h3>
+      <p>Take a simple sale. You bill a customer AED 10,000 plus AED 500 VAT. The total is AED 10,500.</p>
+      <p>On QuickBooks Online, you save the invoice as you do today. The connector picks it up and sends it to the ASP. The ASP checks it and converts it to PINT AE. Then it goes over Peppol to your customer. The FTA gets the tax data.</p>
+      <p>On Zoho Books, you save the invoice. Zoho checks it, converts it and sends it. Same trip, one less hop.</p>
+      <p>The customer sees the same thing on both routes. The difference is behind the scenes. And on your bill.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Who must use e-invoicing, and by when?</h2>
+      <p>Every VAT-registered business that sells to other businesses (B2B) or to government (B2G) must send e-invoices. There is no small-business exemption. Sales to consumers (B2C) are outside the system for now.</p>
+      <p>Your revenue decides your start date. Your software does not.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business group</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p>A late appointment costs AED 5,000 a month. After go-live, each invoice not issued electronically can cost AED 100, up to AED 5,000 a month. Credit notes have their own cap. These penalties come from Cabinet Decision No. 106 of 2025.</p>
+      <p>Here is why this matters for your choice. Time is the hidden cost. Adding a connector to QuickBooks takes about 1 to 2 weeks. Switching software takes longer, because you move data and retrain staff. If you want to switch, start in December. Do not wait for March.</p>
+    </section>
+
+    <section id="side-by-side">
+      <h2>How do all the options compare side by side?</h2>
+      <p>This table covers the seven main routes. The e-invoicing columns show what you pay for e-invoicing itself at 500 invoices a year. Your accounting software plan is extra, except where noted.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Software</th><th>Is it an ASP?</th><th>Connector</th><th>E-invoicing, year one (500 invoices)</th><th>Each year after</th><th>Setup effort</th></tr></thead><tbody>
+        <tr><td>QuickBooks Online</td><td>No</td><td>Yes, {fmt(P.connector.qbo)}</td><td>{fmt(first())} (our fees)</td><td>{fmt(every())}</td><td class="txt">About 1 to 2 weeks</td></tr>
+        <tr><td>QuickBooks Desktop</td><td>No</td><td>Yes, {fmt(P.connector.qbd)}</td><td>{fmt(price('qbd', N0).firstYear)} (our fees)</td><td>{fmt(price('qbd', N0).everyYear)}</td><td class="txt">About 2 to 3 weeks</td></tr>
+        <tr><td>Excel or no software</td><td>No</td><td>Not needed, you upload</td><td>{fmt(price('excel', N0).firstYear)} (our fees)</td><td>{fmt(price('excel', N0).everyYear)}</td><td class="txt">Low</td></tr>
+        <tr><td>Other (Xero, Odoo, Sage, SAP)</td><td>No</td><td>Quoted on WhatsApp</td><td>{fmt(price('other', N0).firstYear)} + connector (our fees)</td><td>{fmt(price('other', N0).everyYear)}</td><td class="txt">Depends on the system</td></tr>
+        <tr><td>Zoho Books</td><td>Yes</td><td>Built in</td><td>About 185 in packs</td><td>About 185 in packs</td><td class="txt">A few hours</td></tr>
+        <tr><td>TallyPrime</td><td>Yes</td><td>Built in</td><td>0, with active TSS</td><td>0, with active TSS</td><td class="txt">A few hours</td></tr>
+        <tr><td>Wafeq</td><td>Yes</td><td>Built in</td><td>0, included in the plan</td><td>0</td><td class="txt">About a day</td></tr>
+      </tbody></table></div>
+      <p>Three notes help you read it.</p>
+      <ul class="know">
+        <li>Our fees for outside-ASP software cover onboarding, setup, connector, platform and invoices. We list each part below.</li>
+        <li>Zoho sells e-invoicing in packs. The first 100 transactions are free, once. Zoho needs the Professional plan or higher.</li>
+        <li>Tally and Wafeq charge no per-invoice fee. You still pay for the Tally TSS subscription or the Wafeq plan.</li>
+      </ul>
+    </section>
+
+    <section id="qbo-cost">
+      <h2>What does QuickBooks Online e-invoicing cost in the UAE?</h2>
+      <p>With einvoicecost.ae, QuickBooks Online e-invoicing costs <b>{aed(first())} in the first year</b> for up to {fmt(N0)} invoices. After that it costs <b>{aed(every())} a year</b>. Above {fmt(N0)} invoices, each extra invoice adds AED {perExtra}. There are no slabs or brackets.</p>
+      <p>Most providers quote only after a sales call. Here, every part of the price is visible.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Part</th><th>How often</th><th>AED</th><th>What it does</th></tr></thead><tbody>
+        <tr><td>Onboarding &amp; ASP registration</td><td>One time</td><td>{fmt(P.onboarding)}</td><td class="txt">We open your account and appoint the ASP on EmaraTax.</td></tr>
+        <tr><td>Setup</td><td>One time</td><td>{fmt(P.setup)}</td><td class="txt">Data checks, VAT code mapping, testing and go-live.</td></tr>
+        <tr><td>Auto-send connector</td><td>One time</td><td>{fmt(P.connector.qbo)}</td><td class="txt">Sends each invoice from QuickBooks to the FTA and your customer automatically.</td></tr>
+        <tr><td>Platform fee</td><td>Every year</td><td>{fmt(P.platform)}</td><td class="txt">Your yearly platform access.</td></tr>
+        <tr><td>E-invoicing (up to {fmt(N0)} invoices)</td><td>Every year</td><td>{fmt(P.feeMin)}</td><td class="txt">Sending your sales invoices and credit notes.</td></tr>
+        <tr><td><b>First year</b></td><td></td><td><b>{fmt(first())}</b></td><td></td></tr>
+        <tr><td><b>Every year after</b></td><td></td><td><b>{fmt(every())}</b></td><td></td></tr>
+      </tbody></table></div>
+      <p>Yearly fees are paid in advance. Your QuickBooks subscription is separate and not included. Intuit bills in US dollars, so your AED price moves a little with the exchange rate.</p>
+
+      <h3 class="sm">The QuickBooks Online price formula</h3>
+      <p>Let <b>n</b> be the sales invoices and credit notes you send in a year. Invoices you receive from suppliers are not counted.</p>
+      <div class="formula"><p class="fh">QuickBooks Online price formula (AED, excl. VAT)</p><pre>{`Invoice fee       = ${fmt(P.feeMin)}                       if n is ${fmt(N0)} or less
+                  = ${fmt(P.feeMin)} + ${perExtra} x (n - ${fmt(N0)})    if n is more than ${fmt(N0)}
+
+First year        = ${fmt(P.onboarding)} + ${fmt(P.setup)} + ${fmt(P.connector.qbo)} + ${fmt(P.platform)} + Invoice fee
+Every year after  = ${fmt(P.platform)} + Invoice fee
+With VAT          = Price x 1.05`}</pre></div>
+
+      <h3 class="sm">QuickBooks Online price at different volumes</h3>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Invoices a year</th><th>First year</th><th>Every year after</th><th>Average per invoice, year after</th></tr></thead><tbody>
+        {rows.map((r) => <tr><td>{fmt(r.n)}</td><td>{fmt(r.first)}</td><td>{fmt(r.every)}</td><td>{(r.every / r.n).toFixed(2)}{r.n < N0 ? ' (minimum fee applies)' : ''}</td></tr>)}
+      </tbody></table></div>
+      <p>See the pattern. Small senders pay the most per invoice. The fixed parts weigh heavily on them. Large senders pay about AED {perExtra} an invoice at the margin. For the full formula and tables, read our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a>. Or open the <a href="/quickbooks-online">QuickBooks Online page</a> for your exact number.</p>
+
+      <h3 class="sm">The QuickBooks subscription on top</h3>
+      <p>You also pay Intuit for QuickBooks itself. Approximate UAE prices per month are:</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>QuickBooks plan</th><th>Users</th><th>About AED a month</th><th>About AED a year</th></tr></thead><tbody>
+        <tr><td>Simple Start</td><td>1</td><td>77</td><td>924</td></tr>
+        <tr><td>Essentials</td><td>3</td><td>114</td><td>1,368</td></tr>
+        <tr><td>Plus</td><td>5</td><td>169</td><td>2,028</td></tr>
+        <tr><td>Advanced</td><td>25</td><td>327</td><td>3,924</td></tr>
+      </tbody></table></div>
+      <p>Intuit often runs discounts, so check your own plan price. We use these figures in the cost tables below.</p>
+    </section>
+
+    <section id="others-cost">
+      <h2>What do Zoho Books, Tally and Wafeq cost?</h2>
+      <p>All three are ASPs. You pay for the software. E-invoicing is either free or sold in small packs.</p>
+
+      <h3 class="sm">Zoho Books</h3>
+      <p>You need the <b>Professional plan or higher</b>. It costs AED 90 a month on yearly billing, which is AED 1,080 a year. The Free and Standard plans do not include e-invoicing.</p>
+      <p>E-invoicing is sold in packs. The first 100 transactions are free, once. Packs are one-time purchases.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Pack size</th><th>Price (AED)</th><th>Per transaction (AED)</th></tr></thead><tbody>
+        <tr><td>100</td><td>41</td><td>0.41</td></tr>
+        <tr><td>500</td><td>185</td><td>0.37</td></tr>
+        <tr><td>1,000</td><td>330</td><td>0.33</td></tr>
+        <tr><td>5,000</td><td>1,500</td><td>0.30</td></tr>
+        <tr><td>10,000</td><td>2,700</td><td>0.27</td></tr>
+      </tbody></table></div>
+      <p>Each e-invoice and each credit note you send is one transaction. Ask Zoho whether received bills also count on your account. Our <a href="/blog/zoho-e-invoicing-uae-guide">Zoho Books e-invoicing guide</a> has the full detail.</p>
+
+      <h3 class="sm">TallyPrime</h3>
+      <p>Tally charges no per-invoice fee. You need an active Tally Software Services (TSS) subscription.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Item</th><th>About AED</th><th>Note</th></tr></thead><tbody>
+        <tr><td>TSS renewal, Silver (one user)</td><td>468 a year</td><td class="txt">Keeps e-invoicing working</td></tr>
+        <tr><td>TSS renewal, Gold (several users)</td><td>1,404 a year</td><td class="txt">Keeps e-invoicing working</td></tr>
+        <tr><td>New Silver licence</td><td>2,340 one time</td><td class="txt">Includes 1 year of TSS</td></tr>
+        <tr><td>New Gold licence</td><td>7,020 one time</td><td class="txt">Includes 1 year of TSS</td></tr>
+      </tbody></table></div>
+      <p>If you already own TallyPrime with active TSS, your only cost is the renewal. Read our <a href="/blog/tally-e-invoicing-uae-guide">Tally e-invoicing guide</a> for more.</p>
+
+      <h3 class="sm">Wafeq</h3>
+      <p>Wafeq includes e-invoicing in its paid plans. There is no per-invoice fee.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Wafeq plan</th><th>AED a year</th><th>E-invoicing fee</th></tr></thead><tbody>
+        <tr><td>Starter</td><td>690</td><td>0</td></tr>
+        <tr><td>Plus</td><td>960</td><td>0</td></tr>
+        <tr><td>Premium</td><td>2,400</td><td>0</td></tr>
+      </tbody></table></div>
+      <p>Wafeq says its accounting product suits businesses that send under about 500 invoices a month. Above that, ask Wafeq if your plan fits. Our <a href="/blog/wafeq-e-invoicing-uae-guide">Wafeq guide</a> explains the plans.</p>
+
+      <h3 class="sm">Optional help on all three</h3>
+      <p>You can set up Zoho, Tally or Wafeq yourself for free. Or we do it for <b>{aed(P.help)}, one time</b>. That covers a data check, your EmaraTax appointment, a test invoice and credit note, and fixes for rejected invoices.</p>
+    </section>
+
+    <section id="three-year">
+      <h2>What does each option cost over three years?</h2>
+      <p>A first-year price can mislead. So here are three-year totals. They include the software plan, because that is what you actually pay.</p>
+      <p>These figures are estimates. They use the plan prices above and assume prices stay flat. They assume you set up the built-in options yourself.</p>
+
+      <h3 class="sm">At 500 invoices a year</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Option</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Three-year total</th></tr></thead><tbody>
+        <tr><td>QuickBooks Online, Simple Start</td><td>6,924</td><td>2,424</td><td>2,424</td><td><b>11,772</b></td></tr>
+        <tr><td>QuickBooks Online, Essentials</td><td>7,368</td><td>2,868</td><td>2,868</td><td><b>13,104</b></td></tr>
+        <tr><td>Zoho Books, Professional</td><td>1,265</td><td>1,265</td><td>1,265</td><td><b>3,795</b></td></tr>
+        <tr><td>TallyPrime Silver, new licence</td><td>2,340</td><td>468</td><td>468</td><td><b>3,276</b></td></tr>
+        <tr><td>TallyPrime Silver, existing user</td><td>468</td><td>468</td><td>468</td><td><b>1,404</b></td></tr>
+        <tr><td>Wafeq Starter</td><td>690</td><td>690</td><td>690</td><td><b>2,070</b></td></tr>
+        <tr><td>Excel with our service (no accounting software)</td><td>4,000</td><td>1,500</td><td>1,500</td><td><b>7,000</b></td></tr>
+      </tbody></table></div>
+      <p>Add AED 1,500 once if you want us to set up Zoho, Tally or Wafeq. So Wafeq Starter with our setup is AED 3,570 over three years.</p>
+
+      <h3 class="sm">At 5,000 invoices a year</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Option</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Three-year total</th></tr></thead><tbody>
+        <tr><td>QuickBooks Online, Plus</td><td>11,403</td><td>6,903</td><td>6,903</td><td><b>25,209</b></td></tr>
+        <tr><td>Zoho Books, Professional</td><td>2,580</td><td>2,580</td><td>2,580</td><td><b>7,740</b></td></tr>
+        <tr><td>TallyPrime Gold, new licence</td><td>7,020</td><td>1,404</td><td>1,404</td><td><b>9,828</b></td></tr>
+        <tr><td>Wafeq Premium</td><td>2,400</td><td>2,400</td><td>2,400</td><td><b>7,200</b></td></tr>
+      </tbody></table></div>
+
+      <h3 class="sm">What these tables say</h3>
+      <p>The gap is big. At 500 invoices, QuickBooks Online with Essentials costs about AED 13,100 over three years. Zoho costs about AED 3,800. That is a gap of roughly AED 9,300.</p>
+      <p>But look at what the tables leave out. They do not include the cost of moving your data. They do not include staff training. And they do not include the risk of a messy migration just before a deadline.</p>
+      <p>So read the gap as a ceiling on what switching could save, not a promise. For many firms with years of clean history in QuickBooks, staying still makes sense. For a young firm with little history, switching is an easy win.</p>
+      <p>If you want to explore switching, see our <a href="/switch-accounting-software">switch software page</a>. We move your data from QuickBooks or Excel to Zoho, Tally or Wafeq. We quote the price on WhatsApp, because it depends on your data.</p>
+    </section>
+
+    <section id="examples">
+      <h2>Four real examples</h2>
+      <p>These businesses are made up. The maths is real. In each case, "invoices" means sales invoices and credit notes to businesses and government.</p>
+
+      <h3 class="sm">Example 1: A Dubai PR agency with 120 invoices a year</h3>
+      <p>Ten corporate invoices go out each month. The agency has three staff, so it picks the 3-user Essentials plan on QuickBooks.</p>
+      <p>On <b>QuickBooks Online Essentials</b>, the e-invoicing fee still starts at the 500-invoice minimum. Year one is AED 6,000 plus AED 1,368 for the plan. That is <b>AED 7,368</b>. Later years cost AED 2,868.</p>
+      <p>On <b>Zoho Books Professional</b>, the first 100 transactions are free. The agency buys one 100 pack for AED 41. Year one is AED 1,080 plus AED 41, so <b>AED 1,121</b>. Later years cost about AED 1,160.</p>
+      <p>On <b>Wafeq Starter</b>, it pays <b>AED 690</b>.</p>
+      <p>Small senders feel the QuickBooks route the most. The fixed fees do not shrink with volume.</p>
+
+      <h3 class="sm">Example 2: A Sharjah spare parts shop with 600 business invoices</h3>
+      <p>The shop sells to about 40 garages on credit. It also serves walk-in drivers who pay cash. Those walk-in sales are B2C and are not counted. Only the garage invoices are.</p>
+      <p>On <b>QuickBooks Online Essentials</b>, the invoice fee is 500 + 0.75 × 100 = AED 575. Year one is 1,000 + 1,500 + 2,000 + 1,000 + 575 = AED 6,075. Add AED 1,368 for the plan. That is <b>AED 7,443</b>. Later years cost AED 2,943.</p>
+      <p>On <b>Zoho Books Professional</b>, 600 transactions need about AED 226 in packs. With the AED 1,080 plan, the total is about <b>AED 1,306</b>.</p>
+      <p>On <b>Wafeq Starter</b>, the cost is <b>AED 690</b>. On <b>Tally Silver</b>, a new licence is <b>AED 2,340</b>, then AED 468 a year.</p>
+      <p>One watch-out applies to every option. A plumber who walks in and asks for a tax invoice for his company is now a B2B buyer. Train counter staff to ask, "Is this for a company?" And capture the TRN.</p>
+
+      <h3 class="sm">Example 3: A Jebel Ali distributor with 3,600 invoices</h3>
+      <p>The distributor has six users, two warehouses and frequent returns. It needs stock tracking.</p>
+      <p>On <b>QuickBooks Online Plus</b>, the invoice fee is 500 + 0.75 × 3,100 = AED 2,825. Year one is 1,000 + 1,500 + 2,000 + 1,000 + 2,825 = AED 8,325. Add AED 2,028 for the plan. That is <b>AED 10,353</b>. Later years cost AED 5,853.</p>
+      <p>On <b>Zoho Books Professional</b>, packs for about 3,500 paid transactions cost roughly AED 1,200. With the plan, the cost is about <b>AED 2,280</b> a year.</p>
+      <p>On <b>TallyPrime Gold</b>, a new licence is <b>AED 7,020</b>, then AED 1,404 a year. Tally also handles stock-heavy trading well. And it sends invoices in bulk, which helps on a busy day.</p>
+      <p>On <b>Wafeq Premium</b>, the cost is <b>AED 2,400</b>. Check the plan limits first.</p>
+      <p>Distributors gain the most from per-invoice savings. Our <a href="/blog/uae-e-invoicing-distributors">distributor e-invoicing guide</a> covers item units and returns.</p>
+
+      <h3 class="sm">Example 4: An Abu Dhabi fit-out contractor with 400 invoices</h3>
+      <p>The contractor bills progress claims with 10% retention. It tracks jobs in QuickBooks Online Plus.</p>
+      <p>On <b>QuickBooks Online Plus</b>, year one is AED 6,000 plus AED 2,028 for the plan. That is <b>AED 8,028</b>. Later years cost AED 3,528.</p>
+      <p>On <b>Zoho Books Professional</b>, a 500 pack costs AED 185. The total is about <b>AED 1,265</b>.</p>
+      <p>On <b>Wafeq Plus</b>, the cost is <b>AED 960</b>. On <b>Tally Gold</b>, a new licence is <b>AED 7,020</b>, then AED 1,404 a year.</p>
+      <p>The cheapest option is not always the right one. A contractor with years of job history in QuickBooks may keep it. The key is clean data. Retention must sit outside the invoice total. The progress e-invoice then shows the net certified amount. Read our <a href="/blog/uae-e-invoicing-contractors">contractor e-invoicing guide</a> for the rules.</p>
+
+      <h3 class="sm">The four examples in one table</h3>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business</th><th>Invoices a year</th><th>QuickBooks Online, year 1 / year 2</th><th>Zoho Books, year 1 / year 2</th><th>Wafeq, year 1 / year 2</th><th>Tally, year 1 / year 2</th></tr></thead><tbody>
+        <tr><td>PR agency</td><td>120</td><td>7,368 / 2,868</td><td>1,121 / about 1,160</td><td>690 / 690</td><td>2,340 / 468</td></tr>
+        <tr><td>Spare parts shop</td><td>600</td><td>7,443 / 2,943</td><td>about 1,306 / about 1,306</td><td>690 / 690</td><td>2,340 / 468</td></tr>
+        <tr><td>Distributor</td><td>3,600</td><td>10,353 / 5,853</td><td>about 2,280 / about 2,280</td><td>2,400 / 2,400</td><td>7,020 / 1,404</td></tr>
+        <tr><td>Contractor</td><td>400</td><td>8,028 / 3,528</td><td>about 1,265 / about 1,265</td><td>960 / 960</td><td>7,020 / 1,404</td></tr>
+      </tbody></table></div>
+      <p class="small">Tally rows use Silver for single-user firms and Gold for firms with several users. Wafeq rows use the plan each firm would likely pick. Zoho rows use the Professional plan.</p>
+    </section>
+
+    <section id="beyond-price">
+      <h2>What differs besides price?</h2>
+      <p>Cost is only one column. These five differences matter just as much on a busy Monday.</p>
+
+      <h3 class="sm">One support team or two</h3>
+      <p>On Zoho, Tally or Wafeq, a rejected invoice goes to one vendor. On QuickBooks, you must check two places. First your QuickBooks data. Then the connector and ASP dashboard. That is slower when a deadline is near.</p>
+      <p>We reduce this on the outside route. We handle the connector and the ASP, and we fix rejected invoices. But it is still two systems under the hood.</p>
+
+      <h3 class="sm">Setup time</h3>
+      <p>A built-in setup takes hours to a day. The forms are quick. The slow part is cleaning data. A QuickBooks Online connector takes about 1 to 2 weeks. QuickBooks Desktop takes about 2 to 3 weeks, because the connector lives on your office computer.</p>
+
+      <h3 class="sm">Accounting depth</h3>
+      <p>QuickBooks has years of add-ons, reports and accountant tools. Many UAE accountants know it well. That has real value. Zoho, Tally and Wafeq are strong, but they work differently. Expect a learning curve of days to weeks.</p>
+      <p>Tally is built for trading. It is quick for keyboard-driven billing and stock-heavy work. Wafeq is built for UAE rules and small firms. Zoho sits between them, with a wide range of plans.</p>
+
+      <h3 class="sm">Arabic and local fit</h3>
+      <p>Tally says TallyPrime supports English and Arabic invoices. Wafeq also works in both languages. If your buyers need Arabic invoices, check this for any tool you pick.</p>
+
+      <h3 class="sm">Receiving supplier invoices</h3>
+      <p>E-invoicing runs both ways. Your suppliers will start sending you e-invoices too. On Zoho, supplier e-invoices arrive in your books as drafts for review. Tally says it does not yet receive supplier e-invoices inside TallyPrime, so check with your Tally partner. On the outside route, supplier invoices come into your ASP portal. And we do not count them in our fee.</p>
+      <p>Ask your own suppliers for their Peppol IDs early. It saves rework later.</p>
+    </section>
+
+    <section id="other">
+      <h2>What about Xero, Odoo, Sage, SAP and other software?</h2>
+      <p>Most accounting and ERP software in the UAE is not an ASP. That includes Xero, Odoo, Sage, SAP, Oracle, Dynamics 365 and ERPNext. They follow route two. They need an outside ASP and a connection.</p>
+      <p>The price structure is the same as for QuickBooks. Onboarding is {aed(P.onboarding)}. Setup is {aed(P.setup)}. The platform fee is {aed(P.platform)} a year. E-invoicing is {aed(P.feeMin)} a year for up to {fmt(N0)} invoices. That makes <b>{aed(price('other', N0).firstYear)} plus a connector</b> in year one, then {aed(every())} a year. Only the connector price changes, because every system connects in its own way. It may use an app module, an API, a desktop agent or a file upload.</p>
+      <p>So if you use Xero, do not assume e-invoicing is bundled. Confirm it with your vendor and check the Ministry of Finance ASP list. Or message us your software name and invoice count. We reply with the connector price, usually the same day. See our <a href="/other-software">other software page</a>.</p>
+      <p>Software also changes over time. A vendor may add its own ASP later. If yours does, compare its price with the outside route before you pay twice.</p>
+    </section>
+
+    <section id="decide">
+      <h2>Should you stay on QuickBooks or switch?</h2>
+      <p>Use this table as a starting point.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Your situation</th><th>Likely best move</th><th>Why</th></tr></thead><tbody>
+        <tr><td class="txt">Team knows QuickBooks. Years of clean history. Complex accounts</td><td class="txt">Stay on QuickBooks</td><td class="txt">Migration risk is higher than the yearly saving</td></tr>
+        <tr><td class="txt">New company, no software yet</td><td class="txt">Zoho, Tally or Wafeq</td><td class="txt">Lowest yearly cost, one system</td></tr>
+        <tr><td class="txt">Under 500 invoices and unhappy with your software</td><td class="txt">Switch to Wafeq or Zoho</td><td class="txt">Fixed costs on the outside route weigh most here</td></tr>
+        <tr><td class="txt">Trading or distribution firm with stock</td><td class="txt">Tally or Zoho</td><td class="txt">Strong stock tools, no or low per-invoice cost</td></tr>
+        <tr><td class="txt">Over 5,000 invoices a year</td><td class="txt">Compare Tally and Zoho closely</td><td class="txt">Per-invoice fees add up on the outside route</td></tr>
+        <tr><td class="txt">QuickBooks Desktop on an old version</td><td class="txt">Consider switching</td><td class="txt">Old copies may not connect, and the connector costs AED 3,000</td></tr>
+        <tr><td class="txt">Only a spreadsheet today</td><td class="txt">Consider real software</td><td class="txt">Excel works, but it is manual</td></tr>
+      </tbody></table></div>
+
+      <h3 class="sm">A five-minute decision check</h3>
+      <ol class="know">
+        <li><b>Count your invoices.</b> Add last year's sales invoices and credit notes to businesses and government. Leave out supplier invoices and consumer sales.</li>
+        <li><b>Check your revenue tier.</b> It sets your date. Under AED 50 million means appoint by 31 March 2027.</li>
+        <li><b>List what QuickBooks does for you that you would miss.</b> Be honest. Add-ons, payroll links and reports count.</li>
+        <li><b>Price both paths for three years.</b> Use the tables above or our <a href="/">calculator</a>.</li>
+        <li><b>Check your calendar.</b> Switching needs weeks. If your deadline is only a few weeks away, keep your software and add the connector. You can switch later.</li>
+      </ol>
+      <p>That last point is key. You do not need to decide your forever software today. You only need an ASP by the deadline. You can connect QuickBooks now and move later.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>What mistakes do people make when comparing software?</h2>
+      <ol class="know">
+        <li><b>Comparing only the first-year price.</b> Look at three years. A low first year can hide a high yearly fee.</li>
+        <li><b>Forgetting the software plan.</b> E-invoicing fees are one part. The QuickBooks subscription, the Zoho plan and the Wafeq plan are the other.</li>
+        <li><b>Counting the wrong invoices.</b> Count sales invoices and credit notes to businesses and government. Do not count supplier invoices or consumer receipts.</li>
+        <li><b>Switching in March.</b> Migration takes time. Fines start at AED 5,000 a month once your appointment date passes.</li>
+        <li><b>Ignoring data quality.</b> Missing customer TRNs and VAT codes cause most rejections on every platform. Fix them first.</li>
+        <li><b>Assuming a PDF is enough.</b> For invoices in scope, the legal invoice is the structured PINT AE file that goes through your ASP.</li>
+        <li><b>Editing sent invoices.</b> You cannot. Issue a credit note and, if needed, a new invoice. Every correction is an extra document. And on Zoho, it is an extra transaction.</li>
+        <li><b>Buying a bigger plan than you need.</b> On Zoho, the packs work the same on every eligible plan. Upgrade for features, not for e-invoicing.</li>
+      </ol>
+      <p class="callout">Want a price for your own setup? Message us on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>QuickBooks Online vs other software: common questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li>
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/einvoicing-accredited-service-providers-asps/" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://quickbooks.intuit.com/ae/resources/running-a-business/e-invoicing-compliance-in-the-uae" target="_blank" rel="noopener">QuickBooks UAE: e-invoicing compliance</a></li>
+        <li><a href="https://www.zoho.com/ae/books/pricing/" target="_blank" rel="noopener">Zoho Books UAE pricing</a></li>
+        <li><a href="https://www.zoho.com/ae/books/academy/taxes-and-compliance/einvoicing-uae.html" target="_blank" rel="noopener">Zoho Books Academy: UAE eInvoicing</a></li>
+        <li><a href="https://help.tallysolutions.com/uae-e-invoicing-in-tallyprime/" target="_blank" rel="noopener">Tally Help: UAE e-invoicing in TallyPrime</a></li>
+        <li><a href="https://www.wafeq.com/en-ae/press-releases/business-regulations-brief/wafeq-uae-e-invoicing-included-at-no-extra-cost" target="_blank" rel="noopener">Wafeq: UAE e-invoicing included at no extra cost (7 October 2026)</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="https://einvoicecost.ae/quickbooks-online" target="_blank" rel="noopener">einvoicecost.ae: QuickBooks Online e-invoicing cost and setup</a></li>
+      </ul>
+      <p class="small">Our prices come from einvoicecost.ae and were checked on 11 November 2026. Zoho, Tally, Wafeq and QuickBooks plan prices come from the vendors and were last checked on 16 November 2026. Vendors can change them, so check before you buy. Three-year totals are estimates that assume flat prices. Examples use made-up businesses and round numbers. This guide is general information, not tax or legal advice.</p>
+    </section>
+
+    <RelatedGuides current="quickbooks-online-vs-other-software-uae-e-invoicing" />
+
+    <section class="final">
+      <div><h2>Get your exact price</h2><p class="sub">Tell us your software and your yearly invoice count. We reply with your price and next steps, usually the same day. We can also tell you honestly whether staying or switching looks better for your numbers.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
