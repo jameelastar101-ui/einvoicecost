@@ -1,0 +1,328 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-16';
+const UPDATED_ISO = '2026-11-16';
+const UPDATED = '16 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/zoho-e-invoicing-uae-guide';
+
+const title = 'ZOHO BOOKS E-INVOICING UAE 2027: COSTS, SETUP AND EXAMPLES';
+const description =
+  'Zoho Books UAE e-invoicing for 2027: plan and pack prices, a 5-step setup and real examples for contractors, distributors, traders and service firms.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I use Zoho Books and read your guide. I would like you to set up e-invoicing.');
+const setupWa = wa('Hi, I use Zoho Books and read your guide. I would like you to set up e-invoicing.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Is Zoho Books an accredited service provider (ASP) in the UAE?", a: "Yes. Zoho Software Trading LLC is on the Ministry of Finance list of accredited service providers, with accreditation number 121988. Zoho Books users appoint Zoho on EmaraTax. They do not need another provider." },
+  { q: "How much does Zoho Books e-invoicing cost in the UAE?", a: "You pay for two things. First, a Zoho Books plan at Professional level or higher, which starts at AED 90 a month on yearly billing (AED 1,080 a year). Second, e-invoicing packs. The first 100 transactions are free, once. After that, a pack of 1,000 costs AED 330. All prices exclude 5% VAT." },
+  { q: "Which Zoho Books plan do I need for UAE e-invoicing?", a: "You need the Professional plan or higher. The Free and Standard plans do not include e-invoicing. Professional costs AED 90 a month on yearly billing and AED 129 a month on monthly billing." },
+  { q: "How many free e-invoices does Zoho Books give me?", a: "The first 100 e-invoicing transactions are free. This is a one-time allowance, not a yearly one. Once you use the 100, you buy packs." },
+  { q: "What do Zoho e-invoicing packs cost?", a: "A pack of 100 costs AED 41. A pack of 500 costs AED 185. A pack of 1,000 costs AED 330. A pack of 5,000 costs AED 1,500. A pack of 10,000 costs AED 2,700. Larger packs cost AED 11,500 for 50,000 and AED 20,000 for 100,000. Packs are one-time purchases and exclude 5% VAT." },
+  { q: "Do Zoho e-invoicing packs expire?", a: "Zoho partner material says unused transactions stay valid as long as your Zoho organisation stays the same. Confirm this with Zoho for your own account before you buy a large pack." },
+  { q: "What counts as one e-invoicing transaction in Zoho Books?", a: "Each e-invoice you send is one transaction. Each credit note you send is also one. Zoho partner material says received bills and credit notes may count too, so confirm with Zoho. Sales to consumers (B2C) are outside e-invoicing for now." },
+  { q: "How do I set up e-invoicing in Zoho Books?", a: "Check your plan and your data. Enter your business details in Zoho Books under Settings, E-Invoicing. Select Zoho Software Trading LLC as your ASP on the EmaraTax portal. Return to Zoho Books and click Verify & Complete Setup. Then fix any data gaps and send one test invoice and one test credit note." },
+  { q: "How long does Zoho Books e-invoicing setup take?", a: "Most businesses finish the setup in a few hours. The forms are quick. The slow part is cleaning customer and item data, such as missing customer TRNs, missing VAT codes and unclear units." },
+  { q: "What is my Peppol ID in Zoho Books?", a: "Your Peppol participant ID is 0235 followed by your 10-digit TIN. The TIN is usually the first 10 digits of your 15-digit TRN. Zoho creates the ID when you complete the setup." },
+  { q: "Can I edit a Zoho Books invoice after I send it as an e-invoice?", a: "No. Once an e-invoice is sent, you cannot edit or delete it. You issue a credit note to correct it, and a new e-invoice if the sale must be billed again. Check the invoice before you send it." },
+  { q: "Do walk-in retail sales need e-invoices in the UAE?", a: "Not for now. Sales to consumers (B2C) are outside the e-invoicing system. But a walk-in buyer who is a business, and who gives you a company TRN, is a B2B customer. That sale needs an e-invoice once your phase starts." },
+  { q: "When is the e-invoicing deadline for Zoho Books users?", a: "It is the same as for every business. With revenue under AED 50 million, appoint an ASP by 31 March 2027 and go live on 1 July 2027. With revenue of AED 50 million or more, the appointment date was 30 October 2026 and go-live is 1 January 2027. Government entities go live on 1 October 2027." },
+  { q: "What is the penalty for missing the e-invoicing deadline?", a: "Under Cabinet Decision No. 106 of 2025, not appointing an ASP on time costs AED 5,000 for each month. After go-live, each invoice or credit note not issued electronically can cost AED 100, up to AED 5,000 a month for each type." },
+  { q: "How does a contractor bill retention in Zoho Books?", a: "The progress e-invoice can cover the net amount after retention is held back. When the retention is released, you issue a separate e-invoice for that amount. Keep retention outside the invoice total in Zoho Books, and test one progress invoice and one retention release before go-live." },
+  { q: "How do I handle returns and damaged goods in Zoho Books?", a: "Issue a credit note from the original invoice. The credit note links to the invoice and goes through Peppol like any other e-invoice document. It uses one transaction. If the sale needs to be billed again, send a new e-invoice." },
+  { q: "I am on the Free or Standard plan. Do I have to upgrade?", a: "Zoho's built-in e-invoicing needs Professional or higher. Moving from Standard to Professional costs AED 360 more a year on yearly billing. An outside ASP is another route, but it adds a second system and a second bill. For most firms, upgrading is simpler." },
+  { q: "Can einvoicecost.ae set up Zoho Books e-invoicing for me?", a: `Yes. We do the full setup for ${aed(P.help)}, one time. This covers a plan check, data clean-up, your EmaraTax appointment, a test invoice and credit note, and fixes for rejected invoices. Or set it up yourself for free with the steps in this guide.` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'Zoho Books e-invoicing UAE', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['what', 'What it is'], ['deadlines', 'Who goes live when'], ['cost', 'What it costs'], ['plan', 'Which plan you need'],
+  ['setup', 'Set up in 5 steps'], ['volumes', 'Cost by invoice volume'], ['contractors', 'Contractors'], ['distributors', 'Distributors'],
+  ['traders', 'Small traders'], ['services', 'Service companies'], ['compare', 'Four business types'], ['mistakes', 'Mistakes that cause rejections'],
+  ['help', 'Yourself or with help'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Zoho Books</p>
+      <p class="eyebrow">Blog · Zoho Books</p>
+      <h1>ZOHO BOOKS E-INVOICING UAE 2027: COSTS, SETUP AND EXAMPLES</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Zoho Books sends your UAE e-invoices for you. Zoho is an accredited service provider (ASP), so you need <b>no other provider</b>. You need the <b>Professional plan or higher</b>, which starts at <b>AED 90 a month</b> on yearly billing. Your <b>first 100 e-invoices are free</b>. After that you buy packs, such as <b>AED 330 for 1,000</b>. Setup takes five steps.</p>
+        <div class="facts">
+          <div><p class="k">Plan needed</p><p class="v">Professional or higher, from AED 1,080 a year</p></div>
+          <div><p class="k">Free allowance</p><p class="v">First 100 transactions, once</p></div>
+          <div><p class="k">Setup with us</p><p class="v">{aed(P.help)}, one time, optional</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="what">
+      <h2>What is Zoho Books e-invoicing in the UAE?</h2>
+      <p>Zoho Books e-invoicing sends your sales invoices to your customer's accounting system as structured data. The data format is called <b>PINT AE</b>. The delivery route is the <b>Peppol network</b>. Zoho Books does the converting, the checking and the sending.</p>
+      <p>The old way was simple. You made a PDF and emailed it. A clerk at your customer's office read it and typed the numbers into another system. A PDF is like a photo of a letter. A person has to read it. An e-invoice is the data inside the letter. A computer reads it, and nobody retypes anything.</p>
+      <p>Zoho Software Trading LLC is on the Ministry of Finance list of accredited service providers (ASPs). Its accreditation number is <b>121988</b>. This matters because every UAE e-invoice must pass through an ASP. When your software company is the ASP, you do not hire a second one. You appoint Zoho on the Federal Tax Authority's EmaraTax portal, and you are connected.</p>
+      <p>Not every program works this way. QuickBooks and Excel are not ASPs. Their users need an outside provider and a connector. Our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a> explains that route. This guide stays with Zoho Books.</p>
+      <h3 class="sm">How one Zoho invoice travels</h3>
+      <p>Say you bill a customer AED 5,000 plus AED 250 VAT. You create the invoice in Zoho Books, as you do today. Zoho converts it to PINT AE and checks it. If a required field is empty, such as the customer's TRN, Zoho stops the invoice and shows an error. You fix the gap and try again.</p>
+      <p>When the invoice passes, Zoho sends it over Peppol to your customer's ASP. Your customer's system receives it. At the same time, the tax data is reported to the Federal Tax Authority (FTA). Five parties are involved: you, your ASP, your customer's ASP, your customer and the FTA. This is called the five-corner model.</p>
+      <p><b>The FTA does not approve each invoice before it goes out.</b> The UAE uses a decentralised model, not a clearance model. Your ASP does the checking. So clean data matters more than speed.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Who must use e-invoicing in the UAE, and by when?</h2>
+      <p>Every VAT-registered business that sells to other businesses (B2B) or to government (B2G) must send e-invoices. There is no small-business exemption. Sales to consumers (B2C) are outside the system for now. Your revenue decides <b>when</b> you start. It does not decide <b>whether</b> you must.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business group</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p>Under Ministerial Decision No. 244 of 2025, your group depends on the gross income in your latest audited financial statements. If you are close to AED 50 million, check that figure first.</p>
+      <p>If your revenue is AED 50 million or more, go-live is about six weeks away. The appointment date has already passed. So appoint Zoho now. If your revenue is under AED 50 million, you have more time, but not as much as it feels. Data clean-up takes longer than most owners expect.</p>
+      <h3 class="sm">What a missed deadline costs</h3>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. Not appointing an ASP on time costs <b>AED 5,000 for each month</b>. After go-live, each invoice you do not issue electronically can cost <b>AED 100</b>. The cap is AED 5,000 a month. The same rule applies to credit notes, with its own AED 5,000 cap.</p>
+      <p>Compare that with the cost of setup. As you will see below, a typical small business spends about AED 1,265 in its first year. One late month costs more than that.</p>
+    </section>
+
+    <section id="cost">
+      <h2>How much does Zoho Books e-invoicing cost?</h2>
+      <p>You pay for two things. The first is your Zoho Books plan. The second is a set of e-invoicing packs. If you already pay for a Professional plan or higher, only the packs are new.</p>
+      <h3 class="sm">Bill one: your Zoho Books plan</h3>
+      <p>E-invoicing starts at the Professional plan. The Free and Standard plans do not include it. Here are the plan prices on Zoho's UAE pricing page, as we last checked them.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Plan</th><th>AED a month (yearly billing)</th><th>AED a month (monthly billing)</th><th>E-invoicing</th></tr></thead><tbody>
+        <tr><td>Free</td><td>0</td><td>0</td><td>No</td></tr>
+        <tr><td>Standard</td><td>60</td><td>69</td><td>No</td></tr>
+        <tr><td>Professional</td><td>90</td><td>129</td><td><b>Yes</b></td></tr>
+        <tr><td>Premium</td><td>120</td><td>159</td><td><b>Yes</b></td></tr>
+        <tr><td>Elite</td><td>280</td><td>349</td><td><b>Yes</b></td></tr>
+        <tr><td>Ultimate</td><td>660</td><td>799</td><td><b>Yes</b></td></tr>
+      </tbody></table></div>
+      <p>Zoho sets and can change these prices. Check Zoho's pricing page before you buy. Professional on yearly billing is AED 90 × 12, which is <b>AED 1,080 a year</b>. That is the lowest cost way in.</p>
+      <h3 class="sm">Bill two: e-invoicing packs</h3>
+      <p>Zoho charges for e-invoicing by the transaction. Every eligible Zoho Books organisation gets 100 free transactions. This is a one-time gift, not a yearly one. When it runs out, you buy packs. Packs are one-time purchases. Bigger packs cost less per transaction.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Pack size</th><th>Price (AED)</th><th>Per transaction (AED)</th></tr></thead><tbody>
+        <tr><td>First 100</td><td>Free</td><td>Once only</td></tr>
+        <tr><td>100</td><td>41</td><td>0.41</td></tr>
+        <tr><td>500</td><td>185</td><td>0.37</td></tr>
+        <tr><td>1,000</td><td>330</td><td>0.33</td></tr>
+        <tr><td>5,000</td><td>1,500</td><td>0.30</td></tr>
+        <tr><td>10,000</td><td>2,700</td><td>0.27</td></tr>
+        <tr><td>50,000</td><td>11,500</td><td>0.23</td></tr>
+        <tr><td>100,000</td><td>20,000</td><td>0.20</td></tr>
+      </tbody></table></div>
+      <p class="small">Pack prices exclude 5% VAT. Our <a href="/zoho-books">Zoho Books price page</a> has a calculator for your own invoice count.</p>
+      <h3 class="sm">What counts as one transaction?</h3>
+      <p>Each e-invoice you send is one transaction. Each credit note you send is one more. So a sale that you correct later uses at least two: the invoice and the credit note. A new invoice after that uses a third.</p>
+      <p>Received documents are less clear. Zoho partner material says received bills and credit notes may also count. Ask Zoho how this works for your account. Drafts and quotes never travel over Peppol. Sales to consumers (B2C) are outside e-invoicing for now, so they do not need a transaction.</p>
+      <p>Do packs expire? Zoho partner material says unused transactions stay valid while your Zoho organisation stays the same. Confirm that with Zoho before you buy a big pack.</p>
+      <h3 class="sm">The Zoho cost formula</h3>
+      <div class="formula"><p class="fh">Zoho Books yearly cost (AED, excl. VAT)</p><pre>{`Plan fee      = monthly price × 12
+                (Professional, yearly billing: 90 × 12 = 1,080)
+
+Pack cost     = packs that cover your yearly documents
+                (500 documents: one 500 pack = 185)
+
+Yearly total  = Plan fee + Pack cost
+                (500 documents: 1,080 + 185 = 1,265)`}</pre></div>
+      <p>Your yearly documents are the invoices and credit notes you send. If you already pay for Professional, your extra cost is the pack cost only.</p>
+    </section>
+
+    <section id="plan">
+      <h2>Which Zoho Books plan do you need for e-invoicing?</h2>
+      <p>You need <b>Professional or higher</b>. The Free and Standard plans cannot connect to the Peppol network on their own.</p>
+      <h3 class="sm">If you are on the Free plan</h3>
+      <p>Check who your customers are first. If you only sell to individual shoppers (B2C), you are outside e-invoicing for now. You can stay on Free. If you send invoices to other businesses, you must move to Professional before your start date. Take a small design studio with 10 business invoices a month. That is 120 documents a year. After the upgrade, the first 100 are free. The studio buys one 100 pack for AED 41 and covers the rest. Its first-year spend is AED 1,080 plus AED 41, so <b>AED 1,121</b>.</p>
+      <h3 class="sm">If you are on the Standard plan</h3>
+      <p>Standard costs AED 60 a month on yearly billing. Professional costs AED 90. The gap is AED 30 a month, or AED 360 a year. Picture a maintenance firm on Standard that sends 40 business invoices and 2 credit notes a month. That is 504 documents a year. After the upgrade, the firm uses its 100 free transactions. It then buys one 500 pack for AED 185. Its first-year spend is AED 1,080 plus AED 185, so <b>AED 1,265</b>.</p>
+      <p>An outside ASP is another route. But it adds a second system and a second bill. It can also cause sync errors between the two systems. For most firms, upgrading inside Zoho is simpler.</p>
+      <h3 class="sm">If you are on Professional or higher</h3>
+      <p>You can start now. Professional is the right plan for most small and mid-size firms. Move up only if you need a feature that Professional lacks. Examples are stronger approval rules or advanced stock tracking. Check Zoho's plan comparison for what each level includes today. Do not upgrade just for e-invoicing. The packs work the same on every eligible plan.</p>
+    </section>
+
+    <section id="setup">
+      <h2>How to set up e-invoicing in Zoho Books in five steps</h2>
+      <p>You set up e-invoicing once. Most businesses finish in a few hours. Before you start, gather four things. You need your 15-digit Tax Registration Number (TRN). You need your 10-digit Tax Identification Number (TIN), which is usually the first 10 digits of the TRN. You need your EmaraTax login. And VAT must already be switched on in Zoho Books.</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Check your plan and your data</h3></div><p>Confirm you are on Professional or higher. Then look at your customers. Every business customer needs a valid TRN. Look at your items. Every item needs a VAT treatment and a standard unit. Doing this first saves you the most pain later.</p></div></li>
+        <li><div><div class="st-head"><h3>Enter your details in Zoho Books</h3></div><p>Open Settings and go to E-Invoicing, under Taxes &amp; Compliance. Click Set Up Now. Enter your legal business name, TRN, TIN and full address. Add the email address you use for EmaraTax. Make sure the name matches your trade licence and tax certificate exactly. Accept the terms and save.</p></div></li>
+        <li><div><div class="st-head"><h3>Appoint Zoho as your ASP on EmaraTax</h3></div><p>Zoho Books gives you a link to EmaraTax. Log in and choose your business. Open the E-Invoicing section. Search for Zoho Software Trading LLC and select it as your ASP. Check your contact details and submit. This tells the FTA that Zoho sends invoices on your behalf.</p></div></li>
+        <li><div><div class="st-head"><h3>Complete the setup in Zoho</h3></div><p>Go back to Zoho Books and click Verify &amp; Complete Setup. Zoho checks your appointment and creates your Peppol participant ID. The ID is 0235 followed by your 10-digit TIN. Your status then shows as active.</p></div></li>
+        <li><div><div class="st-head"><h3>Fix gaps and send a test</h3></div><p>Zoho checks required fields before it sends an invoice. Fix anything it flags. Then send one test invoice and one test credit note. Confirm both go through. Do this before your start date, not on it. A sent e-invoice cannot be edited, so every mistake in real life costs an extra document.</p></div></li>
+      </ol>
+      <p class="callout">Short on time? We can do all five steps for {aed(P.help)}, one time. <a href={setupWa} target="_blank" rel="noopener">Message us on WhatsApp →</a></p>
+    </section>
+
+    <section id="volumes">
+      <h2>What does Zoho e-invoicing cost at different invoice volumes?</h2>
+      <p>Your yearly cost depends on how many invoices and credit notes you send. Here are five common volumes. The total includes the Professional plan on yearly billing. The last column adds our optional setup fee.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Documents a year</th><th>Packs paid to Zoho</th><th>Professional plan</th><th>First year, set up yourself</th><th>First year, we set it up</th></tr></thead><tbody>
+        <tr><td>500</td><td>185</td><td>1,080</td><td>1,265</td><td>{fmt(1265 + P.help)}</td></tr>
+        <tr><td>1,000</td><td>330</td><td>1,080</td><td>1,410</td><td>{fmt(1410 + P.help)}</td></tr>
+        <tr><td>2,000</td><td>660</td><td>1,080</td><td>1,740</td><td>{fmt(1740 + P.help)}</td></tr>
+        <tr><td>5,000</td><td>1,500</td><td>1,080</td><td>2,580</td><td>{fmt(2580 + P.help)}</td></tr>
+        <tr><td>10,000</td><td>2,700</td><td>1,080</td><td>3,780</td><td>{fmt(3780 + P.help)}</td></tr>
+      </tbody></table></div>
+      <p class="small">Pack costs are estimates. They price your yearly count at the matching pack rate, as on our Zoho Books page. In year one, your free 100 can lower the bill a little, because you buy fewer credits. Plan and pack prices exclude 5% VAT.</p>
+      <p>Look at what happens as volume grows. At 500 documents, the packs cost AED 0.37 each. At 10,000, they cost AED 0.27 each. The plan fee does not change. So the plan is the larger share of your cost at low volume. At high volume, the packs are.</p>
+      <p>After the first year, you pay the plan renewal plus new packs. The setup fee is a one-time cost and does not come back. For a business with a steady 1,000 documents a year, that is about AED 1,410 a year. If you already needed Professional for other reasons, e-invoicing adds only AED 330.</p>
+    </section>
+
+    <section id="contractors">
+      <h2>Zoho Books e-invoicing for contractors</h2>
+      <p>Contractors bill in stages. They take advances, certify work, hold retention and agree variations. Each of these events can need its own e-invoice. The rule is simple: <b>one billing event, one document</b>. Because a sent e-invoice cannot be edited, each document must be right the first time.</p>
+      <p>Take a fit-out contractor in Dubai. It wins an office job worth AED 100,000. The client pays a 30% advance, which is AED 30,000. VAT at 5% adds AED 1,500. The contractor creates an invoice for AED 31,500 in Zoho Books and sends it through Peppol. That uses one transaction. (This assumes VAT is due on the advance. Your tax adviser confirms that for your contract.)</p>
+      <p>Later, the client certifies AED 40,000 of work. The contract holds 10% retention, which is AED 4,000. The contractor sends an e-invoice for the net amount: AED 36,000 plus AED 1,800 VAT, so AED 37,800. When the retention is released after handover, a second e-invoice follows. It is AED 4,000 plus AED 200 VAT, so AED 4,200. This matches the approach in version 1.1 of the UAE e-invoicing guidelines, as covered in our <a href="/blog/uae-e-invoicing-contractors">contractor e-invoicing guide</a>.</p>
+      <p>Now the client changes a wall design. The agreed saving is AED 5,000. The contractor cannot edit the invoice already sent. Instead, it issues an e-credit note for AED 5,250, which is AED 5,000 plus AED 250 VAT. The credit note uses one transaction. If the work must be billed again, a new e-invoice uses another.</p>
+      <h3 class="sm">What to set up in Zoho Books</h3>
+      <p>Keep retention outside the invoice total, so the progress invoice shows only the net certified amount. Give every line a standard unit that your ASP accepts. Record the contract, certificate and variation numbers on each document. They help you explain any document later.</p>
+      <p>Many contractors want a project manager to approve each bill before it goes out. Premium and the plans above it add more approval controls. Check Zoho's plan comparison for the exact features. Approval rules are worth having here. They stop wasted transactions.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Suppose the contractor sends about 500 documents a year. That could be 360 progress invoices, 60 advance invoices, 40 retention releases, 25 variations and 15 credit notes. The packs cost AED 185. With the Professional plan at AED 1,080, the first-year total is <b>AED 1,265</b>.</p>
+    </section>
+
+    <section id="distributors">
+      <h2>Zoho Books e-invoicing for distributors</h2>
+      <p>Distributors send many invoices. They also handle returns, damaged stock, short deliveries and price changes. The big risk is bad item data. The UAE system rejects invoices with blank or unclear units. It also rejects items with no tax category.</p>
+      <p>So map every item in Zoho Books to a standard unit and a tax category before go-live. This is slow work if you have thousands of items. Start with your top 200 sellers. They usually make most of your invoices.</p>
+      <p>Here is a real-world case. A beverage distributor in Sharjah delivers 200 cartons of juice to a supermarket chain. Each carton costs AED 40. The invoice is AED 8,000 plus AED 400 VAT, so AED 8,400. It goes out through Peppol. On delivery, the supermarket finds 10 cartons crushed.</p>
+      <p>The clerk cannot edit the sent invoice. Instead, the clerk creates a credit note from the original invoice for the 10 damaged cartons. That is AED 400 plus AED 20 VAT, so AED 420. Zoho links the credit note to the invoice and sends it through Peppol. It uses one transaction.</p>
+      <h3 class="sm">Exports, free zones and van sales</h3>
+      <p>Export sales and free-zone sales still need e-invoices, even at 0% VAT. VAT treatment depends on your facts. Ask your tax adviser, then set the customer type correctly in Zoho.</p>
+      <p>Van-sales apps are a second risk. If a separate app creates the invoice, it must pass a valid customer TRN and tax codes into Zoho. Ask your app vendor how it works when the van has no signal.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Say the distributor sends 4,700 invoices and 300 credit notes a year. That is 5,000 documents. A 5,000 pack costs AED 1,500, which is AED 0.30 each. With Professional at AED 1,080, the first-year total is <b>AED 2,580</b>. Warehouse features may call for a higher plan. If so, add the difference. Our <a href="/blog/uae-e-invoicing-distributors">distributor e-invoicing guide</a> covers master data, ERP options and returns in more depth.</p>
+    </section>
+
+    <section id="traders">
+      <h2>Zoho Books e-invoicing for small traders</h2>
+      <p>Small traders often sell to two kinds of buyers. Some are walk-in shoppers. Others are companies with a trade licence and a TRN. Hardware shops, auto parts dealers and electronics resellers are typical. The good news is that retail sales to individuals (B2C) are outside e-invoicing for now. You do not spend transactions on them.</p>
+      <p>Picture an auto parts shop in Ajman. In a typical week, it serves 50 walk-in car owners and 15 local repair garages. When a car owner buys a battery, the cashier prints a normal receipt. No transaction is used. When a garage buys brake pads on credit, the cashier picks the garage's saved profile. It already holds the garage's TRN, address and VAT treatment. The invoice goes out through Peppol and uses one transaction.</p>
+      <p>One more case matters. A plumber walks in and says, "I need a tax invoice for my company." That buyer is now a business. The sale is B2B and needs an e-invoice once your phase starts. Train your counter staff to ask one question: "Is this purchase for a company?" If yes, they must capture the TRN.</p>
+      <h3 class="sm">What to set up in Zoho Books</h3>
+      <p>Save business customers with their TRN, TIN, address and VAT treatment. Keep individual shoppers as plain customers. Pre-save tax rates and standard units on your top-selling items. Then counter staff will not hit errors in front of a waiting customer.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Say the shop sends about 80 invoices to garages each month, plus 40 credit notes in the year. That is 1,000 documents. Its roughly 2,600 yearly walk-in sales stay outside. One 1,000 pack costs AED 330. With Professional at AED 1,080, the first-year total is <b>AED 1,410</b>.</p>
+    </section>
+
+    <section id="services">
+      <h2>Zoho Books e-invoicing for service companies</h2>
+      <p>Service firms hold no stock, so their setup is the quickest. IT support, marketing, cleaning, consulting and maintenance firms all fit here. They still need care in three places: units, recurring bills and re-billed costs.</p>
+      <p>A valid unit is required on every line, even when you sell time and not boxes. Use Hours, Days or Months from the standard list. Do not type free text.</p>
+      <p>Imagine an IT support company in Abu Dhabi. It charges 40 business clients a fixed monthly fee. Each month, it used to type 40 bills by hand. Now it uses recurring invoices in Zoho Books, with the unit set to Months. On the first of the month, Zoho prepares all 40. The accountant reviews them. Then the 40 go out through Peppol in one batch, using 40 transactions.</p>
+      <p>One tip saves money. Set recurring invoices to save as drafts, not to send on their own. A sent e-invoice cannot be edited. A quick review costs minutes. A wrong invoice costs a credit note and a new invoice, which is two more transactions.</p>
+      <h3 class="sm">Re-billed expenses</h3>
+      <p>Service firms often pay a government fee or a vendor cost for a client, then bill it back. The tax treatment can differ. A cost may be standard-rated at 5%, or it may be a disbursement outside the scope of VAT. Tag each one correctly so the FTA data matches your VAT return. Your tax adviser can confirm the right treatment.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>The IT company sends 480 monthly bills plus about 20 ad-hoc invoices and credit notes. That is 500 documents. One 500 pack costs AED 185. With Professional at AED 1,080, the first-year total is <b>AED 1,265</b>.</p>
+    </section>
+
+    <section id="compare">
+      <h2>The four business types side by side</h2>
+      <p>Here are the four examples from this guide. Each uses the Professional plan on yearly billing. Add {aed(P.help)} if you want us to do the setup.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business</th><th>Documents a year</th><th>Main focus</th><th>Packs paid to Zoho</th><th>First year, set up yourself</th></tr></thead><tbody>
+        <tr><td>Contractor</td><td>500</td><td class="txt">Advances, retention, variations, credit notes</td><td>185</td><td>1,265</td></tr>
+        <tr><td>Distributor</td><td>5,000</td><td class="txt">Item units, tax codes, returns</td><td>1,500</td><td>2,580</td></tr>
+        <tr><td>Small trader</td><td>1,000</td><td class="txt">Separating B2B from walk-in B2C sales</td><td>330</td><td>1,410</td></tr>
+        <tr><td>Service company</td><td>500</td><td class="txt">Recurring bills, service units, re-billed costs</td><td>185</td><td>1,265</td></tr>
+      </tbody></table></div>
+      <p class="small">These are examples, not quotes. Your own invoice count decides your packs. Use our <a href="/zoho-books">Zoho Books calculator</a> for your number.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>Mistakes that cause rejected Zoho e-invoices</h2>
+      <ul class="know">
+        <li><b>Missing customer TRNs.</b> This is the most common problem. Run a report of business customers with no TRN. Fix those first.</li>
+        <li><b>Names that do not match.</b> Your customer's legal name must match its registration. A trading name will not do. Check yours too.</li>
+        <li><b>Free-text units.</b> Words like "pcs" or "boxes" may fail. Use the standard unit list your ASP accepts.</li>
+        <li><b>Items with no VAT treatment.</b> Every item needs the right treatment: standard-rated, zero-rated, exempt or out of scope. Do not rely on a default.</li>
+        <li><b>Editing after sending.</b> You cannot. Credit notes fix mistakes, and each one uses a transaction. Check every invoice before you send it.</li>
+        <li><b>Mixing B2B and B2C.</b> Do not send consumer receipts through Peppol, and do not skip a business customer. Mark customer types clearly.</li>
+        <li><b>Ignoring supplier invoices.</b> E-invoicing runs both ways. Supplier e-invoices and vendor credits arrive in Zoho Books as drafts. Someone must review them. Ask your suppliers for their Peppol IDs early.</li>
+      </ul>
+    </section>
+
+    <section id="help">
+      <h2>Set it up yourself, or get help?</h2>
+      <p>You can do the setup yourself for free. The five steps above are enough for many businesses. If your customer and item data are clean, you may finish in an afternoon.</p>
+      <p>Get help if your data is messy, if you have many customers or if you have no time to test. Our setup service costs {aed(P.help)}, one time. We check your plan so you do not pay for more than you need. We check and fix your customer TRNs, VAT codes and items. We handle the EmaraTax appointment. We send a test invoice and credit note, and we fix rejected invoices. We also show your staff how it works.</p>
+      <p>Not on Zoho? Other software has its own path. TallyPrime and Wafeq have e-invoicing built in, like Zoho. QuickBooks and Excel need an outside ASP. See <a href="/tally">Tally</a>, <a href="/wafeq">Wafeq</a>, <a href="/quickbooks-online">QuickBooks Online</a> or <a href="/other-software">other software</a>.</p>
+      <p class="callout">Want a price for your own invoice count? Message us your plan and yearly invoices on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>Zoho Books e-invoicing UAE: common questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/einvoicing-accredited-service-providers-asps/" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers (Zoho Software Trading LLC, No. 121988)</a></li>
+        <li><a href="https://www.zoho.com/ae/books/academy/taxes-and-compliance/einvoicing-uae.html" target="_blank" rel="noopener">Zoho Books Academy: UAE eInvoicing, all you need to know</a></li>
+        <li><a href="https://www.zoho.com/ae/books/pricing/" target="_blank" rel="noopener">Zoho Books UAE pricing</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="/zoho-books">einvoicecost.ae: Zoho Books e-invoicing cost and setup</a></li>
+      </ul>
+      <p class="small">Plan and pack prices match our Zoho Books page, last checked on 9 November 2026. Zoho can change them, so check Zoho's pricing page before you buy. Examples use made-up businesses and round numbers. This guide is general information, not tax or legal advice. VAT treatment of advances, retention, exports and re-billed costs depends on your contract and facts.</p>
+    </section>
+
+    <RelatedGuides current="zoho-e-invoicing-uae-guide" />
+
+    <section class="final">
+      <div><h2>Get Zoho Books e-invoicing set up</h2><p class="sub">Message us your Zoho plan and yearly invoice count. We reply with next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
