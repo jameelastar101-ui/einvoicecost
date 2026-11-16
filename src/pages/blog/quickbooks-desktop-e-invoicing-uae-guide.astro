@@ -1,0 +1,417 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed, price, invoiceFee, TABLE_INVOICES } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-16';
+const UPDATED_ISO = '2026-11-16';
+const UPDATED = '16 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/quickbooks-desktop-e-invoicing-uae-guide';
+const N0 = P.feeCovered;
+const first = (n = N0) => price('qbd', n).firstYear;
+const every = (n = N0) => price('qbd', n).everyYear;
+const feeAt = invoiceFee;
+const perExtra = P.feePerExtra.toFixed(2);
+
+const title = 'QUICKBOOKS DESKTOP E-INVOICING UAE: COST, SETUP & EDITIONS';
+const description =
+  'QuickBooks Desktop UAE e-invoicing costs AED 7,000 in year one, then AED 1,500. Setup steps and the right edition for traders, distributors and contractors.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I read your QuickBooks Desktop e-invoicing guide. My version is [version], about [number] invoices a year. Please send me my price.');
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Does QuickBooks Desktop support UAE e-invoicing?", a: "Not on its own. QuickBooks Desktop creates the invoice, but it needs an auto-send connector on the computer that runs QuickBooks, linked to an accredited ASP that sends invoices in the UAE format (PINT AE)." },
+  { q: "How much does QuickBooks Desktop e-invoicing cost in the UAE?", a: `With einvoicecost.ae, ${aed(first())} in the first year for up to ${fmt(N0)} invoices: onboarding and ASP registration ${aed(P.onboarding)}, setup ${aed(P.setup)}, auto-send connector ${aed(P.connector.qbd)}, platform fee ${aed(P.platform)} and invoices ${aed(P.feeMin)}. After that it is ${aed(every())} a year. Above ${fmt(N0)} invoices, add AED ${perExtra} per invoice. Prices exclude 5% VAT and your QuickBooks licence.` },
+  { q: "Which QuickBooks Desktop edition do I need for UAE e-invoicing?", a: "You do not need a specific edition. Pro, Premier and Enterprise follow the same price list and the same deadline. What matters is whether your version can be connected. Press F2 in QuickBooks to see your version and send it to us. The edition mainly affects how well your data is organised, for example job costing for contractors or advanced inventory for distributors." },
+  { q: "Does QuickBooks Desktop Enterprise cost more for e-invoicing than Pro?", a: `No. Our price depends on your invoice count and the connector, not on the edition name. A business on Enterprise with ${fmt(N0)} invoices pays the same ${aed(first())} in the first year as a business on Pro with ${fmt(N0)} invoices.` },
+  { q: "Will my old QuickBooks Desktop version work?", a: "Many versions can be connected, but it depends on the version and edition. Press F2 in QuickBooks to see yours and send it to us. We confirm before you start." },
+  { q: "Do I need to move to QuickBooks Online?", a: "Not for e-invoicing. Move only if your version is no longer supported or you want cloud access. That is a bigger change to your accounting, so decide it separately." },
+  { q: "Does the QuickBooks computer need to stay on?", a: "Yes. The connector runs on that computer, so invoices go out only while it is on and connected to the internet." },
+  { q: "Which invoices count toward my yearly invoice fee?", a: "Only the sales invoices and credit notes you send to businesses and government. Invoices you receive from suppliers are not counted. Sales to consumers (B2C) are outside e-invoicing for now, so they are not counted either." },
+  { q: "How long does QuickBooks Desktop e-invoicing setup take?", a: "About 2 to 3 weeks, because the connector is installed and tested on your computer. Plan to finish well before your ASP deadline." },
+  { q: "What is the e-invoicing deadline for QuickBooks Desktop users?", a: "It depends on revenue, not on the software. Businesses under AED 50 million revenue must appoint an ASP by 31 March 2027 and go live on 1 July 2027. Businesses with AED 50 million or more had to appoint by 30 October 2026 and go live on 1 January 2027. Government entities go live on 1 October 2027." },
+  { q: "What is the penalty for missing the deadline?", a: "Under Cabinet Decision No. 106 of 2025, not appointing an ASP on time costs AED 5,000 for each month. Not issuing an e-invoice or e-credit note can cost AED 100 each, up to AED 5,000 a month for each type." },
+  { q: "Can I still email PDF invoices from QuickBooks Desktop?", a: "You can send a PDF as a copy, but for invoices in scope the PDF is not the e-invoice. The legal invoice is the structured PINT AE file sent through your ASP once your phase starts." },
+  { q: "How do contractors show retention on a QuickBooks Desktop e-invoice?", a: "Under the UAE e-invoicing guidelines as summarised in our contractor guide, the progress e-invoice may cover the net amount after retention. When the retention is released, a separate e-invoice is issued for it. Keep retention as its own item outside the invoice total, and confirm the treatment for your contract with a tax adviser." },
+  { q: "Can I edit an e-invoice after it is sent?", a: "No. A sent e-invoice cannot be edited or deleted. You correct it with an e-credit note and, if needed, a new e-invoice." },
+  { q: "Is it cheaper to switch from QuickBooks Desktop to Zoho Books, TallyPrime or Wafeq?", a: "The yearly e-invoicing cost is lower on software with built-in e-invoicing, because there is no ASP fee, connector or platform fee. But switching adds data migration and staff retraining. For many businesses with years of history in QuickBooks, staying is simpler. We quote migration on WhatsApp after checking your data." },
+  { q: "What do I have to do during setup?", a: "Very little. You allow one remote session on the QuickBooks computer, share EmaraTax access and send a copy of your trade licence and TRN certificate. We do every other step." },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'QuickBooks Desktop e-invoicing UAE', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const rows = TABLE_INVOICES.map((n) => ({
+  n,
+  fee: feeAt(n),
+  avg: (feeAt(n) / n).toFixed(2),
+  first: first(n),
+  every: every(n),
+}));
+
+const toc = [
+  ['edition-price', 'Does your edition change the price?'], ['how', 'How QuickBooks Desktop sends e-invoices'], ['cost', 'What it costs'],
+  ['editions', 'Pro, Premier and Enterprise explained'], ['by-business', 'Best edition by business type'], ['service', 'Service companies'],
+  ['traders', 'Small traders'], ['distributors', 'Distributors'], ['contractors', 'Contractors'], ['subcontractors', 'Subcontractors'],
+  ['setup', 'Setup in 5 steps'], ['data', 'Data to fix before go-live'], ['old', 'Old versions: stay or switch?'],
+  ['deadlines', 'Deadlines and penalties'], ['mistakes', 'Mistakes to avoid'], ['decide', 'Decide in five minutes'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › QuickBooks Desktop</p>
+      <p class="eyebrow">Blog · QuickBooks Desktop</p>
+      <h1>{title}</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>QuickBooks Desktop can work with UAE e-invoicing, but not on its own. It is not an Accredited Service Provider (ASP). It needs an <b>auto-send connector</b> on the computer that runs QuickBooks, plus an outside ASP.</p>
+        <p>With einvoicecost.ae, the first year costs <b>{aed(first())}</b> for up to {fmt(N0)} invoices. Every year after that costs <b>{aed(every())}</b>. The edition you own (Pro, Premier or Enterprise) does not change this price or your deadline. It changes how clean your invoice data is. Businesses under AED 50 million revenue must appoint an ASP by <b>31 March 2027</b> and go live on <b>1 July 2027</b>.</p>
+        <div class="facts">
+          <div><p class="k">First year, up to {fmt(N0)} invoices</p><p class="v">{aed(first())}</p></div>
+          <div><p class="k">Every year after</p><p class="v">{aed(every())}</p></div>
+          <div><p class="k">Setup time</p><p class="v">About 2 to 3 weeks</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="edition-price">
+      <h2>Does your QuickBooks Desktop edition change the e-invoicing price?</h2>
+      <p>No. The edition does not change the price. It also does not change your deadline.</p>
+      <p>Two things set your price. The first is how many invoices you send. The second is the connector, which costs {aed(P.connector.qbd)} for QuickBooks Desktop. Pro, Premier and Enterprise all use the same price list.</p>
+      <p>Your deadline depends on your company's yearly revenue. A small trader on Enterprise and a large contractor on Pro follow the same rule. Revenue decides the date, not the software.</p>
+      <p>So why does the edition matter at all? Because of your data. An e-invoice is only as good as the records behind it. A contractor who bills retention, a distributor with 5,000 items and a consultant with one service line all create different data. The edition decides which tools hold that data. Good tools mean fewer rejected invoices.</p>
+      <ul class="know">
+        <li><b>Price:</b> the same for every edition.</li>
+        <li><b>Deadline:</b> the same for every edition. It follows your revenue.</li>
+        <li><b>Data quality:</b> this is where the edition makes a real difference.</li>
+        <li><b>Version age:</b> this matters more than the edition name. Some old copies cannot be connected, so we check yours first.</li>
+      </ul>
+    </section>
+
+    <section id="how">
+      <h2>How QuickBooks Desktop sends e-invoices in the UAE</h2>
+      <p>Since the UAE e-invoicing rules started, a PDF is no longer the invoice for sales in scope. The invoice is a structured data file in a format called <b>PINT AE</b>. QuickBooks Desktop lives on your office computer. It cannot send that file to the UAE network by itself.</p>
+      <p>The auto-send connector fills this gap. It is a small program installed on the computer that runs QuickBooks. It reads each new invoice and credit note and passes it on to the ASP.</p>
+      <p>Here is a simple example. A marketing agency in Dubai bills a client AED 10,000 for monthly social media work. QuickBooks adds 5% VAT of AED 500, so the invoice total is AED 10,500. The accountant saves the invoice. The connector picks it up and sends it to the ASP. The ASP checks it, converts it to PINT AE and delivers it to the client's ASP over the Peppol network. The tax data is then reported to the Federal Tax Authority (FTA).</p>
+      <ol class="know">
+        <li><b>You create the invoice</b> in QuickBooks Desktop, as you do today.</li>
+        <li><b>The connector sends it</b> to the accredited partner (ASP). The ASP converts it to PINT AE and checks it.</li>
+        <li><b>It is delivered</b> through the Peppol network to your customer's ASP.</li>
+        <li><b>The invoice data is reported</b> to the FTA.</li>
+      </ol>
+      <p>The FTA does not approve each invoice before it goes out. Your ASP does the checking. If the data is wrong, the ASP rejects the invoice before it leaves. That is why clean customer details matter so much.</p>
+      <p>Want the short version? Our <a href="/quickbooks-desktop">QuickBooks Desktop guide</a> covers the basics on one page. This article goes deeper on editions and business types.</p>
+    </section>
+
+    <section id="cost">
+      <h2>How much does QuickBooks Desktop e-invoicing cost in the UAE?</h2>
+      <p>With einvoicecost.ae, QuickBooks Desktop e-invoicing costs <b>{aed(first())} in the first year</b> for up to {fmt(N0)} invoices. After that it costs <b>{aed(every())} a year</b>. Above {fmt(N0)} invoices, you add AED {perExtra} for each extra invoice. There are no slabs. All prices are in AED and exclude 5% VAT.</p>
+      <p>Most providers only quote after a sales call. Here the price has five parts, and you can see every one of them.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Part</th><th>How often</th><th>QuickBooks Desktop (AED)</th><th>What it covers</th></tr></thead><tbody>
+        <tr><td>Onboarding &amp; ASP registration</td><td>One time</td><td>{fmt(P.onboarding)}</td><td class="txt">We open your account and appoint the ASP on EmaraTax.</td></tr>
+        <tr><td>Setup</td><td>One time</td><td>{fmt(P.setup)}</td><td class="txt">Data checks, VAT code mapping, testing and go-live.</td></tr>
+        <tr><td>Auto-send connector</td><td>One time</td><td>{fmt(P.connector.qbd)}</td><td class="txt">Sends each invoice from QuickBooks to the FTA and your customer automatically.</td></tr>
+        <tr><td>Platform fee</td><td>Every year</td><td>{fmt(P.platform)}</td><td class="txt">Your yearly platform access.</td></tr>
+        <tr><td>Invoice fee (up to {fmt(N0)})</td><td>Every year</td><td>{fmt(P.feeMin)}</td><td class="txt">Sending your sales invoices and credit notes.</td></tr>
+        <tr><td><b>First year</b></td><td></td><td><b>{fmt(first())}</b></td><td></td></tr>
+        <tr><td><b>Every year after</b></td><td></td><td><b>{fmt(every())}</b></td><td></td></tr>
+      </tbody></table></div>
+      <p>The yearly fees are paid in advance. Your QuickBooks Desktop licence is separate and not included.</p>
+
+      <h3 class="sm">The price formula</h3>
+      <p>Use this formula for any invoice count. Here, <b>n</b> is the number of sales invoices and credit notes you send in a year.</p>
+      <div class="formula"><p class="fh">QuickBooks Desktop price formula (AED, excl. VAT)</p><pre>{`Invoice fee        = ${fmt(P.feeMin)}                      if n is ${fmt(N0)} or less
+                   = ${fmt(P.feeMin)} + ${perExtra} × (n − ${fmt(N0)})   if n is more than ${fmt(N0)}
+
+First year         = Onboarding ${fmt(P.onboarding)} + Setup ${fmt(P.setup)} + Connector ${fmt(P.connector.qbd)}
+                     + Platform fee ${fmt(P.platform)} + Invoice fee
+Every year after   = Platform fee ${fmt(P.platform)} + Invoice fee
+With VAT           = Price × 1.05`}</pre></div>
+
+      <h3 class="sm">Price at different invoice volumes</h3>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Invoices a year</th><th>Invoice fee</th><th>Average per invoice</th><th>First year</th><th>Every year after</th></tr></thead><tbody>
+        {rows.map((r) => <tr><td>{fmt(r.n)}</td><td>{fmt(r.fee)}</td><td>{r.avg}{r.n < N0 ? ' (minimum fee)' : ''}</td><td>{fmt(r.first)}</td><td>{fmt(r.every)}</td></tr>)}
+      </tbody></table></div>
+      <p>More than 10,000 invoices a year? Message us on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a> for a price. For the full tables, see our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a>.</p>
+
+      <h3 class="sm">What counts as an invoice?</h3>
+      <ul class="know">
+        <li><b>Counted:</b> sales invoices and credit notes you send to businesses and government.</li>
+        <li><b>Not counted:</b> invoices you receive from suppliers.</li>
+        <li><b>Not counted:</b> sales to consumers (B2C). They are outside e-invoicing for now.</li>
+      </ul>
+      <p>The supplier rule matters most for distributors and contractors. They often receive far more invoices than they send. Some providers count received documents too. We do not.</p>
+
+      <h3 class="sm">Costs that are not in the price</h3>
+      <p>Be honest with yourself about three more costs. First, your QuickBooks Desktop licence or subscription. Second, your own time to fix customer data. Third, any computer or server upgrade, if your current machine is too old. We check your version and setup before you start, so none of these come as a surprise.</p>
+    </section>
+
+    <section id="editions">
+      <h2>QuickBooks Desktop Pro, Premier and Enterprise explained</h2>
+      <p>QuickBooks Desktop comes in three main editions. They differ in user limits, inventory tools and industry features. Here is a plain summary.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Edition</th><th>Users</th><th>Strong points</th><th>Typical UAE user</th></tr></thead><tbody>
+        <tr><td>Pro</td><td>Up to 3</td><td class="txt">Core invoicing, bills, VAT tracking and basic stock.</td><td class="txt">Service firms and very small traders.</td></tr>
+        <tr><td>Premier</td><td>Up to 5</td><td class="txt">Industry editions, sales orders, job costing and forecasting.</td><td class="txt">Growing traders, contractors and subcontractors.</td></tr>
+        <tr><td>Enterprise</td><td>Many more (about 30 to 40, by version)</td><td class="txt">Advanced Inventory, advanced pricing, large lists and industry editions.</td><td class="txt">Distributors and larger contractors.</td></tr>
+      </tbody></table></div>
+      <p class="small">User limits and features vary by year and plan. Check the exact figures for your own copy.</p>
+
+      <h3 class="sm">What the industry editions add</h3>
+      <p>Premier and Enterprise offer industry editions. Intuit lists five: Contractor, Manufacturing and Wholesale, Nonprofit, Retail, and Professional Services. They share the same core as the standard edition. They add reports, a ready chart of accounts and menus built for that trade.</p>
+      <p>For e-invoicing, the Contractor and Wholesale editions matter most. Contractor tools track jobs, progress billing and retention. Wholesale tools handle sales orders and stock. Both put the right data in the right place before it reaches the connector.</p>
+
+      <h3 class="sm">What Enterprise adds for stock-heavy firms</h3>
+      <p>Enterprise has an Advanced Inventory option. Intuit describes tools for tracking stock across multiple locations, mobile barcode scanning, and automatic purchase orders when stock drops below a set point. For a distributor, that means item codes, units and locations are tidy. Tidy item data means fewer rejected invoices.</p>
+
+      <h3 class="sm">A note on buying and age</h3>
+      <p>Intuit stopped selling new Pro and Premier subscriptions in the US in 2024. Enterprise remains on sale. Many UAE businesses still run older copies of Pro and Premier, and that is fine for e-invoicing in many cases. What matters is whether your version can be connected. Press F2 inside QuickBooks to see your version, then send it to us. We confirm before you spend anything.</p>
+    </section>
+
+    <section id="by-business">
+      <h2>Which QuickBooks Desktop edition fits your business type?</h2>
+      <p>If you already own a copy, keep it. Do not buy a new edition just for e-invoicing. Use this table as a guide for what suits each business, and for what to prepare.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business type</th><th>Edition that usually fits</th><th>Data to get right</th><th>Example volume</th><th>First year (AED)</th><th>Every year after (AED)</th></tr></thead><tbody>
+        <tr><td>Service company</td><td class="txt">Pro or Premier</td><td class="txt">Service descriptions, client TRNs, VAT code on each line</td><td>250</td><td>{fmt(first(250))}</td><td>{fmt(every(250))}</td></tr>
+        <tr><td>Small trader</td><td class="txt">Premier</td><td class="txt">Item codes, units, trader vs retail customers</td><td>900</td><td>{fmt(first(900))}</td><td>{fmt(every(900))}</td></tr>
+        <tr><td>Distributor</td><td class="txt">Enterprise (Wholesale)</td><td class="txt">Items, units, discounts, returns</td><td>4,000</td><td>{fmt(first(4000))}</td><td>{fmt(every(4000))}</td></tr>
+        <tr><td>Contractor</td><td class="txt">Premier or Enterprise (Contractor)</td><td class="txt">Certificates, retention, variations</td><td>600</td><td>{fmt(first(600))}</td><td>{fmt(every(600))}</td></tr>
+        <tr><td>Subcontractor</td><td class="txt">Premier (Contractor)</td><td class="txt">Main contractor TRN, project references</td><td>80</td><td>{fmt(first(80))}</td><td>{fmt(every(80))}</td></tr>
+      </tbody></table></div>
+      <p class="small">Volumes are examples only. All prices exclude 5% VAT and your QuickBooks licence.</p>
+    </section>
+
+    <section id="service">
+      <h2>QuickBooks Desktop e-invoicing for service companies</h2>
+      <p>Service firms have the simplest setup. They bill for hours, retainers and fixed fees. The data is short and repeats every month. Pro or Premier handles this well.</p>
+      <p><b>Example.</b> A cleaning company in Sharjah sends 20 monthly invoices to office clients, plus some credit notes. Over a year that is about 250 documents. The invoice fee is the minimum {aed(P.feeMin)}. The first year costs {aed(first(250))}. Each year after costs {aed(every(250))}.</p>
+      <p>What goes wrong for service firms? Usually it is customer data. A client is saved as "Al Noor" in QuickBooks, but the legal name on its trade licence is "Al Noor Trading LLC". The ASP expects the legal name and the right TRN. A mismatch can mean a rejected invoice.</p>
+      <ul class="know">
+        <li><b>Fix:</b> use each client's legal name, address and 15-digit TRN.</li>
+        <li><b>Fix:</b> give every service line a VAT code, even if it is 0% or exempt.</li>
+        <li><b>Tip:</b> recurring invoices go out on their own, so test one before go-live.</li>
+      </ul>
+      <p>Do you have few invoices and no plans to grow? Compare the numbers with our <a href="/excel">Excel option</a>. It costs AED 4,000 in the first year because it needs no connector. But if your team lives in QuickBooks every day, keeping it is usually simpler.</p>
+    </section>
+
+    <section id="traders">
+      <h2>QuickBooks Desktop e-invoicing for small traders</h2>
+      <p>Small traders buy and sell goods. They need item codes, units and stock levels. Premier suits most of them. Pro works if the stock list is short.</p>
+      <p><b>Example.</b> A spare parts shop in Sharjah sells 50 brake pads to a local garage at AED 80 each. That is AED 4,000, plus AED 200 VAT, so AED 4,200. The shop sends about 900 invoices and credit notes a year to garages and workshops.</p>
+      <p>The invoice fee is 500 + 0.75 × (900 − 500) = AED {fmt(feeAt(900))}. First year: 1,000 + 1,500 + 3,000 + 1,000 + {fmt(feeAt(900))} = <b>{aed(first(900))}</b>. Every year after: 1,000 + {fmt(feeAt(900))} = <b>{aed(every(900))}</b>.</p>
+      <p>Here is a trap for traders. The same shop also sells over the counter to walk-in customers. Those B2C sales are outside e-invoicing for now. They do not count toward your invoice fee. Only sales to businesses and government do. So count your business invoices, not every receipt.</p>
+      <ul class="know">
+        <li><b>Fix:</b> one item code per product, with a clear name and unit.</li>
+        <li><b>Fix:</b> mark each customer as a business (with TRN) or a retail walk-in.</li>
+        <li><b>Fix:</b> remove duplicate customers, so one buyer is not split across three records.</li>
+      </ul>
+    </section>
+
+    <section id="distributors">
+      <h2>QuickBooks Desktop e-invoicing for distributors</h2>
+      <p>Distributors have the heaviest data. They sell many items, in many units, to many customers. They also handle discounts and returns all week. Enterprise, often with Advanced Inventory, is the usual fit.</p>
+      <p><b>Example.</b> A food distributor in Ajman ships from two warehouses to supermarkets. One order is 200 cartons at AED 45, so AED 9,000. A 10% discount takes off AED 900, leaving AED 8,100. VAT at 5% is AED 405. The invoice total is AED 8,505. If the supermarket returns 10 damaged cartons, the distributor issues an e-credit note. A sent e-invoice cannot be edited.</p>
+      <p>This distributor sends about 4,000 invoices and credit notes a year. The invoice fee is 500 + 0.75 × 3,500 = AED {fmt(feeAt(4000))}. First year: 6,500 + {fmt(feeAt(4000))} = <b>{aed(first(4000))}</b>. Every year after: 1,000 + {fmt(feeAt(4000))} = <b>{aed(every(4000))}</b>. The average cost is about AED {(feeAt(4000) / 4000).toFixed(2)} per invoice.</p>
+      <p>Notice what is not in that number. The distributor may receive 15,000 supplier invoices a year. None of them count toward the fee with us.</p>
+      <ul class="know">
+        <li><b>Fix:</b> make sure every item has a unit (carton, piece, kilo) and a VAT code.</li>
+        <li><b>Fix:</b> check price levels and discounts, so line totals add up exactly.</li>
+        <li><b>Plan:</b> returns create credit notes. Count them in your yearly volume.</li>
+        <li><b>Plan:</b> big customers may reject by automated checks. Test with your biggest buyer first.</li>
+      </ul>
+      <p>For more on this, read our <a href="/blog/uae-e-invoicing-distributors">UAE e-invoicing guide for distributors</a>.</p>
+    </section>
+
+    <section id="contractors">
+      <h2>QuickBooks Desktop e-invoicing for contractors</h2>
+      <p>Contractors bill by certificate, not by delivery. They deal with progress claims, retention, variations and advances. Premier Contractor or Enterprise with the Contractor edition handles job costing and progress billing. That keeps the data in order before it reaches the connector.</p>
+      <p><b>Example.</b> A civil contractor in Abu Dhabi has a certificate approved for AED 300,000. The client holds 10% retention, which is AED 30,000. The progress e-invoice covers the net AED 270,000 plus 5% VAT of AED 13,500. That is AED 283,500. When the retention is released later, the contractor issues a separate e-invoice for AED 30,000 plus AED 1,500 VAT, so AED 31,500.</p>
+      <p>That treatment follows the UAE e-invoicing guidelines as summarised in our contractor guide. Your contract decides the final treatment, so confirm it with your tax adviser.</p>
+      <p>This contractor sends about 600 invoices a year across several projects. The invoice fee is 500 + 0.75 × 100 = AED {fmt(feeAt(600))}. First year: 6,500 + {fmt(feeAt(600))} = <b>{aed(first(600))}</b>. Every year after: 1,000 + {fmt(feeAt(600))} = <b>{aed(every(600))}</b>.</p>
+      <ul class="know">
+        <li><b>Fix:</b> keep retention as its own item, outside the invoice total.</li>
+        <li><b>Fix:</b> invoice only certified amounts. A sent e-invoice cannot be edited, so every correction is an extra document.</li>
+        <li><b>Keep:</b> contract, certificate and variation numbers in your project records.</li>
+      </ul>
+      <p>The full detail is in our <a href="/blog/uae-e-invoicing-contractors">contractor e-invoicing guide</a>.</p>
+    </section>
+
+    <section id="subcontractors">
+      <h2>QuickBooks Desktop e-invoicing for subcontractors</h2>
+      <p>Subcontractors bill a main contractor. That is a business-to-business sale, so e-invoicing applies. There is no small-business exemption. Premier Contractor is a common fit, because it tracks jobs and partial bills.</p>
+      <p><b>Example.</b> An HVAC subcontractor in Dubai sends one certified bill a month on each of six jobs. With variations and credit notes, that is about 80 documents a year. The invoice fee is the {aed(P.feeMin)} minimum. First year: <b>{aed(first(80))}</b>. Every year after: <b>{aed(every(80))}</b>.</p>
+      <p>The dates are the tricky part. A large main contractor (revenue AED 50 million or more) goes live on 1 January 2027. A subcontractor under AED 50 million goes live on 1 July 2027. That is a six-month gap. Ask your main contractor how it will accept your invoices before July. Also ask for its TRN and project reference codes now.</p>
+      <ul class="know">
+        <li><b>Fix:</b> save the main contractor's legal name and TRN on its customer record.</li>
+        <li><b>Fix:</b> add the work order or project reference to each bill.</li>
+        <li><b>Option:</b> businesses that are ready may start voluntarily from 1 July 2026. Penalties apply only once your own phase starts.</li>
+      </ul>
+    </section>
+
+    <section id="setup">
+      <h2>How to set up e-invoicing in QuickBooks Desktop in 5 steps</h2>
+      <p>With einvoicecost.ae, you do no setup work. You allow one remote session and share EmaraTax access. We do the rest. Setup takes about 2 to 3 weeks, because the connector is installed and tested on your computer.</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Check your version and data</h3></div><p>We check which QuickBooks Desktop version and edition you run. Then we review your company TRN, customer TRNs, VAT codes and addresses. Anything missing, we fix. Press F2 in QuickBooks to see your version.</p></div></li>
+        <li><div><div class="st-head"><h3>Open your account and appoint the ASP</h3></div><p>We open your e-invoicing account with our accredited partner. We appoint it as your ASP on EmaraTax. Your business then gets a Peppol ID, which is its address on the UAE network.</p></div></li>
+        <li><div><div class="st-head"><h3>Install the auto-send connector</h3></div><p>In one remote session, we install and set up the connector on the computer that runs QuickBooks. Your QuickBooks file stays on your computer. If several people share the file, we confirm which computer should host the connector first.</p></div></li>
+        <li><div><div class="st-head"><h3>Match your VAT codes and items</h3></div><p>QuickBooks uses its own VAT codes and item names. The UAE format needs standard ones. We map each VAT code (standard 5%, zero-rated, exempt and others), plus your items, units and customer types.</p></div></li>
+        <li><div><div class="st-head"><h3>Test and go live</h3></div><p>We send test invoices and a credit note. We fix anything rejected. Then we switch it on, and you invoice in QuickBooks as usual. If an invoice is rejected later, we find the cause and fix it.</p></div></li>
+      </ol>
+
+      <h3 class="sm">All we need from you</h3>
+      <ul class="know">
+        <li>One remote session on the computer that runs QuickBooks.</li>
+        <li>Access to EmaraTax. We may ask you for a one-time code.</li>
+        <li>A copy of your trade licence and TRN certificate.</li>
+      </ul>
+
+      <h3 class="sm">When to start</h3>
+      <p>If your revenue is under AED 50 million, your ASP deadline is 31 March 2027. Setup takes 2 to 3 weeks. But delays happen. A customer TRN may be missing. The QuickBooks computer may be busy at month end. So aim to finish by the end of February.</p>
+      <p>A good rule is simple. Send us your version and invoice count in December. Then you have a clear price and a calm timeline.</p>
+      <p class="callout">Ready to start? <a href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp →</a></p>
+    </section>
+
+    <section id="data">
+      <h2>QuickBooks Desktop data to fix before go-live</h2>
+      <p>Bad data is the number one cause of rejected e-invoices. Clean it before the connector goes live. This table shows what to check.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>What to check</th><th>Why it matters</th><th>Who it hits most</th></tr></thead><tbody>
+        <tr><td>Customer legal name</td><td class="txt">It must match the buyer's registered name.</td><td class="txt">Everyone</td></tr>
+        <tr><td>Customer TRN (15 digits)</td><td class="txt">A missing or wrong TRN is a top reason for rejection.</td><td class="txt">Everyone</td></tr>
+        <tr><td>Customer address</td><td class="txt">The format needs a complete address.</td><td class="txt">Everyone</td></tr>
+        <tr><td>VAT code on every line</td><td class="txt">Each line needs a clear VAT treatment.</td><td class="txt">Traders, distributors</td></tr>
+        <tr><td>Item names and units</td><td class="txt">Lines must describe what was sold and how much.</td><td class="txt">Traders, distributors</td></tr>
+        <tr><td>Retention kept separate</td><td class="txt">The progress invoice should carry the net amount.</td><td class="txt">Contractors, subcontractors</td></tr>
+        <tr><td>Credit note links</td><td class="txt">Corrections should point back to the original invoice.</td><td class="txt">Distributors, contractors</td></tr>
+        <tr><td>Duplicate customers</td><td class="txt">One buyer split across records causes mismatches.</td><td class="txt">Traders, service firms</td></tr>
+      </tbody></table></div>
+      <p>A tip: sort your customer list by TRN. Blank cells jump out at once. Then call those customers or ask your sales team to collect them.</p>
+    </section>
+
+    <section id="old">
+      <h2>Old QuickBooks Desktop version: stay or switch?</h2>
+      <p>Many versions can be connected. It depends on the version and the edition. We confirm before you start. If your copy is too old, you have two paths. You can upgrade QuickBooks, or you can move to different software.</p>
+      <p>You do not need to move to QuickBooks Online for e-invoicing. Move only if your version is no longer supported or you want cloud access. That is a bigger change to your accounting, so decide it separately.</p>
+      <p>Software with built-in e-invoicing (Zoho Books, TallyPrime and Wafeq) has no ASP fee, no connector and no platform fee. That lowers the yearly cost. But switching adds data migration and staff retraining. This table compares only our fees, over three years, at up to {fmt(N0)} invoices.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Software</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>3-year total (our fees)</th></tr></thead><tbody>
+        <tr><td>QuickBooks Desktop</td><td>{fmt(first())}</td><td>{fmt(every())}</td><td>{fmt(every())}</td><td><b>{fmt(first() + 2 * every())}</b></td></tr>
+        <tr><td>Zoho Books / TallyPrime / Wafeq (we set it up)</td><td>{fmt(P.help)}</td><td>0</td><td>0</td><td><b>{fmt(P.help)}</b> + software costs</td></tr>
+      </tbody></table></div>
+      <p class="small">Our fees only. Software subscriptions and any data migration are extra.</p>
+      <p><b>Usually keep QuickBooks Desktop</b> if you have years of history in it, your team knows it well, and your version can be connected. <b>Consider switching</b> if your version is old, you want no yearly e-invoicing fee, or you were planning to change anyway. If you switch, <a href="/switch-accounting-software">we move your data and set up e-invoicing</a>.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>E-invoicing deadlines and penalties for QuickBooks Desktop users</h2>
+      <p>The deadline is the same for every QuickBooks Desktop user. It depends on revenue only.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Who</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p>Missed the October date? Appoint now, so the monthly fine stops growing. Check the Ministry of Finance for any later change.</p>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. They apply once your phase starts.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not appointing an ASP on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+      </tbody></table></div>
+      <p>Do the maths. Six months of late appointment costs AED 30,000 in fines. That is more than four times the {aed(first())} first-year cost of QuickBooks Desktop e-invoicing.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>7 mistakes QuickBooks Desktop users make with e-invoicing</h2>
+      <ol class="know">
+        <li><b>Buying a new edition first.</b> Check your current version before you spend anything. The edition rarely blocks e-invoicing. An old version might.</li>
+        <li><b>Thinking a PDF is enough.</b> For invoices in scope, the PDF is not the e-invoice. The structured file is.</li>
+        <li><b>Leaving the QuickBooks computer off.</b> The connector runs on that computer. Invoices go out only while it is on and online.</li>
+        <li><b>Skipping customer data work.</b> Missing TRNs and VAT codes cause most rejections.</li>
+        <li><b>Counting the wrong invoices.</b> Count business sales and credit notes. Leave out supplier invoices and consumer sales.</li>
+        <li><b>Editing a sent invoice.</b> You cannot. Issue a credit note and a new invoice.</li>
+        <li><b>Waiting until March.</b> Setup takes 2 to 3 weeks, and fines start at AED 5,000 a month.</li>
+      </ol>
+    </section>
+
+    <section id="decide">
+      <h2>How to decide in five minutes</h2>
+      <ul class="know">
+        <li><b>Step 1.</b> Press F2 in QuickBooks and note your version and edition.</li>
+        <li><b>Step 2.</b> Count last year's sales invoices and credit notes to businesses.</li>
+        <li><b>Step 3.</b> Use the formula above to get your price.</li>
+        <li><b>Step 4.</b> Check your revenue tier. It sets your deadline.</li>
+        <li><b>Step 5.</b> Send the version and count to us on WhatsApp. We reply with your price and next steps, usually the same day.</li>
+      </ul>
+      <p class="callout">Want your exact price without the maths? Use the <a href="/">einvoicecost.ae calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>QuickBooks Desktop e-invoicing in the UAE: common questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-ministry/mof-initiatives/einvoicing/pre-approved-einvoicing-service-providers" target="_blank" rel="noopener">UAE Ministry of Finance: eInvoicing Accredited Service Providers</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="https://quickbooks.intuit.com/desktop/enterprise/industry-solutions/" target="_blank" rel="noopener">Intuit: QuickBooks Desktop Enterprise industry editions</a></li>
+        <li><a href="https://quickbooks.intuit.com/desktop/enterprise/resources/faq/" target="_blank" rel="noopener">Intuit: QuickBooks Desktop Enterprise inventory tools</a></li>
+        <li><a href="https://fitsmallbusiness.com/quickbooks-pro-vs-premier-vs-enterprise-vs-accountant/" target="_blank" rel="noopener">Fit Small Business: QuickBooks Pro vs Premier vs Enterprise</a></li>
+      </ul>
+      <p class="small">Prices on this page are einvoicecost.ae prices, checked on 16 November 2026. QuickBooks edition details vary by year and plan. This guide is general information, not tax or legal advice. VAT treatment of retention, advances and credit notes depends on your contract.</p>
+    </section>
+
+    <RelatedGuides current="quickbooks-desktop-e-invoicing-uae-guide" />
+
+    <section class="final">
+      <div><h2>Get QuickBooks Desktop ready before 31 March</h2><p class="sub">Send us your QuickBooks version and yearly invoice count. We reply with your price and next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
