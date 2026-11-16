@@ -1,0 +1,350 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/guide.css';
+import '../../styles/blog.css';
+import { PRICES as P, WA, fmt, aed } from '../../config/prices.js';
+
+/** Update these whenever prices or rules change. */
+const PUBLISHED = '2026-11-16';
+const UPDATED_ISO = '2026-11-16';
+const UPDATED = '16 November 2026';
+
+const URL = 'https://einvoicecost.ae/blog/tally-e-invoicing-uae-guide';
+
+const title = 'TALLY E-INVOICING UAE 2027: COST, SETUP AND EXAMPLES';
+const description =
+  'TallyPrime UAE e-invoicing for 2027: no per-invoice fee, TSS and licence costs, 5-step setup and real examples for traders, distributors, contractors and service firms.';
+
+const wa = (t: string) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const ctaWa = wa('Hi, I use Tally Prime and read your guide. I would like you to set up e-invoicing.');
+const setupWa = ctaWa;
+
+type FAQ = { q: string; a: string };
+
+const faqs: FAQ[] = [
+  { q: "Is Tally an accredited service provider (ASP) in the UAE?", a: "Yes. Tally Software Solutions FZCO is an accredited ASP. TallyPrime users appoint Tally on EmaraTax. They do not need another provider." },
+  { q: "Is Tally e-invoicing free in the UAE?", a: "There is no per-invoice fee. E-invoicing is included in TallyPrime as long as your TSS subscription is active. You still pay for TSS or a licence." },
+  { q: "How much does Tally e-invoicing cost in the UAE?", a: "TSS renewal costs about AED 468 a year for Silver and AED 1,404 a year for Gold. A new Silver licence costs about AED 2,340. A new Gold licence costs about AED 7,020. Both include the first year of TSS. All prices exclude 5% VAT." },
+  { q: "Do I need TSS for Tally e-invoicing?", a: "Yes. Your TSS must be active. You also need a Tally.NET ID." },
+  { q: "Which Tally version do I need for UAE e-invoicing?", a: "You need the latest TallyPrime release. UAE e-invoicing features came in recent releases, such as Release 7.1 and 7.2. Update before you start." },
+  { q: "How do I set up e-invoicing in TallyPrime?", a: "Install the latest release. Press F11 and enable VAT and e-Invoicing. Open EmaraTax from Tally and select Tally Software Solutions FZCO as your ASP. Then press S in Tally to complete registration. Fix your data and send a test." },
+  { q: "How long does Tally e-invoicing setup take?", a: "Most businesses finish in a few hours. The forms are quick. The slow part is cleaning customer and item data." },
+  { q: "What is my Peppol ID in TallyPrime?", a: "It is a digital address that Tally creates when you complete registration. You will see it on screen after you press S." },
+  { q: "Can I use an Indian TallyPrime licence for UAE e-invoicing?", a: "For now, yes. Tally says registration will soon be supported only with an International licence. Plan the switch." },
+  { q: "Do branches need to register separately?", a: "No. Once your head office is registered, branches can issue e-invoices using the same setup." },
+  { q: "Does Tally support Arabic e-invoices?", a: "Tally says TallyPrime supports both English and Arabic invoices." },
+  { q: "Can I send e-invoices in bulk from Tally?", a: "Yes. You can send invoices, credit notes and debit notes one by one or in bulk. The e-invoice report shows the status of each voucher." },
+  { q: "Can I edit a Tally invoice after I send it as an e-invoice?", a: "No. Once an e-invoice is sent, you cannot edit it. You issue a credit note to correct it. Then you send a new e-invoice if the sale must be billed again." },
+  { q: "Do walk-in retail sales need e-invoices in the UAE?", a: "Not for now. Sales to consumers (B2C) are outside the system. But a walk-in buyer who gives you a company TRN is a B2B customer. That sale needs an e-invoice once your phase starts." },
+  { q: "How does a contractor bill retention in Tally?", a: "Keep retention outside the invoice total. The progress e-invoice covers the net certified amount. When the retention is released, you issue a separate e-invoice for it." },
+  { q: "How do I handle returns in Tally?", a: "Issue an e-credit note linked to the original invoice. If the sale must be billed again, send a new e-invoice." },
+  { q: "When is the e-invoicing deadline for Tally users?", a: "It is the same as for every business. With revenue under AED 50 million, appoint an ASP by 31 March 2027 and go live on 1 July 2027. With revenue of AED 50 million or more, the appointment date was 30 October 2026 and go-live is 1 January 2027. Government entities go live on 1 October 2027." },
+  { q: "What is the penalty for missing the e-invoicing deadline?", a: "Not appointing an ASP on time costs AED 5,000 for each month. After go-live, each invoice not issued electronically can cost AED 100, up to AED 5,000 a month. Credit notes have their own cap." },
+  { q: "Can einvoicecost.ae set up Tally e-invoicing for me?", a: `Yes. We do the full setup for ${aed(P.help)}, one time. It covers data fixes, your EmaraTax appointment, registration, a test invoice and credit note, and fixes for rejected invoices. Or set it up yourself for free with the steps in this guide.` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://einvoicecost.ae/' },
+  { name: 'Blog', url: 'https://einvoicecost.ae/blog' },
+  { name: 'Tally e-invoicing UAE', url: URL },
+];
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: PUBLISHED,
+  dateModified: UPDATED_ISO,
+  author: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  publisher: { '@type': 'Organization', name: 'einvoicecost.ae', url: 'https://einvoicecost.ae' },
+  mainEntityOfPage: URL,
+  inLanguage: 'en',
+};
+
+const toc = [
+  ['what', 'What it is'], ['deadlines', 'Who goes live when'], ['cost', 'What it costs'], ['examples', 'Cost examples'],
+  ['setup', 'Set up in 5 steps'], ['data', 'Master data to fix'], ['traders', 'Small traders'], ['distributors', 'Distributors'],
+  ['contractors', 'Contractors'], ['services', 'Service companies'], ['compare', 'Four business types'], ['mistakes', 'Mistakes that cause rejections'],
+  ['know', 'Before you start'], ['help', 'Yourself or with help'], ['faq', 'Questions'], ['sources', 'Sources'],
+];
+---
+
+<BaseLayout title={title} description={description} canonicalURL={URL} ogType="article" faqs={faqs} breadcrumbs={breadcrumbs}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  </Fragment>
+
+  <div class="band-navy">
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="/">einvoicecost<span>.ae</span></a>
+        <div class="top-right">
+          <a class="link" href="/#compare">Compare all software</a>
+          <a class="btn-top" href={`https://wa.me/${WA}`} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> WhatsApp</a>
+        </div>
+      </header>
+      <nav class="gnav" aria-label="Software guides"><span class="gl">Guides</span><div class="gscroll"><a href="/quickbooks-online">QuickBooks Online</a><a href="/quickbooks-desktop">QuickBooks Desktop</a><a href="/excel">Excel</a><a href="/zoho-books">Zoho Books</a><a href="/tally">Tally</a><a href="/wafeq">Wafeq</a><a href="/other-software">Other software</a><a href="/switch-accounting-software">Switch software</a></div></nav>
+      <p class="crumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › Tally</p>
+      <p class="eyebrow">Blog · Tally</p>
+      <h1>TALLY E-INVOICING UAE 2027: COST, SETUP AND EXAMPLES</h1>
+      <p class="byline"><span>Updated <b>{UPDATED}</b></span><span>Prices in AED, excluding 5% VAT</span></p>
+      <div class="answer" id="answer">
+        <p class="eyebrow">Quick answer</p>
+        <p>Tally e-invoicing in the UAE has <b>no per-invoice fee</b>. Tally Software Solutions FZCO is an accredited service provider (ASP), so TallyPrime users need no other provider. You need an <b>active Tally Software Services (TSS) subscription</b>. TSS renewal costs about <b>AED 468 a year</b> for one computer and <b>AED 1,404 a year</b> for several. Setup takes five steps and a few hours.</p>
+        <div class="facts">
+          <div><p class="k">Per-invoice fee</p><p class="v">AED 0, at any volume</p></div>
+          <div><p class="k">TSS renewal</p><p class="v">AED 468 Silver, AED 1,404 Gold, a year</p></div>
+          <div><p class="k">Setup with us</p><p class="v">{aed(P.help)}, one time, optional</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap blog">
+    <nav class="toc" aria-label="Contents"><b>In this guide</b><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+    <section id="what">
+      <h2>What is Tally e-invoicing in the UAE?</h2>
+      <p>Tally e-invoicing lets you send official digital invoices from inside TallyPrime. You do not need a second tool. You do not need a separate portal for each bill.</p>
+      <p>Here is the old way. You made a PDF. You emailed it. A clerk at your customer's office read it and typed the numbers into another system. A PDF is like a photo of a letter. A person must read it. An e-invoice is different. It is the data inside the letter. Your customer's system reads it. Nobody retypes anything.</p>
+      <p>The UAE e-invoice uses a data format called <b>PINT AE</b>. It travels over a secure network called <b>Peppol</b>. Your software does the converting, the checking and the sending. In this case, your software is TallyPrime.</p>
+      <p>Tally Software Solutions FZCO is on the Ministry of Finance list of accredited service providers. This matters because every UAE e-invoice must pass through an ASP. When your software company is the ASP, you do not hire a second one. You appoint Tally on the Federal Tax Authority (FTA) portal, called EmaraTax. Then you are connected.</p>
+      <p>Not every program works this way. QuickBooks and Excel are not ASPs. Their users need an outside provider. Our <a href="/blog/uae-e-invoicing-cost">complete UAE e-invoicing price guide</a> explains that route. This guide stays with Tally. For the short version, see our <a href="/tally">Tally page</a>.</p>
+      <h3 class="sm">What TallyPrime does for you</h3>
+      <p>Tally describes these features for UAE e-invoicing:</p>
+      <ul class="know">
+        <li>It checks each invoice before it goes out. It looks at mandatory fields, customer Tax Registration Numbers (TRNs) and units of measure.</li>
+        <li>It sends invoices, credit notes and debit notes one by one or in bulk.</li>
+        <li>It shows an e-invoice report with each voucher's status. You can see which ones went through, which are pending and which were rejected.</li>
+        <li>It supports English and Arabic invoices.</li>
+        <li>It lets you record transactions offline. They sync when your internet comes back, according to Tally.</li>
+      </ul>
+      <p>Those checks matter more than they sound. A rejected invoice is a wasted document. A missing TRN is the most common cause.</p>
+      <h3 class="sm">How one Tally e-invoice travels</h3>
+      <p>Take a simple sale. You own a computer shop in Dubai. You sell ten laptops to a local school. The price is AED 30,000. VAT at 5% adds AED 1,500. The total is AED 31,500.</p>
+      <p>You create the sales invoice in TallyPrime, as you do today. You enter the school's TRN, pick the items and the VAT rate, and save. Next, you send it for e-invoicing from the voucher or the report screen. Tally checks the data. If a required field is empty, Tally stops the invoice and shows an error. You fix the gap and try again.</p>
+      <p>When the invoice passes, Tally converts it to PINT AE and sends it over Peppol to the school's ASP. The school's system receives it. At the same time, the tax data is reported to the FTA. Five parties are involved: you, your ASP, your customer's ASP, your customer and the FTA. This is called the five-corner model.</p>
+      <p><b>The FTA does not approve each invoice before it goes out.</b> The UAE uses a decentralised model, not a clearance model. Your ASP does the checking. So clean data matters more than speed.</p>
+    </section>
+
+    <section id="deadlines">
+      <h2>Who must use e-invoicing in the UAE, and by when?</h2>
+      <p>Every VAT-registered business that sells to other businesses (B2B) or to government (B2G) must send e-invoices. There is no small-business exemption. Sales to consumers (B2C) are outside the system for now. Your revenue decides <b>when</b> you start. It does not decide <b>whether</b> you must.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Business group</th><th>Appoint your ASP by</th><th>E-invoicing starts</th></tr></thead><tbody>
+        <tr><td>Revenue AED 50 million or more</td><td>30 October 2026 (passed)</td><td><b>1 January 2027</b></td></tr>
+        <tr><td>Revenue under AED 50 million</td><td><b>31 March 2027</b></td><td><b>1 July 2027</b></td></tr>
+        <tr><td>Government entities</td><td>31 March 2027</td><td>1 October 2027</td></tr>
+      </tbody></table></div>
+      <p>The same dates apply to Tally users. Being on Tally does not give you extra time. If your revenue is AED 50 million or more, go-live is about six weeks away. The appointment date has already passed, so appoint Tally now. If your revenue is under AED 50 million, you have more time. But data clean-up takes longer than most owners expect. Start early.</p>
+      <h3 class="sm">What a missed deadline costs</h3>
+      <p>Cabinet Decision No. 106 of 2025 sets the penalties. They are on top of normal VAT penalties.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Violation</th><th>Penalty</th></tr></thead><tbody>
+        <tr><td>Not appointing an ASP or implementing e-invoicing on time</td><td>AED 5,000 for each month</td></tr>
+        <tr><td>Not issuing or sending an e-invoice</td><td>AED 100 per invoice, up to AED 5,000 a month</td></tr>
+        <tr><td>Not issuing or sending an e-credit note</td><td>AED 100 per credit note, up to AED 5,000 a month</td></tr>
+      </tbody></table></div>
+      <p>Compare that with the cost of setup. A single late month costs more than a Silver TSS renewal. It costs more than ten of them.</p>
+    </section>
+
+    <section id="cost">
+      <h2>How much does Tally e-invoicing cost in the UAE?</h2>
+      <p>The cost is easy to understand. Tally does not charge per invoice. It does not matter if you send 50 invoices or 50,000. What you do pay for is the right to keep using TallyPrime with updates. That is the TSS subscription. If your TSS lapses, e-invoicing stops working.</p>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Item</th><th>About AED (excl. VAT)</th><th>Note</th></tr></thead><tbody>
+        <tr><td>E-invoicing per invoice</td><td>0</td><td class="txt">Included with active TSS</td></tr>
+        <tr><td>TSS renewal, Silver (single user)</td><td>468 a year</td><td class="txt">Keeps e-invoicing working</td></tr>
+        <tr><td>TSS renewal, Gold (multi-user)</td><td>1,404 a year</td><td class="txt">Keeps e-invoicing working</td></tr>
+        <tr><td>New TallyPrime Silver licence</td><td>2,340 one time</td><td class="txt">Single user. Includes 1 year of TSS</td></tr>
+        <tr><td>New TallyPrime Gold licence</td><td>7,020 one time</td><td class="txt">Multi-user. Includes 1 year of TSS</td></tr>
+        <tr><td>TallyPrime subscription, single user</td><td>From about 78 a month</td><td class="txt">Instead of buying a licence</td></tr>
+        <tr><td>Our setup (optional)</td><td>{fmt(P.help)} one time</td><td class="txt">Or do it yourself for free</td></tr>
+      </tbody></table></div>
+      <p class="small">These are approximate prices from Tally and its UAE partners. Tally can change them. Check with your Tally partner before you buy.</p>
+      <h3 class="sm">Silver or Gold?</h3>
+      <p>The difference is how many people use Tally at the same time. Silver is for one computer. Gold is for several computers on the same network. Ask one question: "How many people need to be inside Tally at the same moment?" If the answer is one, buy Silver. If it is two or more, buy Gold. Do not guess low to save money. Moving from Silver to Gold later means paying again.</p>
+      <h3 class="sm">The Tally cost formula</h3>
+      <div class="formula"><p class="fh">Tally yearly cost (AED, excl. VAT)</p><pre>{`Year one (new user)   = Licence price
+                        (Silver 2,340 or Gold 7,020)
+                        TSS for year one is included.
+
+Every year after      = TSS renewal
+                        (Silver 468 or Gold 1,404)
+
+Existing user         = TSS renewal only
+                        (if your TSS is already active)
+
+E-invoices sent       = 0 extra, at any volume`}</pre></div>
+      <p>Add {aed(P.help)} once if you want us to do the setup for you.</p>
+      <h3 class="sm">Three-year cost at a glance</h3>
+      <div class="tablewrap"><table class="w700"><thead><tr><th>Plan</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Three-year total</th></tr></thead><tbody>
+        <tr><td>Silver licence (one user)</td><td>2,340</td><td>468</td><td>468</td><td>3,276</td></tr>
+        <tr><td>Gold licence (multi-user)</td><td>7,020</td><td>1,404</td><td>1,404</td><td>9,828</td></tr>
+        <tr><td>Monthly subscription, single user</td><td>About 936</td><td>About 936</td><td>About 936</td><td>About 2,808</td></tr>
+      </tbody></table></div>
+      <p>The monthly option is 78 × 12 = AED 936 a year. It costs less at the start. It costs more over three years than Silver. Pick it only if you want smaller payments.</p>
+      <h3 class="sm">What does it cost per invoice?</h3>
+      <p>Tally charges nothing per invoice. But you can still work out an average. Divide your yearly TSS fee by your invoice count. A small shop on Silver sends 600 invoices a year. AED 468 ÷ 600 is AED 0.78 per invoice. A busy trader on Silver sends 6,000. AED 468 ÷ 6,000 is AED 0.078 per invoice. A distributor on Gold sends 10,000. AED 1,404 ÷ 10,000 is about AED 0.14 per invoice. The more you send, the cheaper each one gets. That is the opposite of providers who charge per document.</p>
+    </section>
+
+    <section id="examples">
+      <h2>Real cost examples</h2>
+      <p>Numbers are easier with names. These businesses are made up, but the maths is real.</p>
+      <p><b>Omar, a trading firm in Dubai.</b> Omar has three accountants. They all work in Tally at the same time. So he needs Gold. He pays AED 7,020 one time. His first year of TSS is included. He sends 10,000 e-invoices that year and pays nothing extra. In year two, he pays AED 1,404 to renew TSS. His three-year total is AED 9,828.</p>
+      <p><b>Sara, a bakery owner in Sharjah.</b> Sara works alone on one laptop. She already owns TallyPrime. Her TSS is active. So her only cost is the AED 468 renewal each year. If her TSS had lapsed, she would renew it first.</p>
+      <p><b>Nadia, an accounting consultant in Dubai.</b> Nadia has two staff. Both create invoices at once. She buys Gold for AED 7,020. She sends 600 e-invoices to corporate clients in year one. She pays no transaction fees. In year two, she pays AED 1,404. If Nadia worked alone, she would pay AED 2,340 in year one and AED 468 after that.</p>
+      <p><b>Faisal, a fit-out contractor who wants help.</b> Faisal owns Tally Gold with active TSS. He is busy and does not want to learn EmaraTax. He pays us {aed(P.help)} once. Tally still costs him AED 0 per invoice. His TSS renewal stays AED 1,404.</p>
+    </section>
+
+    <section id="setup">
+      <h2>How to set up e-invoicing in TallyPrime in five steps</h2>
+      <p>Setup happens once. Most businesses finish in a few hours. The slow part is data clean-up, not the forms. Before you start, gather four things: your 15-digit TRN, your EmaraTax login, your Tally.NET ID and an active TSS.</p>
+      <ol class="steps5">
+        <li><div><div class="st-head"><h3>Check that Tally is ready</h3></div><p>Install the latest TallyPrime release. Tally's UAE e-invoicing features came in recent releases, such as Release 7.1 and 7.2 or newer. Check that your TSS is active and that you have a Tally.NET ID. Your base currency must be AED. VAT must be enabled with your TRN.</p></div></li>
+        <li><div><div class="st-head"><h3>Turn on e-invoicing in TallyPrime</h3></div><p>Press F11 to open Company Features. Enable VAT and e-Invoicing. Enter your TRN, the date e-invoicing applies from, and your trade licence details.</p></div></li>
+        <li><div><div class="st-head"><h3>Select Tally as your ASP on EmaraTax</h3></div><p>In TallyPrime, log in to e-Invoicing. Press V to open EmaraTax. Open the E-Invoicing section. Select "Tally Software Solutions FZCO". Verify your email and Tax Identification Number (TIN). Then submit. Use the email address registered with EmaraTax. A different email is a common reason for delays.</p></div></li>
+        <li><div><div class="st-head"><h3>Complete registration in Tally</h3></div><p>Go back to TallyPrime and press S. Tally creates your Peppol ID and shows it on screen. When you see it, registration is complete. Your Peppol ID works like an address. It lets other businesses send e-invoices to you. It also identifies you when you send.</p></div></li>
+        <li><div><div class="st-head"><h3>Fix your data and send a test</h3></div><p>Use Tally's bulk reports: Update Party TRN, VAT Rate Setup and Map UOM to UQC. They show you what is missing. Fill the gaps. Then record a test invoice and a test credit note, and check their status in the e-Invoice report. Do this before your start date, not on it. A sent e-invoice cannot be edited, so every mistake in real life costs an extra document.</p></div></li>
+      </ol>
+      <p class="callout">Short on time? We can do all five steps for {aed(P.help)}, one time. <a href={setupWa} target="_blank" rel="noopener">Message us on WhatsApp →</a></p>
+    </section>
+
+    <section id="data">
+      <h2>What master data do you need to fix first?</h2>
+      <p>Master data means the saved details of your customers and items. Bad master data causes most rejections. So fix it first.</p>
+      <h3 class="sm">Customer details</h3>
+      <p>Every business customer needs a valid 15-digit TRN. It also needs a legal name and a full address. A trading name will not do. Use the name on the customer's trade licence or tax certificate. Run the Update Party TRN report. It lists the customers with gaps. Start with your biggest clients. They bring most of your invoices.</p>
+      <h3 class="sm">Item units</h3>
+      <p>Every invoice line needs a standard unit. For goods, the code is called a Unit Quantity Code (UQC). Tally's Map UOM to UQC report lets you match your existing units to the standard codes in one go. "Pcs" becomes the standard code for pieces. "Box" becomes the standard code for boxes. Services need a unit too. Hours or projects still need a code. Use Hours, Days, Months or a service unit from the standard list.</p>
+      <h3 class="sm">VAT rates</h3>
+      <p>Every item needs the right VAT treatment. It may be standard-rated, zero-rated, exempt or out of scope. Do not rely on a default. Use the VAT Rate Setup report to check each item.</p>
+    </section>
+
+    <section id="traders">
+      <h2>Tally e-invoicing for small traders</h2>
+      <p>Small traders often sell to two kinds of buyers. Some are walk-in shoppers. Others are companies with a trade licence and a TRN. Grocery shops, hardware stores and electronics resellers fit here. Sales to individual shoppers (B2C) are outside e-invoicing for now. You do not send them through Peppol.</p>
+      <p>Picture a grocery trader in Ajman with one shop computer. Most customers pay cash at the counter and get a normal receipt. But each week, he also supplies three hotels and eight restaurants on credit. Those are B2B sales. Each one needs an e-invoice once his phase starts.</p>
+      <p>He saves each hotel and restaurant as a party in Tally, with its TRN, address and VAT treatment. When he bills a hotel AED 4,000 plus AED 200 VAT, he picks the saved party. The invoice goes out. No retyping.</p>
+      <p>One more case matters. A plumber walks in and says, "I need a tax invoice for my company." That buyer is now a business. The sale is B2B. Train your counter staff to ask one question: "Is this purchase for a company?" If yes, capture the TRN.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>The trader already owns TallyPrime Silver. He pays AED 468 a year for TSS. He sends unlimited e-invoices to his hotel and restaurant buyers at no extra cost.</p>
+    </section>
+
+    <section id="distributors">
+      <h2>Tally e-invoicing for distributors</h2>
+      <p>Distributors send many invoices. They also handle returns, damaged stock, short deliveries and price changes. The big risk is item data. A blank unit or a missing tax category gets an invoice rejected. So map every stock item before go-live. Use the bulk reports. This is slow work if you have thousands of items. Start with your top 200 sellers. They usually make most of your invoices.</p>
+      <p>Khalid runs a wholesale electronics firm in Sharjah. He supplies phones and cables to 150 retail shops. He updates Tally and links his EmaraTax account. He maps units such as "Boxes" and "Pieces" to the standard codes. He fixes the TRNs for his 150 clients.</p>
+      <p>Then he sells fifty smartphones to a Dubai retailer for AED 75,000. VAT adds AED 3,750. The total is AED 78,750. He saves the invoice. Tally checks it, converts it and sends it. The retailer receives it through Peppol.</p>
+      <p>Two days later, the retailer returns two damaged phones. The price is AED 3,000 for the pair, plus AED 150 VAT. Khalid cannot edit the sent invoice. He issues an e-credit note for AED 3,150 in Tally. The credit note links to the original invoice. The tax records stay correct.</p>
+      <h3 class="sm">Sending in bulk</h3>
+      <p>At the end of a busy day, Khalid may have 200 invoices. He does not send them one by one. He opens the e-invoice report, selects the pending vouchers and sends them in one batch. Then he checks the status column. Anything rejected goes to the top of his list.</p>
+      <h3 class="sm">Exports, free zones and van sales</h3>
+      <p>Export and free-zone sales still need e-invoices, even at 0% VAT. Your tax adviser confirms the VAT treatment for your facts. You then set the party type correctly in Tally. If a separate van-sales app creates the invoice, check how it passes the customer TRN into Tally. Ask your app vendor how it works when the van has no signal.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Khalid has four users. He needs Gold. A new Gold licence is AED 7,020. After year one, he pays AED 1,404 a year. Our <a href="/blog/uae-e-invoicing-distributors">distributor e-invoicing guide</a> covers master data, ERP options and returns in more depth.</p>
+    </section>
+
+    <section id="contractors">
+      <h2>Tally e-invoicing for contractors and subcontractors</h2>
+      <p>Contractors bill in stages. They take advances, certify work, hold retention and agree variations. The rule is simple: <b>one billing event, one document</b>. Because a sent e-invoice cannot be edited, each document must be right the first time.</p>
+      <h3 class="sm">Set up retention the right way</h3>
+      <p>Retention is the part of each payment that the client holds back. It is often 5% to 10%. The client releases it at completion or at the end of the defects period. Under the UAE e-invoicing guidelines, the progress e-invoice may cover the net amount after retention. Later, when the retention becomes payable, you issue a second e-invoice for that amount.</p>
+      <p>So set up a retention ledger in Tally. Keep it outside the invoice total. Then the e-invoice shows only the net certified amount and the VAT on it. Our <a href="/blog/uae-e-invoicing-contractors">contractor e-invoicing guide</a> explains the retention rules in full.</p>
+      <h3 class="sm">An example with numbers</h3>
+      <p>Reem runs an air conditioning subcontracting company in Abu Dhabi. She works for a large building contractor. She finishes the first floor of a tower. The certified work is AED 200,000. The contract holds 10% retention, which is AED 20,000.</p>
+      <p>She creates a progress e-invoice for the net amount: AED 180,000 plus AED 9,000 VAT, so AED 189,000. Tally checks the buyer's TRN and sends the invoice. Months later, the client releases the retention. Reem issues a second e-invoice: AED 20,000 plus AED 1,000 VAT, so AED 21,000.</p>
+      <p>Then the client agrees to a design change. The saving is AED 5,000. Reem cannot edit the sent invoice. She issues an e-credit note for AED 5,250, which is AED 5,000 plus AED 250 VAT. This assumes VAT is due as shown and that retention applies to your contract. Your tax adviser confirms the treatment for your contract.</p>
+      <h3 class="sm">Items, units and your buyer</h3>
+      <p>Set up milestone items in Tally. Map them to a service unit such as Project, Contract or Hours. Record the contract number, certificate number and variation number on every document. They help you explain any bill later.</p>
+      <p>Collect the main contractor's legal name, TRN and address before go-live. Ask whether it has a Peppol ID and when its own e-invoicing starts. A main contractor over AED 50 million goes live on 1 January 2027. A subcontractor under AED 50 million goes live on 1 July 2027. The dates do not match, so ask early.</p>
+      <p>Tally does not yet receive supplier e-invoices inside TallyPrime. Check with your Tally partner for updates. Until then, ask your own suppliers how they will send you their invoices.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>A mid-sized contractor with five accountants and quantity surveyors needs Gold. That is AED 7,020 one time. The contractor sends thousands of progress invoices without a fee per invoice. In year two, it pays AED 1,404 for TSS.</p>
+    </section>
+
+    <section id="services">
+      <h2>Tally e-invoicing for service companies</h2>
+      <p>Service firms hold no stock, so their setup is the quickest. Marketing, IT support, consulting, cleaning and maintenance companies all fit here. They still need care in three places: units, recurring bills and re-billed costs.</p>
+      <p>A valid unit is required on every line, even when you sell time and not boxes. Use Hours, Days or Months from the standard list. Do not type free text.</p>
+      <p>Tariq owns a digital marketing agency in Sharjah. He designs websites for local businesses. He updates TallyPrime, appoints Tally on EmaraTax and gets his Peppol ID. He links his service items to standard units: "Website Design" uses Project and "Monthly SEO" uses Months. He uses the bulk reports to fix two missing client TRNs. Then he bills a client AED 15,000 for a new website. VAT adds AED 750. The total is AED 15,750. He saves the voucher. Tally checks the bill and sends it.</p>
+      <h3 class="sm">Recurring bills</h3>
+      <p>Many service firms bill the same clients every month. Say an IT support firm has 40 clients on fixed fees. Set up each bill once. Review the 40 invoices before you send them. Then send them as one batch. Do not send on autopilot. A sent e-invoice cannot be edited. A two-minute review is cheaper than a credit note and a new invoice.</p>
+      <h3 class="sm">Re-billed expenses</h3>
+      <p>Service firms often pay a government fee or a vendor cost for a client, then bill it back. The VAT treatment can differ. A cost may be standard-rated at 5%, or it may be a disbursement outside the scope of VAT. Tag each one correctly so the FTA data matches your VAT return. Your tax adviser can confirm the right treatment.</p>
+      <h3 class="sm">What it costs</h3>
+      <p>Nadia from the earlier example pays AED 7,020 for Gold in year one. If you work alone, Silver is AED 2,340. Either way, per-invoice fees are zero.</p>
+    </section>
+
+    <section id="compare">
+      <h2>The four business types side by side</h2>
+      <p>The Tally cost is the same for every business type. What changes is where you spend your setup time.</p>
+      <div class="tablewrap"><table class="w900"><thead><tr><th>Business</th><th>Main setup focus</th><th>Example licence</th><th>First-year cost, set up yourself</th><th>Each year after</th></tr></thead><tbody>
+        <tr><td>Small trader</td><td class="txt">Separating B2B from walk-in B2C sales</td><td>Silver</td><td>2,340</td><td>468</td></tr>
+        <tr><td>Distributor</td><td class="txt">Item units, tax codes, returns, bulk sending</td><td>Gold</td><td>7,020</td><td>1,404</td></tr>
+        <tr><td>Contractor or subcontractor</td><td class="txt">Retention, variations, credit notes</td><td>Gold</td><td>7,020</td><td>1,404</td></tr>
+        <tr><td>Service company</td><td class="txt">Service units, recurring bills, re-billed costs</td><td>Silver</td><td>2,340</td><td>468</td></tr>
+      </tbody></table></div>
+      <p class="small">These are examples, not quotes. Existing Tally users with active TSS only pay the renewal. Add {aed(P.help)} once if you want us to do the setup.</p>
+    </section>
+
+    <section id="mistakes">
+      <h2>Mistakes that cause rejected Tally e-invoices</h2>
+      <ul class="know">
+        <li><b>Missing customer TRNs.</b> This is the most common problem. Run the Update Party TRN report and fix the gaps first.</li>
+        <li><b>Names that do not match.</b> The customer's legal name must match its registration. A trading name will not do. Check your own too.</li>
+        <li><b>Wrong units.</b> Free-text units may fail. Map every unit to the standard code.</li>
+        <li><b>Items with no VAT treatment.</b> Every item needs the right treatment. Check each one in the VAT Rate Setup report.</li>
+        <li><b>Discounts and charges with no reason.</b> UAE e-invoicing needs a reason whenever a discount, charge or excise amount changes the invoice value. Add the reason in Tally.</li>
+        <li><b>Editing after sending.</b> You cannot. Credit notes fix mistakes. Check every invoice before you send it.</li>
+        <li><b>Mixing B2B and B2C.</b> Do not send consumer receipts through Peppol. And do not skip a business customer. Mark customer types clearly.</li>
+        <li><b>Letting TSS lapse.</b> Your e-invoicing stops. Renew before the date.</li>
+      </ul>
+    </section>
+
+    <section id="know">
+      <h2>Things to know before you start</h2>
+      <ul class="know">
+        <li><b>Keep TSS active.</b> E-invoicing in TallyPrime needs an active TSS subscription. Renew it before it lapses.</li>
+        <li><b>Indian licences will need to change.</b> An Indian TallyPrime licence can be used for registration now. But Tally says registration will soon need an International licence. Plan the switch.</li>
+        <li><b>Branches do not register again.</b> Once your head office is registered, branches can issue e-invoices under the same setup.</li>
+        <li><b>Check the latest release.</b> Tally adds UAE features in new releases. Update before you start.</li>
+      </ul>
+    </section>
+
+    <section id="help">
+      <h2>Set it up yourself, or get help?</h2>
+      <p>You can set up Tally yourself for free. The five steps above are enough for many businesses. If your customer and item data are clean, you may finish in an afternoon. Get help if your data is messy, if you have many customers or items, or if you have no time to test.</p>
+      <p>Our setup service costs {aed(P.help)}, one time. We check your Tally release, TSS and Tally.NET ID. We check and fix your customer TRNs, VAT codes and items. We handle your EmaraTax appointment and registration. We send a test invoice and credit note. We fix any rejected invoice. And we show your staff how it works.</p>
+      <p>Not on Tally? Other software has its own path. Zoho Books and Wafeq have e-invoicing built in, like Tally. QuickBooks and Excel need an outside ASP. See <a href="/zoho-books">Zoho Books</a>, <a href="/wafeq">Wafeq</a>, <a href="/quickbooks-online">QuickBooks Online</a> or <a href="/other-software">other software</a>. You can also read our <a href="/blog/zoho-e-invoicing-uae-guide">Zoho e-invoicing guide</a>.</p>
+      <p class="callout">Want help with your own Tally setup? Message us on <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">WhatsApp</a>, or use the <a href="/">einvoicecost.ae price calculator →</a></p>
+    </section>
+
+    <section id="faq">
+      <h2>Tally e-invoicing UAE: common questions</h2>
+      <div class="faq">
+        {faqs.map((f, i) => <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="srclist">
+        <li><a href="https://mof.gov.ae/en/about-us/initiatives/einvoicing/" target="_blank" rel="noopener">UAE Ministry of Finance: e-invoicing</a></li>
+        <li><a href="https://help.tallysolutions.com/uae-e-invoicing-in-tallyprime/" target="_blank" rel="noopener">Tally Help: UAE e-invoicing in TallyPrime</a></li>
+        <li><a href="https://mof.gov.ae/wp-content/uploads/2025/11/Cabinet-Decision-Violations-and-Penalties-eInvoicing-24.11.25.pdf" target="_blank" rel="noopener">Cabinet Decision No. 106 of 2025 on e-invoicing violations and penalties</a></li>
+        <li><a href="/tally">einvoicecost.ae: Tally e-invoicing cost and setup</a></li>
+      </ul>
+      <p class="small">Licence and TSS prices are approximate prices from Tally and its UAE partners, last checked on 16 November 2026. Tally can change them, so check with your Tally partner before you buy. Examples use made-up businesses and round numbers. This guide is general information, not tax or legal advice. VAT treatment of retention, exports and re-billed costs depends on your contract and facts.</p>
+    </section>
+
+    <RelatedGuides current="tally-e-invoicing-uae-guide" />
+
+    <section class="final">
+      <div><h2>Get Tally e-invoicing set up</h2><p class="sub">Message us your Tally licence type and TSS status. We reply with next steps, usually the same day.</p></div>
+      <a class="btn-wa" href={ctaWa} target="_blank" rel="noopener">Message us on WhatsApp</a>
+    </section>
+
+    <SiteFooter />
+  </main>
+</BaseLayout>
